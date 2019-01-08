@@ -72,20 +72,23 @@ void Menu_Student(const string & ID) {
 			fstream CourseInfoFile;
 			while (current != nullptr) {
 				CourseInfoFile.open(GetPath("Courses/" + current->CoursePath + "_Info.txt"), fstream::in);
-				CourseInfoFile.is_open();
 				getline(CourseInfoFile, CourseName);
 				getline(CourseInfoFile, skip);
 				CourseInfoFile >> CourseStartTime;
+				CourseInfoFile.close();
 				localtime_s(&CourseStartTime_tm, &CourseStartTime);
 				i++;
 				cout << i << ". " << CourseName << " (" << wday_name[CourseStartTime_tm.tm_wday] << ")" << "\n";
 				current = current->next;
 			}
-			CourseInfoFile.close();
 
 		}
 
-		//else if (c == "checkin") { }
+		else if (c == "checkin")
+		{
+			CheckIn_Menu(StudentID);
+		}
+
 		//else if (c == "listck") { }
 		//else if (c == "score") { }
 

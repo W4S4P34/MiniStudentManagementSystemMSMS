@@ -186,27 +186,47 @@ void CheckIn_Menu(const string & StudentID) {
 	Timetable StudentTimetable;
 	StudentTimetable.Load(StudentID);
 	
+	//cout << "Opted-in courses:" << "\n";
+	//Timetable::node * current = StudentTimetable.head;
+	//int i = 0;
+	//string CoursePath, CourseName, skip;
+	//time_t CourseStartTime; tm * CourseStartTime_tm = {0};
+	//const char wday_name[][4] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+
+	//ifstream CourseInfoFile;
+	//while (current != nullptr) {
+	//	// CoursePath = current->CoursePath;
+	//	CourseInfoFile.open(GetPath("Courses/" + CoursePath + "_Info.txt"));
+	//	getline(CourseInfoFile, CourseName);
+	//	getline(CourseInfoFile, skip);
+	//	CourseInfoFile >> CourseStartTime;
+	//	CourseInfoFile.close();
+	//	localtime_s(CourseStartTime_tm, &CourseStartTime);
+	//	i++;
+	//	cout << i << ". " << CourseName << " (" << wday_name[CourseStartTime_tm->tm_wday] << ")" << "\n";
+	//	current = current->next;
+	//}
+	//cout << "\n";
+
 	cout << "Opted-in courses:" << "\n";
 	Timetable::node * current = StudentTimetable.head;
 	int i = 0;
-	string CoursePath, CourseName, skip;
-	time_t CourseStartTime; tm * CourseStartTime_tm = {0};
+	string CourseName, skip;
+	time_t CourseStartTime; tm CourseStartTime_tm = { 0 };
 	const char wday_name[][4] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
 
-	ifstream CourseInfoFile;
+	fstream CourseInfoFile;
 	while (current != nullptr) {
-		CoursePath = current->CoursePath;
-		CourseInfoFile.open(GetPath(CoursePath + "_Info.txt"));
+		CourseInfoFile.open(GetPath("Courses/" + current->CoursePath + "_Info.txt"), fstream::in);
 		getline(CourseInfoFile, CourseName);
 		getline(CourseInfoFile, skip);
 		CourseInfoFile >> CourseStartTime;
-		localtime_s(CourseStartTime_tm, &CourseStartTime);
 		CourseInfoFile.close();
+		localtime_s(&CourseStartTime_tm, &CourseStartTime);
 		i++;
-		cout << i << ". " << CourseName << " (" << wday_name[CourseStartTime_tm->tm_wday] << ")" << "\n";
+		cout << i << ". " << CourseName << " (" << wday_name[CourseStartTime_tm.tm_wday] << ")" << "\n";
 		current = current->next;
 	}
-	cout << "\n";
 
 	int selection;
 	do {
@@ -225,13 +245,13 @@ void CheckIn_Menu(const string & StudentID) {
 
 void CheckIn(const string & CoursePath, const string & StudentID) {
 	time_t CurrentTime, CourseStartTime, CourseEndTime;
-	tm *CurrentTime_tm = {0}, *CourseStartTime_tm = {0}, *CourseEndTime_tm ={0};
+	tm CurrentTime_tm = {0}, CourseStartTime_tm = {0}, CourseEndTime_tm ={0};
 	string skip;
 
 	time(&CurrentTime);
 
-	ifstream CourseInfoFile;
-	CourseInfoFile.open(GetPath(CoursePath + "/Info.txt"));
+	fstream CourseInfoFile;
+	CourseInfoFile.open(GetPath("Courses/" + CoursePath + "_Info.txt"), fstream::in);
 	getline(CourseInfoFile, skip);
 	getline(CourseInfoFile, skip);
 	CourseInfoFile >> CourseStartTime;
@@ -241,22 +261,22 @@ void CheckIn(const string & CoursePath, const string & StudentID) {
 	size_t CW = ceil((CurrentTime - CourseStartTime) / (60 * 60 * 24 * 7));
 
 	if (CW < 1 || CW > DC) {
-		cout << "System hasn't opened yet. Please come back later." << "\n" << "\n";
+		cout << "System hasn't opened yet. Please come back later.";
 		return;
 	}
 
-	localtime_s(CurrentTime_tm, &CurrentTime);
-	localtime_s(CourseStartTime_tm, &CourseStartTime);
-	localtime_s(CourseEndTime_tm, &CourseEndTime);
+	localtime_s(&CurrentTime_tm, &CurrentTime);
+	localtime_s(&CourseStartTime_tm, &CourseStartTime);
+	localtime_s(&CourseEndTime_tm, &CourseEndTime);
 
-	if (CurrentTime_tm->tm_wday != CourseStartTime_tm->tm_wday) {
-		cout << "System hasn't opened yet. Please come back later." << "\n" << "\n";
+	if (CurrentTime_tm.tm_wday != CourseStartTime_tm.tm_wday) {
+		cout << "System hasn't opened yet. Please come back later.";
 		return;
 	}
 
-	if ((CurrentTime_tm->tm_hour < CourseStartTime_tm->tm_hour) || (CurrentTime_tm->tm_hour == CourseStartTime_tm->tm_hour && CurrentTime_tm->tm_min < CourseStartTime_tm->tm_min) ||
-		(CurrentTime_tm->tm_hour > CourseEndTime_tm->tm_hour) || (CurrentTime_tm->tm_hour == CourseEndTime_tm->tm_hour && CurrentTime_tm->tm_min > CourseEndTime_tm->tm_min)) {
-		cout << "System hasn't opened yet. Please come back later." << "\n" << "\n";
+	if ((CurrentTime_tm.tm_hour < CourseStartTime_tm.tm_hour) || (CurrentTime_tm.tm_hour == CourseStartTime_tm.tm_hour && CurrentTime_tm.tm_min < CourseStartTime_tm.tm_min) ||
+		(CurrentTime_tm.tm_hour > CourseEndTime_tm.tm_hour) || (CurrentTime_tm.tm_hour == CourseEndTime_tm.tm_hour && CurrentTime_tm.tm_min > CourseEndTime_tm.tm_min)) {
+		cout << "System hasn't opened yet. Please come back later.";
 		return;
 	}
 

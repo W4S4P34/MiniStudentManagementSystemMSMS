@@ -256,17 +256,19 @@ void CreateCourse(Course & NewCourse)
 	}
 
 	// apparently mktime() destroys tm after conversion
-	tm CourseStartTime_tm, CourseEndTime_tm;
+	tm CourseStartTime_tm = {0}, CourseEndTime_tm = {0};
 
 	// CREATE INFO FILE ///////////////////////////////////////////////////////////
 
 	CourseStartTime_tm = NewCourse.Start;
 	CourseEndTime_tm = NewCourse.End;
+
 	InfoFile.close();
 	InfoFile.open(GetPath("Courses/" + NewCourse.Year + "/" + NewCourse.Term + "/" + NewCourse.ID + "_" + NewCourse.ClassID + "_" + wday_name[NewCourse.Start.tm_wday] + "_Info.txt"), fstream::out);
 	InfoFile << NewCourse.Name << "\n";
 	InfoFile << NewCourse.Room << "\n";
 	InfoFile << mktime(&CourseStartTime_tm) << "\n";
+
 	InfoFile << mktime(&CourseEndTime_tm) << "\n";
 	/*InfoFile << NewCourse.Start.tm_year + 1900
 		<< "-" << NewCourse.Start.tm_mon + 1
@@ -372,10 +374,14 @@ void ImportCourse(const string & FileName, const string & Year, const string & T
 		getline(CourseFile, EndMM, ',');
 		getline(CourseFile, Course_New.Room);
 
+		Course_New.Start = {0};
+
 		Course_New.Start.tm_year = stoi(StartY); Course_New.Start.tm_year -= 1900;
 		Course_New.Start.tm_mon = stoi(StartM); Course_New.Start.tm_mon -= 1;
 		Course_New.Start.tm_mday = stoi(StartD);
 		Course_New.Start.tm_hour = stoi(StartHH);
+			// test
+			// Course_New.Start.tm_hour += 1;
 		Course_New.Start.tm_min = stoi(StartMM);
 		if (DoW == "Sun") Course_New.Start.tm_wday = 0;
 		else if (DoW == "Mon") Course_New.Start.tm_wday = 1;
@@ -385,10 +391,14 @@ void ImportCourse(const string & FileName, const string & Year, const string & T
 		else if (DoW == "Fri") Course_New.Start.tm_wday = 5;
 		else if (DoW == "Sat") Course_New.Start.tm_wday = 6;
 
+		Course_New.End = {0};
+
 		Course_New.End.tm_year = stoi(EndY); Course_New.End.tm_year -= 1900;
 		Course_New.End.tm_mon = stoi(EndM); Course_New.End.tm_mon -= 1;
 		Course_New.End.tm_mday = stoi(EndD);
 		Course_New.End.tm_hour = stoi(EndHH);
+			// test
+			// Course_New.End.tm_hour += 1;
 		Course_New.End.tm_min = stoi(EndMM);
 		if (DoW == "Sun") Course_New.End.tm_wday = 0;
 		else if (DoW == "Mon") Course_New.End.tm_wday = 1;
