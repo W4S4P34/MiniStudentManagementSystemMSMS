@@ -11,8 +11,8 @@ using namespace std;
 
 // File list
 constexpr auto LOGIN_LIST_ADMIN = "D:/data/Login/Admin.txt";
-constexpr auto LOGIN_LIST_LECTURER = "D:/data/Login/Lecturer.csv";
-constexpr auto LOGIN_LIST_STUDENT = "D:/data/Login/Student.csv";
+constexpr auto LOGIN_LIST_LECTURER = "D:/data/Login/Lecturer.txt";
+constexpr auto LOGIN_LIST_STUDENT = "D:/data/Login/Student.txt";
 
 // Access class
 constexpr auto AC_ADMIN = 0;
