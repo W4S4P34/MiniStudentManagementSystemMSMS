@@ -1,7 +1,3 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <conio.h>
 #include "Login.h"
 #include "Menu.h"
 using namespace std;
