@@ -3,16 +3,12 @@
 #include <fstream>
 #include <string>
 #include <conio.h>
+#include "_FILES_.h"
 #include "sha1/sha1.h"
 using namespace std;
 
 // SHA-1: 80 bits
 // Empty password: da39a3ee5e6b4b0d3255bfef95601890afd80709
-
-// File list
-constexpr auto LOGIN_LIST_ADMIN = "D:/data/Login/Admin.txt";
-constexpr auto LOGIN_LIST_LECTURER = "D:/data/Login/Lecturer.txt";
-constexpr auto LOGIN_LIST_STUDENT = "D:/data/Login/Student.txt";
 
 // Access class
 constexpr auto AC_ADMIN = 0;
