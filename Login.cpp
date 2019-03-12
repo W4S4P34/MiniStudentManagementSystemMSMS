@@ -61,7 +61,7 @@ char Authenticate(const string & ID, const string & Password) {
 		AccessClass = AC_STUDENT;
 	}
 	else {
-		return -1;
+		return AC_INVALID;
 	}
 
 	if (!LoginList.is_open()) {
@@ -78,7 +78,7 @@ char Authenticate(const string & ID, const string & Password) {
 				return AccessClass;
 		}
 	}
-	return -1;
+	return AC_INVALID;
 }
 
 void ChangePassword(const string & ID, const char & AccessClass) {
