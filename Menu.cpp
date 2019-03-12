@@ -2,11 +2,73 @@
 
 /*----------------------------------------------------------------*/
 
-//Menu Student
+char Menu_Student() {
+	cout << "STUDENT MENU (Note: choices are case-insensitive.)\n\n"
+		<< "[-] Log out\n"
+		<< "[*] Change password\n"
+		<< "\n"
+		<< "[C] Check-in\n"
+		<< "[H] View check-in result\n"
+		<< "[S] View schedules\n"
+		<< "[R] View scoreboard result\n"
+		<< endl;
+
+	char r;
+	do {
+		cout << "> Choose: ";
+		string c;
+		cin >> c;
+		transform(c.begin(), c.end(), c.begin(), ::tolower);
+
+		if (c == "-") { r = -2; cout << "Logging out..."; }
+		else if (c == "*") { r = 0; cout << c; }
+		else if (c == "c") { r = 0; cout << c; }
+		else if (c == "h") { r = 0; cout << c; }
+		else if (c == "s") { r = 0; cout << c; }
+		else if (c == "r") { r = 0; cout << c; }
+
+		else { r = -1; cout << "Invalid choice.\n"; }
+	} while (r == -1);
+	return r;
+}
 
 /*----------------------------------------------------------------*/
 
-//Menu Lecturer
+char Menu_Lecturer() {
+	cout << "LECTURER MENU (Note: choices are case-insensitive.)\n\n"
+		<< "[-] Log out\n"
+		<< "[*] Change password\n"
+		<< "\n"
+		<< "[C] View list of courses in the current semester\n"
+		<< "[S] View list of students of a course\n"
+		<< "[A] View attendance list of a course\n"
+		<< "[T] Edit an attendance\n"
+		<< "[I] Import scoreboard of a course (midterm, final, lab, bonus) from a csv file\n"
+		<< "[R] Edit grade of a student\n"
+		<< "[O] View a scoreboard\n"
+		<< endl;
+
+	char r;
+	do {
+		cout << "> Choose: ";
+		string c;
+		cin >> c;
+		transform(c.begin(), c.end(), c.begin(), ::tolower);
+
+		if (c == "-") { r = -2; cout << "Logging out..."; }
+		else if (c == "*") { r = 0; cout << c; }
+		else if (c == "c") { r = 0; cout << c; }
+		else if (c == "s") { r = 0; cout << c; }
+		else if (c == "a") { r = 0; cout << c; }
+		else if (c == "t") { r = 0; cout << c; }
+		else if (c == "i") { r = 0; cout << c; }
+		else if (c == "r") { r = 0; cout << c; }
+		else if (c == "o") { r = 0; cout << c; }
+
+		else { r = -1; cout << "Invalid choice.\n"; }
+	} while (r == -1);
+	return r;
+}
 
 /*----------------------------------------------------------------*/
 
