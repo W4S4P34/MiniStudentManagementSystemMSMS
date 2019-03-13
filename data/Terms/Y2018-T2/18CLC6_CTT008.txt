@@ -1,0 +1,23 @@
+;; Loại bỏ hết mấy comment (bắt đầu bằng ;;) với dòng trống
+
+;; Class ID
+18CLC6
+
+;; Course ID, Course Name
+CTT008,Programming Techniques
+
+;; Lecturer ID
+lecturer1
+
+;; Room
+Room
+
+;; Time (human-readable)
+StartDate,EndDate,DayOfWeek,StartHour,EndHour
+
+;; Time (machine-readable, UNIX timestamps)
+;; Mỗi dòng define 2 mốc thời gian bắt đầu-kết thúc của một buổi học
+;; Nếu môn này học trong 10 tuần, mỗi tuần 1 buổi thì sẽ có 10 dòng timestamp ở đây
+
+;; Student ID, 4 cột điểm, 10 cột điểm danh (tương ứng 10 tuần)
+18120001,0,0,0,0,-,-,-,-,-,-,-,-,-,-
