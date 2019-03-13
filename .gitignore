@@ -30,7 +30,3 @@
 *.exe
 *.out
 *.app
-.vscode/c_cpp_properties.json
-
-# Files
-_FILES_.h
