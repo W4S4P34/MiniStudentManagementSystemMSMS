@@ -1,36 +1,26 @@
+﻿#pragma once
+
 #include <iostream>
-#include <fstream>
 #include <string>
-#include <vector>
+#include <fstream>
 using namespace std;
 
-
-struct date {
-	int day;
-	int month;
-	int year;
-};
-
 class Student {
-	//attributes
-private:
-	string id;
-	string lastname;
-	string firstname;
-	string gender;
-	date dob;
-	//constructors
-public:
-	Student( string ID, string LASTNAME, string FIRSTNAME, string GENDER, int day, int month, int year) {
-		id = ID;
-		lastname = LASTNAME;
-		firstname = FIRSTNAME;
-		gender = GENDER;
-		dob.day = day; dob.month = month; dob.year = year;
-	}
-	//method
-public:
-	static bool input(const char *path, vector <Student> &a);
-	static bool output(const char *path, const vector <Student> &a);
-};
+	private:
+		struct Birth {
+			short d, m;
+			int y;
+		};
+		bool isFemale;
+		
+	protected:
+		string ID;
+		string LastName, FirstName;
+		// list các lớp-môn sinh viên có mặt, Class_Course
 
+	public:
+		void CheckIn();
+		void ViewAttendance(string CourseID);
+		void ViewSchedules();
+		void ViewScores();
+};
