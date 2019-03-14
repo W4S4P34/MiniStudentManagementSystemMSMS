@@ -10,11 +10,12 @@ struct Class {
 	Class * next;
 };
 
+struct ClassNode {
+	Class data;
+	ClassNode * next;
+};
+
 struct ClassList {
-	struct ClassNode {
-		Class data;
-		ClassNode * next;
-	};
 	ClassNode * head = nullptr;
 };
 

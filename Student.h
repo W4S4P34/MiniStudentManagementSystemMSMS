@@ -26,7 +26,8 @@ struct StudentList {
 	Student * head = nullptr;
 };
 
-Student *getStudent();
+Student *getStudent(string, string, string, string, Birth);
+void ShowInfo(const string, const StudentList &);
 void ImportStudents(const char * filepath, StudentList & list);
 void ExportStudents(const char * filepath, const StudentList & list);
 void CreateStudent(StudentList & list);
