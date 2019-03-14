@@ -1,27 +1,31 @@
 #pragma once
 
 #include <string>
+#include <iostream>
+#include <fstream>
 using namespace std;
+
+struct Birth {
+	short d, m;
+	int y;
+};
+
+struct Student {
+	// ID and info of current node
+	string ID;
+	string LastName, FirstName;
+	string Gender;
+
+	// next node
+	Student * next;
+};
 
 struct StudentList {
 	// each student is a node
-	struct Student {
-		// ID and info of current node
-		string ID;
-		string LastName, FirstName;
-		bool isFemale;
-		struct Birth {
-			short d, m;
-			int y;
-		};
-
-		// next node
-		Student * next;
-	};
-
 	Student * head = nullptr;
 };
 
+Student *getStudent();
 void ImportStudents(const char * filepath, StudentList & list);
 void ExportStudents(const char * filepath, const StudentList & list);
 void CreateStudent(StudentList & list);
