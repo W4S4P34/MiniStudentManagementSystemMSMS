@@ -1,7 +1,13 @@
 #pragma once
 
+#include <iostream>
 #include <string>
 using namespace std;
+
+struct Birth {
+	short d, m;
+	int y;
+};
 
 struct StudentList {
 	// each student is a node
@@ -10,10 +16,7 @@ struct StudentList {
 		string ID;
 		string LastName, FirstName;
 		bool isFemale;
-		struct Birth {
-			short d, m;
-			int y;
-		};
+		Birth DOB;
 
 		// next node
 		Student * next;
