@@ -105,3 +105,95 @@ void CreateStudent(StudentList & list) {
 		list.head = St;
 	}
 }
+
+#include "Student.h"
+
+void EditStudent(StudentList & list, const string & ID)
+{
+	int info;
+
+	cout << "Enter the information you want to change (1-4):\n"
+		<< "1. Last name" << endl
+		<< "2. First name" << endl
+		<< "3. Gender" << endl
+		<< "4. Day of Birth" << endl;
+	cin >> info;
+
+	string option;
+	cout << "Are you sure? (Yes/No): ";
+	cin >> option;
+
+	for (int i = 0; i < option.length(); i++)
+		option[i] = tolower(option[i]);
+
+	if (option == "yes") {
+		Student * current = list.head;
+
+		while (current != nullptr)
+		{
+			if (current->ID == ID)
+			{
+				switch (info) {
+				case 1: {
+					cout << "Enter new Last name: ";
+					cin >> current->LastName;
+					cout << "Student's information is edited" << endl;
+					break;
+				}
+				case 2: {
+					cout << "Enter new First name: ";
+					cin >> current->FirstName;
+					cout << "Student's information is edited" << endl;
+					break;
+				}
+				case 3: {
+					cout << "Enter new Gender: ";
+					cin >> current->Gender;
+					cout << "Student's information is edited" << endl;
+					break;
+				}
+				case 4: {
+					cout << "Enter new Day of Birth (d m y): " << endl;
+					cin >> current->DOB.y >> current->DOB.m >> current->DOB.d;
+					cout << "Student's information is edited" << endl;
+					break;
+				}
+				}
+			}
+			else
+				current = current->next;
+		}
+	}
+	else
+		return;
+}
+
+void DeleteStudent(StudentList & list, const string & ID)
+{
+	Student * current = list.head;
+	Student * previous = nullptr;
+
+	while (current != nullptr)
+	{
+		if (current->ID == ID)
+		{
+			if (current == list.head)
+			{
+				list.head = list.head->next;
+				delete current;
+				break;
+			}
+			else
+			{
+				previous->next = current->next;
+				delete current;
+				break;
+			}
+		}
+		else
+		{
+			previous = current;
+			current = current->next;
+		}
+	}
+}
