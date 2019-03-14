@@ -16,7 +16,7 @@ struct Student {
 	string ID;
 	string LastName, FirstName;
 	string Gender;
-
+	Birth DOB;
 	// next node
 	Student * next;
 };
