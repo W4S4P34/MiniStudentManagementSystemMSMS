@@ -1,5 +1,33 @@
 #include "Login.h"
 
+bool doLoginFilesExist() {
+	ifstream test;
+	bool check = true;
+
+	test.open(GetPath(LOGIN_LIST_ADMIN));
+	if (!test.is_open()) {
+		cout << "Admin login list does not exist.\n";
+		check = false;
+	}
+	test.close();
+
+	test.open(GetPath(LOGIN_LIST_LECTURER));
+	if (!test.is_open()) {
+		cout << "Lecturer login list does not exist.\n";
+		check = false;
+	}
+	test.close();
+
+	test.open(GetPath(LOGIN_LIST_STUDENT));
+	if (!test.is_open()) {
+		cout << "Student login list does not exist.\n";
+		check = false;
+	}
+	test.close();
+
+	return check;
+}
+
 void LoginMenu(string & ID, char & AccessClass) {
 	cout << "(Type \"quit\" in ID to quit.)\n\n";
 	do {
@@ -49,15 +77,15 @@ char Authenticate(const string & ID, const string & Password) {
 	char AccessClass;
 
 	if (ID.substr(0, 5) == "admin") {
-		LoginList.open(LOGIN_LIST_ADMIN);
+		LoginList.open(GetPath(LOGIN_LIST_ADMIN));
 		AccessClass = AC_ADMIN;
 	}
 	else if ((ID[0] >= 'A' && ID[0] <= 'Z') || (ID[0] >= 'a' && ID[0] <= 'z')) {
-		LoginList.open(LOGIN_LIST_LECTURER);
+		LoginList.open(GetPath(LOGIN_LIST_LECTURER));
 		AccessClass = AC_LECTURER;
 	}
 	else if (ID[0] >= '1' && ID[0] <= '9') {
-		LoginList.open(LOGIN_LIST_STUDENT);
+		LoginList.open(GetPath(LOGIN_LIST_STUDENT));
 		AccessClass = AC_STUDENT;
 	}
 	else {
@@ -65,8 +93,8 @@ char Authenticate(const string & ID, const string & Password) {
 	}
 
 	if (!LoginList.is_open()) {
-		cerr << "ERROR: Unable to open login list. Forcefully quitting...\n";
-		exit(EXIT_FAILURE);
+		cout << "ERROR: Something went wrong. Check if login files still exist.\n";
+		return AC_INVALID;
 	}
 
 	string ID_compare, Password_compare;
@@ -85,19 +113,19 @@ void ChangePassword(const string & ID, const char & AccessClass) {
 	fstream LoginList;
 	switch (AccessClass) {
 		case AC_ADMIN:
-			LoginList.open(LOGIN_LIST_ADMIN);
+			LoginList.open(GetPath(LOGIN_LIST_ADMIN));
 			break;
 		case AC_LECTURER:
-			LoginList.open(LOGIN_LIST_LECTURER);
+			LoginList.open(GetPath(LOGIN_LIST_LECTURER));
 			break;
 		case AC_STUDENT:
-			LoginList.open(LOGIN_LIST_STUDENT);
+			LoginList.open(GetPath(LOGIN_LIST_STUDENT));
 			break;
 	}
 
 	if (!LoginList.is_open()) {
-		cerr << "ERROR: Unable to open login list. Forcefully quitting...\n";
-		exit(EXIT_FAILURE);
+		cout << "ERROR: Something went wrong. Check if login files still exist.\n";
+		return;
 	}
 
 	string Password_new;
@@ -108,7 +136,7 @@ void ChangePassword(const string & ID, const char & AccessClass) {
 	getline(cin, Password_new_re);
 
 	if (Password_new != Password_new_re) {
-		cerr << "Passwords do not match. Operation aborted.\n";
+		cout << "Passwords do not match. Operation aborted.\n";
 	}
 	else {
 		string ID_compare, skip;

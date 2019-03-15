@@ -16,7 +16,8 @@ constexpr auto AC_LECTURER = 1;
 constexpr auto AC_STUDENT = 2;
 constexpr auto AC_INVALID = -1;
 
-void LoginMenu(string & ID, char & AccessClass); // also returns access class
-string GetPassword(); // masked password field
+bool doLoginFilesExist();
+void LoginMenu(string & ID, char & AccessClass);
+string GetPassword();
 char Authenticate(const string & ID, const string & Password);
 void ChangePassword(const string & ID, const char & AccessClass);

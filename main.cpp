@@ -7,15 +7,18 @@ int main(void) {
 	char AccessClass;
 
 	do {
+		if (!doLoginFilesExist()) {
+			cout << "Press any key to exit.\n";
+			_getch();
+			break;
+		}
 		LoginMenu(ID, AccessClass);
 		system("CLS");
-
 		ShowMenu(AccessClass);
 		cout << "\n";
 		Interpret(ID, AccessClass);
 		system("CLS");
-
 	} while (1);
-
+	
 	return EXIT_SUCCESS;
 }
