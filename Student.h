@@ -32,6 +32,14 @@ struct StudentList {
 		newnode->next = head;
 		head = newnode;
 	}
+
+	~StudentList() {
+		while (head != nullptr) {
+			node * current = head;
+			head = current->next;
+			delete current;
+		}
+	}
 };
 
 void ImportStudents(const string & filepath, StudentList & CurrentList);

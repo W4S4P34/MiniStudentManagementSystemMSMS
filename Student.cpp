@@ -44,6 +44,9 @@ void ImportStudents(const string & filepath, StudentList & CurrentList) {
 		ClassID[i] = ::toupper(ClassID[i]);
 	UpdateStudentFile(ClassID, temp);
 	cout << "Successfully imported.\n";
+
+	temp.~StudentList();
+
 	LoadStudents(ClassID, CurrentList);
 }
 
@@ -94,6 +97,8 @@ void LoadStudents(const string & ClassID, StudentList & CurrentList) {
 		cout << "ERROR: Unable to load " << ClassID << ". Check if this class exists.\n";
 		return;
 	}
+
+	CurrentList.~StudentList();
 
 	string skip;
 	string ID, LastName, FirstName, Gender;
