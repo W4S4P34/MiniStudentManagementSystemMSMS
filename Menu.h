@@ -3,8 +3,14 @@
 #include <fstream>
 #include <string>
 #include <conio.h>
-#include "Login.h" // access classes and changing password
+#include "Login.h"
 using namespace std;
 
-void ShowMenu(const char & AccessClass); // to-do: include Student.h for info. Class?
-void Interpret(const string & ID, const char & AccessClass);
+void ShowHelp_General();
+void ShowHelp_Student();
+// void ShowHelp_Lecturer();
+void ShowHelp_Admin();
+
+void Menu_Student(const string & ID);
+// void Menu_Lecturer(const string & ID);
+void Menu_Admin(const string & ID);
