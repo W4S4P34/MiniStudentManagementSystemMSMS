@@ -1,199 +1,237 @@
 #include "Student.h"
 
-Student *getStudent(string ID, string LN, string FN, string Ge, Birth Bi) {
-	Student *Stu = new Student;
-	if (Stu != NULL)
-	{
-		Stu->ID = ID;
-		Stu->LastName = LN;
-		Stu->FirstName = FN;
-		Stu->Gender = Ge;
-		Stu->DOB = Bi;
-		Stu->next = NULL;
+void ImportStudents(const string & filepath, StudentList & CurrentList) {
+	ifstream file;
+	file.open(filepath);
+
+	if (!file.is_open()) {
+		// return instead of forcefully killing the whole program
+		cout << "ERROR: Unable to open student list.\n";
+		return;
 	}
-	return Stu;
+
+	StudentList temp;
+	string skip;
+	string ID, LastName, FirstName, Gender;
+	Birth DOB;
+
+	// skip the first line
+	getline(file, skip);
+	while (!file.eof())
+	{
+		getline(file, skip, ',');
+		getline(file, ID, ',');
+		getline(file, LastName, ',');
+		getline(file, FirstName, ',');
+		getline(file, Gender, ',');
+		file >> DOB.y;
+		file.ignore(1);
+		file >> DOB.m;
+		file.ignore(1);
+		file >> DOB.d;
+		temp.AddStudent({ID, LastName, FirstName, Gender, DOB});
+	}
+
+	string ClassID;
+	do {
+		cout << "Enter class ID: ";
+		getline(cin, ClassID);
+	} while (
+		ClassID.empty()
+		&& cout << "Invalid class ID.\n"
+	);
+	for (size_t i = 0; i < ClassID.length(); i++)
+		ClassID[i] = ::toupper(ClassID[i]);
+	UpdateStudentFile(ClassID, temp);
+	cout << "Successfully imported.\n";
+	LoadStudents(ClassID, CurrentList);
 }
 
-void ImportStudents(const char * filepath, StudentList & list) {
-	
-	string str;
-	string ID, LN, FN, Ge;
-	Birth Bi;
-	ifstream f;
-	f.open(filepath);
-
-	if (!f.is_open()) {
-		cerr << "ERROR: Unable to open student list. Forcefully quitting...\n";
-		exit(EXIT_FAILURE);
-	}
-
-	getline(f, str); // skip the first line
-	
-	while (!EOF)
-	{
-		getline(f, str, ',');
-		getline(f, ID, ',');
-		getline(f, LN, ',');
-		getline(f, FN, ',');
-		getline(f, Ge, ',');
-		f >> Bi.y;
-		f.ignore(1);
-		f >> Bi.m;
-		f.ignore(1);
-		f >> Bi.d;
-		Student *St = getStudent(ID, LN, FN, Ge, Bi);
-		if (St == NULL)
+void ShowInfo(const string & ID, const StudentList & list) {
+	StudentList::node * current = list.head;
+	while (current != nullptr) {
+		if (ID == current->data.ID) {
+			cout << "--------------------" << endl;
+			cout << "ID: " << current->data.ID << endl;
+			cout << "Full Name: " << current->data.LastName << " " << current->data.FirstName << endl;
+			cout << "Gender: " << current->data.Gender << endl;
+			cout << "Date of birth (yyyy/mm/dd): " << current->data.DOB.y << '/' << current->data.DOB.m << '/' << current->data.DOB.d << endl;
 			return;
-		if (list.head == NULL) {
-			list.head = St;
 		}
-		else {
-			list.head->next = St;
-			list.head = St;
-		}
+		current = current->next;
 	}
+	cout << "Student " << ID << " not found.\n";
 }
 
-void ShowInfo(const string ID, const StudentList &list) {
-	Student *Cur = list.head;
-	while (!Cur) {
-		if (ID == Cur->ID) {
-			cout << "User's Information:" << endl;
-			cout << "ID: ";
-			cout << Cur->ID << endl;
-			cout << "Last name: ";
-			cout << Cur->LastName << endl;
-			cout << "First name: ";
-			cout << Cur->FirstName << endl;
-			cout << "Gender: ";
-			cout << Cur->Gender << endl;
-			cout << "Date of birth (yyyy/mm/dd): ";
-			cout << Cur->DOB.y << '/' << Cur->DOB.m << '/' << Cur->DOB.d;
-		}
-		Cur = Cur->next;
-	}
-}
-
-void CreateStudent(StudentList & list) {
-	string str;
-	string ID, LN, FN, Ge;
-	Birth Bi;
-	cout << "User's Information:" << endl;
-	cout << "ID: ";
-	cin >> ID;
-	cout << "Last name: ";
-	cin >> LN;
-	cout << "First name: ";
-	cin >> FN;
-	cout << "Gender: ";
-	cin >> Ge;
-	cout << "Date of birth (yyyy/mm/dd):" <<endl;
-	cout << "Year: ";
-	cin >> Bi.y;
-	cout << "Month: ";
-	cin >> Bi.m;
-	cout << "Day: ";
-	cin >> Bi.d;
-	Student *St = getStudent(ID, LN, FN, Ge, Bi);
-	if (St == NULL)
+void UpdateStudentFile(const string & ClassID, const StudentList & list) {
+	ofstream file;
+	file.open(GetPath("Classes/" + ClassID + ".txt"));
+	if (!file.is_open()) {
+		cout << "ERROR: Unable to create file.\n";
 		return;
-	if (list.head == NULL) {
-		list.head = St;
 	}
-	else {
-		list.head->next = St;
-		list.head = St;
+	file << ClassID;
+	StudentList::node * current = list.head;
+	while (current != nullptr) {
+		file << endl
+			<< current->data.ID << ","
+			<< current->data.LastName << ","
+			<< current->data.FirstName << ","
+			<< current->data.Gender << ","
+			<< setw(4) << setfill('0') << current->data.DOB.y << "-"
+			<< setw(2) << setfill('0') << current->data.DOB.m << "-"
+			<< setw(2) << setfill('0') << current->data.DOB.d;
+		current = current->next;
 	}
+	file.close();
 }
 
-#include "Student.h"
+void LoadStudents(const string & ClassID, StudentList & CurrentList) {
+	ifstream file;
+	file.open(GetPath("Classes/" + ClassID + ".txt"));
 
-void EditStudent(StudentList & list, const string & ID)
-{
-	int info;
-
-	cout << "Enter the information you want to change (1-4):\n"
-		<< "1. Last name" << endl
-		<< "2. First name" << endl
-		<< "3. Gender" << endl
-		<< "4. Day of Birth" << endl;
-	cin >> info;
-
-	string option;
-	cout << "Are you sure? (Yes/No): ";
-	cin >> option;
-
-	for (int i = 0; i < option.length(); i++)
-		option[i] = tolower(option[i]);
-
-	if (option == "yes") {
-		Student * current = list.head;
-
-		while (current != nullptr)
-		{
-			if (current->ID == ID)
-			{
-				switch (info) {
-				case 1: {
-					cout << "Enter new Last name: ";
-					cin >> current->LastName;
-					cout << "Student's information is edited" << endl;
-					break;
-				}
-				case 2: {
-					cout << "Enter new First name: ";
-					cin >> current->FirstName;
-					cout << "Student's information is edited" << endl;
-					break;
-				}
-				case 3: {
-					cout << "Enter new Gender: ";
-					cin >> current->Gender;
-					cout << "Student's information is edited" << endl;
-					break;
-				}
-				case 4: {
-					cout << "Enter new Day of Birth (d m y): " << endl;
-					cin >> current->DOB.y >> current->DOB.m >> current->DOB.d;
-					cout << "Student's information is edited" << endl;
-					break;
-				}
-				}
-			}
-			else
-				current = current->next;
-		}
-	}
-	else
+	if (!file.is_open()) {
+		cout << "ERROR: Unable to load " << ClassID << ". Check if this class exists.\n";
 		return;
-}
-
-void DeleteStudent(StudentList & list, const string & ID)
-{
-	Student * current = list.head;
-	Student * previous = nullptr;
-
-	while (current != nullptr)
-	{
-		if (current->ID == ID)
-		{
-			if (current == list.head)
-			{
-				list.head = list.head->next;
-				delete current;
-				break;
-			}
-			else
-			{
-				previous->next = current->next;
-				delete current;
-				break;
-			}
-		}
-		else
-		{
-			previous = current;
-			current = current->next;
-		}
 	}
+
+	string skip;
+	string ID, LastName, FirstName, Gender;
+	Birth DOB;
+
+	// skip the first line
+	getline(file, skip);
+	streamoff SeekPosition;
+	while (!file.eof()) {
+		//SeekPosition = file.tellg();
+		//getline(file, skip);
+		//if (skip == "\n") break;
+		//file.seekg(SeekPosition);
+		file.ignore(1); // \n
+		getline(file, ID, ',');
+		getline(file, LastName, ',');
+		getline(file, FirstName, ',');
+		getline(file, Gender, ',');
+		file >> DOB.y;
+		file.ignore(1);
+		file >> DOB.m;
+		file.ignore(1);
+		file >> DOB.d;
+		CurrentList.AddStudent({ ID, LastName, FirstName, Gender, DOB });
+	}
+
+	cout << "Successfully loaded " << ClassID << ".\n";
 }
+
+//void CreateStudent(StudentList & list) {
+//	string str;
+//	string ID, LN, FN, Ge;
+//	Birth Bi;
+//	cout << "User's Information:" << endl;
+//	cout << "ID: ";
+//	cin >> ID;
+//	cout << "Last name: ";
+//	cin >> LN;
+//	cout << "First name: ";
+//	cin >> FN;
+//	cout << "Gender: ";
+//	cin >> Ge;
+//	cout << "Date of birth (yyyy/mm/dd):" <<endl;
+//	cout << "Year: ";
+//	cin >> Bi.y;
+//	cout << "Month: ";
+//	cin >> Bi.m;
+//	cout << "Day: ";
+//	cin >> Bi.d;
+//	list.AddStudent({ ID, LN, FN, Ge, Bi, nullptr });
+//}
+
+//void EditStudent(StudentList & list, const string & ID)
+//{
+//	int info;
+//
+//	cout << "Enter the information you want to change (1-4):\n"
+//		<< "1. Last name" << endl
+//		<< "2. First name" << endl
+//		<< "3. Gender" << endl
+//		<< "4. Day of Birth" << endl;
+//	cin >> info;
+//
+//	string option;
+//	cout << "Are you sure? (Yes/No): ";
+//	cin >> option;
+//
+//	for (size_t i = 0; i < option.length(); i++)
+//		option[i] = tolower(option[i]);
+//
+//	if (option == "yes") {
+//		StudentList::node * current = list.head;
+//
+//		while (current != nullptr)
+//		{
+//			if (current->data.ID == ID)
+//			{
+//				switch (info) {
+//				case 1: {
+//					cout << "Enter new Last name: ";
+//					cin >> current->data.LastName;
+//					cout << "Student's information is edited" << endl;
+//					break;
+//				}
+//				case 2: {
+//					cout << "Enter new First name: ";
+//					cin >> current->data.FirstName;
+//					cout << "Student's information is edited" << endl;
+//					break;
+//				}
+//				case 3: {
+//					cout << "Enter new Gender: ";
+//					cin >> current->data.Gender;
+//					cout << "Student's information is edited" << endl;
+//					break;
+//				}
+//				case 4: {
+//					cout << "Enter new Day of Birth (d m y): " << endl;
+//					cin >> current->data.DOB.y >> current->data.DOB.m >> current->data.DOB.d;
+//					cout << "Student's information is edited" << endl;
+//					break;
+//				}
+//				}
+//			}
+//			else
+//				current = current->next;
+//		}
+//	}
+//	else
+//		return;
+//}
+
+//void DeleteStudent(StudentList & list, const string & ID)
+//{
+//	StudentList::node * current = list.head;
+//	StudentList::node * previous = nullptr;
+//
+//	while (current != nullptr)
+//	{
+//		if (current->data.ID == ID)
+//		{
+//			if (current == list.head)
+//			{
+//				list.head = list.head->next;
+//				delete current;
+//				break;
+//			}
+//			else
+//			{
+//				previous->next = current->next;
+//				delete current;
+//				break;
+//			}
+//		}
+//		else
+//		{
+//			previous = current;
+//			current = current->next;
+//		}
+//	}
+//}

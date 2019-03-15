@@ -1,6 +1,8 @@
 #pragma once
 
+#include "_FILES_.h"
 #include <iostream>
+#include <iomanip> // setw, setfill
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -12,24 +14,33 @@ struct Birth {
 };
 
 struct Student {
-	// ID and info of current node
 	string ID;
 	string LastName, FirstName;
 	string Gender;
 	Birth DOB;
-	// next node
-	Student * next;
 };
 
 struct StudentList {
-	// each student is a node
-	Student * head = nullptr;
+	struct node {
+		Student data;
+		node * next;
+	};
+	node * head = nullptr;
+
+	void AddStudent(Student New) {
+		node * newnode = new node {New, nullptr};
+		newnode->next = head;
+		head = newnode;
+	}
 };
 
-Student *getStudent(string, string, string, string, Birth);
-void ShowInfo(const string, const StudentList &);
-void ImportStudents(const char * filepath, StudentList & list);
-void ExportStudents(const char * filepath, const StudentList & list);
-void CreateStudent(StudentList & list);
-void EditStudent(StudentList & list, const string & ID);
-void DeleteStudent(StudentList & list, const string & ID);
+void ImportStudents(const string & filepath, StudentList & CurrentList);
+void ShowInfo(const string & ID, const StudentList & list);
+
+void UpdateStudentFile(const string & ClassID, const StudentList & list);
+void LoadStudents(const string & ClassID, StudentList & CurrentList);
+
+// void ExportStudents(const char * filepath, const StudentList & list);
+// void CreateStudent(StudentList & list);
+// void EditStudent(StudentList & list, const string & ID);
+//void DeleteStudent(StudentList & list, const string & ID);
