@@ -111,7 +111,7 @@ void Menu_Admin(const string & ID) {
 			cout << "Usage: tload <Class ID>\n";
 		}
 		else if (c.substr(0, strlen("tload")) == "tload") {
-			string ClassID = c.substr(strlen("tload") + 1);
+			ClassID = c.substr(strlen("tload") + 1);
 			if (ClassID.find_first_not_of(' ') != string::npos) {
 				LoadStudents(ClassID, CurrentList);
 			}
