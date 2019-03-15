@@ -1,6 +1,7 @@
 #pragma once
 
 #include "_FILES_.h"
+#include "Login.h"
 #include <iostream>
 #include <iomanip> // setw, setfill
 #include <string>
@@ -42,13 +43,15 @@ struct StudentList {
 	}
 };
 
-void ImportStudents(const string & filepath, StudentList & CurrentList);
+void ImportStudents(string & ClassID, StudentList & CurrentList);
 void ShowInfo(const string & ID, const StudentList & list);
 
 void UpdateStudentFile(const string & ClassID, const StudentList & list);
-void LoadStudents(const string & ClassID, StudentList & CurrentList);
+void LoadStudents(string & ClassID, StudentList & CurrentList);
+void CreateStudent(const string & ClassID, StudentList & list);
 
 // void ExportStudents(const char * filepath, const StudentList & list);
-// void CreateStudent(StudentList & list);
-// void EditStudent(StudentList & list, const string & ID);
-//void DeleteStudent(StudentList & list, const string & ID);
+void EditStudent(StudentList & list, const string & ID);
+void DeleteStudent(StudentList & list, const string & ID, const string & ClassID);
+
+void ListStudents(const StudentList & list);
