@@ -178,7 +178,7 @@ void ChangePassword(const string & ID, const char & AccessClass) {
 void CreateLogin(const string & StudentID, const string & ClassID) {
 	fstream LoginList;
 	LoginList.open(GetPath("Login/Student.txt"), fstream::app);
-	LoginList << endl << StudentID << "@" << ClassID << ",da39a3ee5e6b4b0d3255bfef95601890afd80709";
+	LoginList << StudentID << "@" << ClassID << ",da39a3ee5e6b4b0d3255bfef95601890afd80709" << endl;
 }
 
 void DeleteLogin(const string & StudentID, const string & ClassID) {
@@ -202,7 +202,7 @@ void DeleteLogin(const string & StudentID, const string & ClassID) {
 	LoginList_new.open(GetPath("Login/Student.txt"));
 	Login_LinkedList::node * current = l.head;
 	while (current != nullptr) {
-		LoginList_new << endl << current->ID << ',' << current->Password;
+		LoginList_new << current->ID << ',' << current->Password << endl;
 		current = current->next;
 	}
 
