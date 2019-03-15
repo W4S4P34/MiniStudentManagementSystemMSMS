@@ -1,4 +1,5 @@
 #include "Menu.h"
+#include "Student.h"
 
 void ShowMenu(const char & AccessClass) {
 	cout << "COMMAND LIST:\n"
@@ -81,6 +82,9 @@ void ShowMenu(const char & AccessClass) {
 }
 
 void Interpret(const string & ID, const char & AccessClass) {
+	StudentList CurrentList;
+
+	// commands
 	do {
 		string c;
 		cout << "(" << ID << ")>";
@@ -90,7 +94,7 @@ void Interpret(const string & ID, const char & AccessClass) {
 		for (size_t i = 0; i < c.length(); i++)
 			c[i] = ::tolower(c[i]);
 
-		if (c == "-") break;
+		if (c == "-" || c == "logout") break;
 		else if (c == "i") cout << "Show user information";
 		else if (c == "?") ShowMenu(AccessClass);
 		else if (c == "cls") system("CLS");
@@ -115,7 +119,27 @@ void Interpret(const string & ID, const char & AccessClass) {
 				break;
 
 			case AC_ADMIN:
-				if (c == "t1") { cout << c; }
+				if (c == "t1") {
+					cout << "Enter filename: ";
+					string filename;
+					getline(cin, filename);
+					cout << GetPath("../import/student_info/" + filename) << endl;
+					ImportStudents(GetPath("../import/student_info/" + filename), CurrentList);
+				}
+				// temporary
+				else if (c == "tlookup") {
+					cout << "Enter student ID: ";
+					string StudentID;
+					getline(cin, StudentID);
+					ShowInfo(StudentID, CurrentList);
+				}
+				// also temporary
+				else if (c == "tload") {
+					cout << "Enter class ID: ";
+					string ClassID;
+					getline(cin, ClassID);
+					LoadStudents(ClassID, CurrentList);
+				}
 				else if (c == "t2") { cout << c; }
 				else if (c == "t3") { cout << c; }
 				else if (c == "t4") { cout << c; }
