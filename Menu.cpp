@@ -97,6 +97,7 @@ void Menu_Admin(const string & ID) {
 		for (size_t i = 0; i < c.length(); i++)
 			c[i] = ::tolower(c[i]);
 
+<<<<<<< HEAD
 		if (c == "logout" || c == "-") { break; }
 		else if (c == "quit") { exit(EXIT_SUCCESS); }
 		else if (c == "cls") { system("CLS"); }
@@ -105,6 +106,100 @@ void Menu_Admin(const string & ID) {
 
 		else if (c == "timport") {
 			ImportStudents(ClassID, CurrentList);
+=======
+		if (c == "-" || c == "logout") break;
+		else if (c == "i") cout << "Show user information";
+		else if (c == "?") ShowMenu(AccessClass);
+		else if (c == "cls") system("CLS");
+		else if (c == "*") ChangePassword(ID, AccessClass);
+		else if (c == "quit" || c == "exit") exit(EXIT_SUCCESS);
+
+		else switch (AccessClass) {
+			case AC_STUDENT:
+				if (c == "c") { cout << c; }
+				else if (c == "h") { cout << c; }
+				else if (c == "s") { cout << c; }
+				else if (c == "r") { cout << c; }
+				break;
+
+			case AC_LECTURER:
+				if (c == "c1") { cout << c; }
+				else if (c == "c2") { cout << c; }
+				else if (c == "a1") { cout << c; }
+				else if (c == "a2") { cout << c; }
+				else if (c == "s1") { cout << c; }
+				else if (c == "s2") { cout << c; }
+				else if (c == "s3") { cout << c; }
+				break;
+
+			case AC_ADMIN:
+				if (c == "timport") {
+					ImportStudents(ClassID, CurrentList);
+				}
+				else if (c == "tlookup") {
+					cout << "Enter student ID: ";
+					string StudentID;
+					getline(cin, StudentID);
+					ShowInfo(StudentID, CurrentList);
+				}
+				else if (c == "tload") {
+					cout << "Enter class ID: ";
+					getline(cin, ClassID);
+					LoadStudents(ClassID, CurrentList);
+				}
+				else if (c == "tadd") {
+					CreateStudent(ClassID, CurrentList);
+				}
+				else if (c == "tdelete") {
+					cout << "Enter student ID: ";
+					string StudentID;
+					getline(cin, StudentID);
+					DeleteStudent(CurrentList, StudentID, ClassID);
+				}
+				else if (c == "tclass") {
+					cout << "Current class = " << ClassID << ".\n";
+				}
+				else if (c == "tedit") {
+					cout << "Enter student ID: ";
+					string StudentID;
+					getline(cin, StudentID);
+					EditStudent(CurrentList, StudentID, ClassID);
+				}
+				else if (c == "tlist") {
+					ListStudents(CurrentList);
+				}
+				else if (c == "t3") { cout << c; }
+				else if (c == "t4") { cout << c; }
+				else if (c == "t5") { cout << c; }
+				else if (c == "t6") { cout << c; }
+				else if (c == "t7") { cout << c; }
+				else if (c == "y1") { cout << c; }
+				else if (c == "y2") { cout << c; }
+				else if (c == "y3") { cout << c; }
+				else if (c == "y4") { cout << c; }
+				else if (c == "y5") { cout << c; }
+				else if (c == "y6") { cout << c; }
+				else if (c == "y7") { cout << c; }
+				else if (c == "y8") { cout << c; }
+				else if (c == "c1") { cout << c; }
+				else if (c == "c2") { cout << c; }
+				else if (c == "c3") { cout << c; }
+				else if (c == "c4") { cout << c; }
+				else if (c == "c5") { cout << c; }
+				else if (c == "c6") { cout << c; }
+				else if (c == "c7") { cout << c; }
+				else if (c == "l1") { cout << c; }
+				else if (c == "l2") { cout << c; }
+				else if (c == "l3") { cout << c; }
+				else if (c == "l4") { cout << c; }
+				else if (c == "s1") { cout << c; }
+				else if (c == "s2") { cout << c; }
+				else if (c == "s3") { cout << c; }
+				else if (c == "a1") { cout << c; }
+				else if (c == "a2") { cout << c; }
+				else if (c == "a3") { cout << c; }
+				break;
+>>>>>>> parent of 8b42392... Revert "Fix Edit Student"
 		}
 
 		else if (c == "tload") {
