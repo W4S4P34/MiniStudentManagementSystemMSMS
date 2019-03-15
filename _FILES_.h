@@ -3,13 +3,11 @@
 #include <string>
 using namespace std;
 
-// Logins
-//constexpr auto LOGIN_LIST_ADMIN = "/Users/User/GitHub/MSMS/data/Login/Admin.txt";
-//constexpr auto LOGIN_LIST_LECTURER = "/Users/User/GitHub/MSMS/data/Login/Lecturer.txt";
-//constexpr auto LOGIN_LIST_STUDENT = "/Users/User/GitHub/MSMS/data/Login/Student.txt";
+// Thai's Base path
+constexpr auto BASE_PATH = "/Users/HP/GitHub Source/MSMS--G1/data/";
 
 // Base path
-constexpr auto BASE_PATH = "/Users/User/GitHub/MSMS/data/";
+//constexpr auto BASE_PATH = "/Users/User/GitHub/MSMS/data/";
 
 // Login files
 constexpr auto LOGIN_LIST_ADMIN = "Login/Admin.txt";
