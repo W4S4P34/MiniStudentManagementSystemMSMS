@@ -51,7 +51,6 @@ string GetPassword() {
 	const char RETURN = 13; // CR; 10=LF
 
 	string Password;
-	string skip;
 	unsigned char c;
 	while ((c = _getch()) != RETURN) {
 		if (c == BACKSPACE) {
@@ -62,7 +61,7 @@ string GetPassword() {
 			}
 		}
 		else if (c == 0 || c == 224) {
-			cin.clear();
+			_getch();
 			continue;
 		}
 		else if (c >= 32 && c <= 126) {

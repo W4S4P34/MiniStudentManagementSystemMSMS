@@ -4,7 +4,7 @@
 using namespace std;
 
 // Thai
-constexpr auto BASE_PATH = "/Users/HP/GitHub Source/MSMS--G1/data/";
+// constexpr auto BASE_PATH = "/Users/HP/GitHub Source/MSMS--G1/data/";
 
 // Alec
 // constexpr auto BASE_PATH = "E:/Github/StudentManagerProgram-SMP--G1/data/";

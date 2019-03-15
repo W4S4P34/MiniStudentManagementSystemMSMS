@@ -154,7 +154,7 @@ void Interpret(const string & ID, const char & AccessClass) {
 					cout << "Enter student ID: ";
 					string StudentID;
 					getline(cin, StudentID);
-					EditStudent(CurrentList, StudentID, ClassID);
+					EditStudent(CurrentList, StudentID);
 				}
 				else if (c == "tlist") {
 					ListStudents(CurrentList);
