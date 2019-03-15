@@ -6,6 +6,8 @@ using namespace std;
 // Thai's Base path
 constexpr auto BASE_PATH = "/Users/HP/GitHub Source/MSMS--G1/data/";
 
+//Base path of Alec: E:/Github/StudentManagerProgram-SMP--G1/data;
+
 // Base path
 //constexpr auto BASE_PATH = "/Users/User/GitHub/MSMS/data/";
 
