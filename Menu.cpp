@@ -33,13 +33,16 @@ void ShowMenu(const char & AccessClass) {
 		case AC_ADMIN:
 			cout << "------------------------------\n\n"
 				<< "STUDENTS AND CLASSES\n"
-				<< "[T1] Import students of a class (from a CSV file)\n"
-				<< "[T2] Add a student to a class\n"
-				<< "[T3] Change a student from class A to class B\n"
-				<< "[T4] Edit a student\n"
-				<< "[T5] Remove a student\n"
+				<< "timport : Import students of a class (from a CSV file)\n"
+				<< "tload   : Load a class from the database\n"
+				<< "tclass  : Show current working class\n"
+				<< "tlookup : Find information of a student\n"
+				<< "tadd    : Add a student to a class\n"
+				<< "tedit   : Edit a student\n"
+				<< "tdelete : Remove a student\n"
+				<< "tlist   : View list of students in a class\n";
+				/*<< "[T3] Change a student from class A to class B\n"
 				<< "[T6] View list of classes\n"
-				<< "[T7] View list of students in a class\n"
 				<< "\n"
 				<< "ACADEMIC YEARS AND SEMESTERS\n"
 				<< "[Y1] Create an academic year\n"
@@ -74,7 +77,7 @@ void ShowMenu(const char & AccessClass) {
 				<< "ATTENDANCE LISTS\n"
 				<< "[A1] Search attendance list of a course\n"
 				<< "[A2] View attendance list of a course\n"
-				<< "[A3] Export attendance list (to a CSV file)\n";
+				<< "[A3] Export attendance list (to a CSV file)\n";*/
 			break;
 	}
 	
@@ -83,11 +86,12 @@ void ShowMenu(const char & AccessClass) {
 
 void Interpret(const string & ID, const char & AccessClass) {
 	StudentList CurrentList;
+	string ClassID;
 
 	// commands
 	do {
 		string c;
-		cout << "(" << ID << ")>";
+		cout << "(" << ID << ")> ";
 		getline(cin, c);
 
 		// case-insensitivity
@@ -99,6 +103,7 @@ void Interpret(const string & ID, const char & AccessClass) {
 		else if (c == "?") ShowMenu(AccessClass);
 		else if (c == "cls") system("CLS");
 		else if (c == "*") ChangePassword(ID, AccessClass);
+		else if (c == "quit" || c == "exit") exit(EXIT_SUCCESS);
 
 		else switch (AccessClass) {
 			case AC_STUDENT:
@@ -119,28 +124,41 @@ void Interpret(const string & ID, const char & AccessClass) {
 				break;
 
 			case AC_ADMIN:
-				if (c == "t1") {
-					cout << "Enter filename: ";
-					string filename;
-					getline(cin, filename);
-					cout << GetPath("../import/student_info/" + filename) << endl;
-					ImportStudents(GetPath("../import/student_info/" + filename), CurrentList);
+				if (c == "timport") {
+					ImportStudents(ClassID, CurrentList);
 				}
-				// temporary
 				else if (c == "tlookup") {
 					cout << "Enter student ID: ";
 					string StudentID;
 					getline(cin, StudentID);
 					ShowInfo(StudentID, CurrentList);
 				}
-				// also temporary
 				else if (c == "tload") {
 					cout << "Enter class ID: ";
-					string ClassID;
 					getline(cin, ClassID);
 					LoadStudents(ClassID, CurrentList);
 				}
-				else if (c == "t2") { cout << c; }
+				else if (c == "tadd") {
+					CreateStudent(ClassID, CurrentList);
+				}
+				else if (c == "tdelete") {
+					cout << "Enter student ID: ";
+					string StudentID;
+					getline(cin, StudentID);
+					DeleteStudent(CurrentList, StudentID, ClassID);
+				}
+				else if (c == "tclass") {
+					cout << "Current class = " << ClassID << ".\n";
+				}
+				else if (c == "tedit") {
+					cout << "Enter student ID: ";
+					string StudentID;
+					getline(cin, StudentID);
+					EditStudent(CurrentList, StudentID);
+				}
+				else if (c == "tlist") {
+					ListStudents(CurrentList);
+				}
 				else if (c == "t3") { cout << c; }
 				else if (c == "t4") { cout << c; }
 				else if (c == "t5") { cout << c; }
