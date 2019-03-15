@@ -51,7 +51,7 @@ void LoadStudents(string & ClassID, StudentList & CurrentList);
 void CreateStudent(const string & ClassID, StudentList & list);
 
 // void ExportStudents(const char * filepath, const StudentList & list);
-void EditStudent(StudentList & list, const string & ID);
+void EditStudent(StudentList & list, const string & ID, const string & ClassID);
 void DeleteStudent(StudentList & list, const string & ID, const string & ClassID);
 
 void ListStudents(const StudentList & list);

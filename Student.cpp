@@ -158,7 +158,7 @@ void CreateStudent(const string & ClassID, StudentList & list) {
 	cout << "Successfully created student " << ID << " in class " << ClassID << ".\n";
 }
 
-void EditStudent(StudentList & list, const string & ID) {
+void EditStudent(StudentList & list, const string & ID, const string & ClassID) {
 	StudentList::node * current = list.head;
 	while (current != nullptr) {
 		if (current->data.ID == ID)
@@ -182,26 +182,36 @@ void EditStudent(StudentList & list, const string & ID) {
 	switch (info) {
 		case 1: {
 			cout << "Enter new Last name: ";
-			cin >> current->data.LastName;
+			while (cin.get() != '\n');
+			getline(cin, current->data.LastName, '\n');
 			break;
 		}
 		case 2: {
 			cout << "Enter new First name: ";
-			cin >> current->data.FirstName;
+			while (cin.get() != '\n');
+			getline(cin, current->data.FirstName, '\n');
 			break;
 		}
 		case 3: {
 			cout << "Enter new Gender: ";
-			cin >> current->data.Gender;
+			while (cin.get() != '\n');
+			getline(cin, current->data.Gender, '\n');
 			break;
 		}
 		case 4: {
 			cout << "Enter new Day of Birth (yyyy mm dd): " << endl;
-			cin >> current->data.DOB.y >> current->data.DOB.m >> current->data.DOB.d;
+			cout << "Year: ";
+			cin >> current->data.DOB.y;
+			cout << "Month: ";
+			cin >> current->data.DOB.m;
+			cout << "Day: ";
+			cin >> current->data.DOB.d;
+			while (cin.get() != '\n');
 			break;
 		}
 	}
 	cout << "Student's info edited.\n";
+	UpdateStudentFile(ClassID, list);
 }
 
 void DeleteStudent(StudentList & list, const string & ID, const string & ClassID)

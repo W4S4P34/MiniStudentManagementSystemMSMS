@@ -1,0 +1,40 @@
+18CLC6
+18125115,Nguyen Nhat,Toan,Male,2000-09-04
+18127068,Bui Nguyen Minh,Chau,Female,2000-07-11
+18127244,Bui Ta Duc,Tuan,Male,2000-06-15
+18127132,Bui Thanh,Long,Male,2000-05-24
+18127221,Bui Van,Thien,Male,2000-06-30
+18127185,Bui Vu Hieu,Phung,Female,2000-09-01
+18127103,Cao Gia,Hung,Male,2000-01-25
+18127196,Cao Nguyen An,Son,Male,2000-11-23
+18127197,Dang Khanh,Son,Male,2000-07-16
+18127172,Dang Nguyen Quynh,Nhu,Female,2000-01-05
+18127083,Dang Quang,Dung,Male,2000-06-12
+18127082,Dang Thi Kim,Dung,Female,2000-12-24
+18127101,Dao Le Viet,Hoang,Male,2000-02-28
+18127084,Dinh Hoang,Duong,Male,2000-05-24
+18127252,Dinh Thanh,Viet,Male,2000-10-12
+18127189,Do Duc,Quang,Male,2000-09-06
+18127105,Do Quoc,Huy,Male,2000-02-17
+18127231,Doan Dinh,Toan,Male,2000-11-26
+18127187,Duong Ngoc Nguyen,Phuong,Female,2000-10-22
+18127175,Duong Tan,Phat,Male,2000-01-11
+18127087,Duong Tran Man,Duy,Male,2000-02-06
+18127170,Duong Trung,Nhat,Male,1996-03-03
+18127209,Ha Minh,Thanh,Male,2000-10-14
+18127097,Ha The,Hien,Male,2000-06-03
+18127251,Ho Huu,Vien,Male,2000-03-03
+18127151,Ho,Minh,Male,2000-04-07
+18127193,Ho Pham Nam,Quoc,Male,2000-09-10
+18127179,Ho Tran Hoang,Phuc,Male,2000-07-12
+18127124,Hoang Xuan,Kiet,Male,2000-11-06
+18127149,Hua Minh,Man,Male,2000-11-15
+18127126,Huynh Duc,Le,Male,2000-01-18
+18127106,Huynh Nguyen Nhat Quang,Huy,Male,2000-05-19
+18127164,Huynh Thien,Nhan,Male,2000-09-19
+18127195,Hy Phu,Quyen,Male,2000-04-15
+18127146,Khuu Vi,Luan,Male,2000-04-19
+18127080,Kieu Vu Minh,Duc,Male,2000-05-03
+18127133,La Hoang,Long,Male,2000-11-13
+18127207,La Thanh,Thai,Male,2000-05-19
+18127088,Le Cao,Duy,Male,2000-06-08
