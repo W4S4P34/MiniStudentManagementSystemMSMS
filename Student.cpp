@@ -181,27 +181,19 @@ void EditStudent(StudentList & list, const string & ID, const string & ClassID) 
 	switch (info) {
 		case 1: {
 			cout << "Enter new Last name: ";
-<<<<<<< HEAD
-			getline(cin, current->data.LastName);
-=======
 			while (cin.get() != '\n');
 			getline(cin, current->data.LastName, '\n');
->>>>>>> parent of 8b42392... Revert "Fix Edit Student"
 			break;
 		}
 		case 2: {
 			cout << "Enter new First name: ";
-<<<<<<< HEAD
-			getline(cin, current->data.FirstName);
-=======
 			while (cin.get() != '\n');
 			getline(cin, current->data.FirstName, '\n');
->>>>>>> parent of 8b42392... Revert "Fix Edit Student"
 			break;
 		}
 		case 3: {
 			cout << "Enter new Gender: ";
-<<<<<<< HEAD
+			while (cin.get() != '\n');
 			getline(cin, current->data.Gender);
 			break;
 		}
@@ -210,20 +202,6 @@ void EditStudent(StudentList & list, const string & ID, const string & ClassID) 
 			cout << "Year: "; cin >> current->data.DOB.y;
 			cout << "Month: "; cin >> current->data.DOB.m;
 			cout << "Day: "; cin >> current->data.DOB.d;
-=======
-			while (cin.get() != '\n');
-			getline(cin, current->data.Gender, '\n');
-			break;
-		}
-		case 4: {
-			cout << "Enter new Day of Birth (yyyy mm dd): " << endl;
-			cout << "Year: ";
-			cin >> current->data.DOB.y;
-			cout << "Month: ";
-			cin >> current->data.DOB.m;
-			cout << "Day: ";
-			cin >> current->data.DOB.d;
->>>>>>> parent of 8b42392... Revert "Fix Edit Student"
 			while (cin.get() != '\n');
 			break;
 		}

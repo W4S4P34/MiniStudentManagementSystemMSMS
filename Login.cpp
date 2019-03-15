@@ -62,10 +62,6 @@ string GetPassword() {
 			}
 		}
 		else if (c == 0 || c == 224) {
-<<<<<<< HEAD
-			// _getch();
-=======
->>>>>>> parent of 8b42392... Revert "Fix Edit Student"
 			cin.clear();
 			continue;
 		}
