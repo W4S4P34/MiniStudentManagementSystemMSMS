@@ -7,16 +7,14 @@ using namespace std;
 struct Class {
 	string ID;
 	StudentList Students;
-	Class * next;
-};
-
-struct ClassNode {
-	Class data;
-	ClassNode * next;
 };
 
 struct ClassList {
-	ClassNode * head = nullptr;
+	struct node {
+		Class data;
+		node * next;
+	};
+	node * head = nullptr;
 };
 
 void ListClasses(const ClassList & list);
