@@ -37,12 +37,12 @@ void LoginMenu(string & ID, char & AccessClass) {
 		if (ID == "quit") exit(EXIT_SUCCESS);
 		string Password;
 		cout << "Password: ";
-		// getline(cin, Password);
 		Password = GetPassword();
+		cout << "\n";
 		AccessClass = Authenticate(ID, Password);
 	} while (
 		AccessClass == AC_INVALID
-		&& cout << "\nInvalid login details.\n\n"
+		&& cout << "Invalid login details.\n\n"
 	);
 }
 
@@ -72,7 +72,7 @@ string GetPassword() {
 	return Password;
 }
 
-char Authenticate(const string & ID, const string & Password) {
+char Authenticate(string & ID, const string & Password) {
 	ifstream LoginList;
 	char AccessClass;
 
@@ -97,13 +97,28 @@ char Authenticate(const string & ID, const string & Password) {
 		return AC_INVALID;
 	}
 
-	string ID_compare, Password_compare;
-	while (!LoginList.eof()) {
-		getline(LoginList, ID_compare, ',');
-		getline(LoginList, Password_compare, '\n');
-		if (ID_compare == ID && sha1(Password) == Password_compare) {
+	if (AccessClass == AC_STUDENT) {
+		string ID_compare, Password_compare, skip;
+		while (!LoginList.eof()) {
+			getline(LoginList, ID_compare, '@');
+			getline(LoginList, skip, ',');
+			getline(LoginList, Password_compare, '\n');
+			if (ID_compare == ID && sha1(Password) == Password_compare) {
+				LoginList.close();
+				ID = ID_compare + '@' + skip;
+				return AccessClass;
+			}
+		}
+	}
+	else {
+		string ID_compare, Password_compare;
+		while (!LoginList.eof()) {
+			getline(LoginList, ID_compare, ',');
+			getline(LoginList, Password_compare, '\n');
+			if (ID_compare == ID && sha1(Password) == Password_compare) {
 				LoginList.close();
 				return AccessClass;
+			}
 		}
 	}
 	return AC_INVALID;
@@ -131,9 +146,11 @@ void ChangePassword(const string & ID, const char & AccessClass) {
 	string Password_new;
 	string Password_new_re;
 	cout << "Enter new password: ";
-	getline(cin, Password_new);
+	Password_new = GetPassword();
+	cout << "\n";
 	cout << "Re-enter new password: ";
-	getline(cin, Password_new_re);
+	Password_new_re = GetPassword();
+	cout << "\n";
 
 	if (Password_new != Password_new_re) {
 		cout << "Passwords do not match. Operation aborted.\n";
@@ -155,4 +172,38 @@ void ChangePassword(const string & ID, const char & AccessClass) {
 	}
 
 	LoginList.close();
+}
+
+void CreateLogin(const string & StudentID, const string & ClassID) {
+	fstream LoginList;
+	LoginList.open(GetPath("Login/Student.txt"), fstream::app);
+	LoginList << endl << StudentID << "@" << ClassID << ",da39a3ee5e6b4b0d3255bfef95601890afd80709";
+}
+
+void DeleteLogin(const string & StudentID, const string & ClassID) {
+	ifstream LoginList;
+	LoginList.open(GetPath("Login/Student.txt"));
+	Login_LinkedList l;
+	string ID, Password, skip;
+	string ID_to_Compare = StudentID + '@' + ClassID;
+	getline(LoginList, skip);
+	while (!LoginList.eof()) {
+		getline(LoginList, ID, ',');
+		getline(LoginList, Password, '\n');
+		l.Add(ID, Password);
+	}
+	l.Remove(ID_to_Compare);
+	LoginList.close();
+
+	//--------------------
+
+	ofstream LoginList_new;
+	LoginList_new.open(GetPath("Login/Student.txt"));
+	Login_LinkedList::node * current = l.head;
+	while (current != nullptr) {
+		LoginList_new << endl << current->ID << ',' << current->Password;
+		current = current->next;
+	}
+
+	LoginList_new.close();
 }
