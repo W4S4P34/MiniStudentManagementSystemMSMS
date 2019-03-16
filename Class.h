@@ -2,7 +2,9 @@
 
 #include "Student.h"
 #include <string>
+#include <filesystem>
 using namespace std;
+namespace fs = std::experimental::filesystem;
 
 struct Class {
 	string ID;
@@ -18,4 +20,5 @@ struct ClassList {
 };
 
 void ListClasses(const ClassList & list);
+void ListClasses();
 void ListStudents(const ClassList & list, string ClassID);
