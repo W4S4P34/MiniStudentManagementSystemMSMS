@@ -1,6 +1,20 @@
 #include "Student.h"
 
-void ImportStudents(string & ClassID, StudentList & CurrentList) {
+void StudentList::AddStudent(Student New) {
+	node * newnode = new node{ New, nullptr };
+	newnode->next = head;
+	head = newnode;
+}
+
+StudentList::~StudentList() {
+	while (head != nullptr) {
+		node * current = head;
+		head = current->next;
+		delete current;
+	}
+}
+
+void ImportStudents(StudentList & CurrentList, string & ClassID) {
 	cout << "Enter filename: ";
 	string filename;
 	getline(cin, filename);
@@ -55,18 +69,22 @@ void ImportStudents(string & ClassID, StudentList & CurrentList) {
 		CreateLogin(ID, ClassID);
 	}
 
-	UpdateStudentFile(ClassID, temp);
+	UpdateStudentFile(temp, ClassID);
 	cout << "Successfully imported.\n";
 
 	temp.~StudentList();
 
-	LoadStudents(ClassID, CurrentList);
+	LoadStudents(CurrentList, ClassID);
 }
 
-void ShowInfo(const string & ID, const StudentList & list) {
-	StudentList::node * current = list.head;
+void ShowInfo(const StudentList & CurrentList, const string & ClassID, const string & StudentID) {
+	if (ClassID.empty()) {
+		cout << "ERROR: No class loaded.\n";
+		return;
+	}
+	StudentList::node * current = CurrentList.head;
 	while (current != nullptr) {
-		if (ID == current->data.ID) {
+		if (StudentID == current->data.ID) {
 			cout << "ID: " << current->data.ID << endl;
 			cout << "Full Name: " << current->data.LastName << " " << current->data.FirstName << endl;
 			cout << "Gender: " << current->data.Gender << endl;
@@ -75,10 +93,10 @@ void ShowInfo(const string & ID, const StudentList & list) {
 		}
 		current = current->next;
 	}
-	cout << "Student " << ID << " not found.\n";
+	cout << "Student " << StudentID << " not found.\n";
 }
 
-void UpdateStudentFile(const string & ClassID, const StudentList & list) {
+void UpdateStudentFile(const StudentList & CurrentList, const string & ClassID) {
 	ofstream file;
 	file.open(GetPath("Classes/" + ClassID + ".txt"));
 	if (!file.is_open()) {
@@ -86,7 +104,7 @@ void UpdateStudentFile(const string & ClassID, const StudentList & list) {
 		return;
 	}
 	file << ClassID;
-	StudentList::node * current = list.head;
+	StudentList::node * current = CurrentList.head;
 	while (current != nullptr) {
 		file << endl
 			<< current->data.ID << ","
@@ -102,7 +120,7 @@ void UpdateStudentFile(const string & ClassID, const StudentList & list) {
 	cout << "Successfully updated " << ClassID << ".\n";
 }
 
-void LoadStudents(string & ClassID, StudentList & CurrentList) {
+void LoadStudents(StudentList & CurrentList, string & ClassID) {
 	for (size_t i = 0; i < ClassID.length(); i++)
 		ClassID[i] = ::toupper(ClassID[i]);
 
@@ -140,7 +158,11 @@ void LoadStudents(string & ClassID, StudentList & CurrentList) {
 	cout << "Successfully loaded " << ClassID << ".\n";
 }
 
-void CreateStudent(const string & ClassID, StudentList & list) {
+void CreateStudent(StudentList & CurrentList, const string & ClassID) {
+	if (ClassID.empty()) {
+		cout << "ERROR: No class loaded.\n";
+		return;
+	}
 	string ID, LastName, FirstName, Gender;
 	Birth DOB;
 	cout << "ID: "; getline(cin, ID);
@@ -151,22 +173,26 @@ void CreateStudent(const string & ClassID, StudentList & list) {
 	cout << "Birth/Month: "; cin >> DOB.m;
 	cout << "Birth/Day: "; cin >> DOB.d;
 	while (cin.get() != '\n');
-	list.AddStudent({ ID, LastName, FirstName, Gender, DOB });
+	CurrentList.AddStudent({ ID, LastName, FirstName, Gender, DOB });
 	CreateLogin(ID, ClassID);
-	UpdateStudentFile(ClassID, list);
+	UpdateStudentFile(CurrentList, ClassID);
 	cout << "Successfully created student " << ID << " in class " << ClassID << ".\n";
 }
 
-void EditStudent(StudentList & list, const string & ID, const string & ClassID) {
-	StudentList::node * current = list.head;
+void EditStudent(StudentList & CurrentList, const string & ClassID, const string & StudentID) {
+	if (ClassID.empty()) {
+		cout << "ERROR: No class loaded.\n";
+		return;
+	}
+	StudentList::node * current = CurrentList.head;
 	while (current != nullptr) {
-		if (current->data.ID == ID)
+		if (current->data.ID == StudentID)
 			break;
 		else
 			current = current->next;
 	}
 	if (current == nullptr) {
-		cout << "Student " << ID << " not found.\n";
+		cout << "Student " << StudentID << " not found.\n";
 		return;
 	}
 
@@ -204,23 +230,25 @@ void EditStudent(StudentList & list, const string & ID, const string & ClassID) 
 			break;
 		}
 	}
-	UpdateStudentFile(ClassID, list);
+	UpdateStudentFile(CurrentList, ClassID);
 	cout << "Student's info edited.\n";
-	UpdateStudentFile(ClassID, list);
 }
 
-void DeleteStudent(StudentList & list, const string & ID, const string & ClassID)
-{
-	StudentList::node * current = list.head;
+void DeleteStudent(StudentList & CurrentList, const string & ClassID, const string & StudentID) {
+	if (ClassID.empty()) {
+		cout << "ERROR: No class loaded.\n";
+		return;
+	}
+	StudentList::node * current = CurrentList.head;
 	StudentList::node * previous = nullptr;
 
 	while (current != nullptr)
 	{
-		if (current->data.ID == ID)
+		if (current->data.ID == StudentID)
 		{
-			if (current == list.head)
+			if (current == CurrentList.head)
 			{
-				list.head = list.head->next;
+				CurrentList.head = CurrentList.head->next;
 				delete current;
 				break;
 			}
@@ -243,12 +271,16 @@ void DeleteStudent(StudentList & list, const string & ID, const string & ClassID
 		}
 	}
 
-	DeleteLogin(ID, ClassID);
-	UpdateStudentFile(ClassID, list);
+	DeleteLogin(StudentID, ClassID);
+	UpdateStudentFile(CurrentList, ClassID);
 }
 
-void ListStudents(const StudentList & list) {
-	StudentList::node * current = list.head;
+void ListStudents(const StudentList & CurrentList, const string & ClassID) {
+	if (ClassID.empty()) {
+		cout << "ERROR: No class loaded.\n";
+		return;
+	}
+	StudentList::node * current = CurrentList.head;
 	while (current != nullptr) {
 		cout << current->data.ID << ", "
 			<< current->data.LastName << " " << current->data.FirstName

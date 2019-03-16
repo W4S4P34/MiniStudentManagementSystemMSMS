@@ -28,30 +28,21 @@ struct StudentList {
 	};
 	node * head = nullptr;
 
-	void AddStudent(Student New) {
-		node * newnode = new node {New, nullptr};
-		newnode->next = head;
-		head = newnode;
-	}
-
-	~StudentList() {
-		while (head != nullptr) {
-			node * current = head;
-			head = current->next;
-			delete current;
-		}
-	}
+	void AddStudent(Student New);
+	~StudentList();
 };
 
-void ImportStudents(string & ClassID, StudentList & CurrentList);
-void ShowInfo(const string & ID, const StudentList & list);
+// CurrentList, ClassID, StudentID
 
-void UpdateStudentFile(const string & ClassID, const StudentList & list);
-void LoadStudents(string & ClassID, StudentList & CurrentList);
-void CreateStudent(const string & ClassID, StudentList & list);
+void ImportStudents(StudentList & CurrentList, string & ClassID);
+void ShowInfo(const StudentList & CurrentList, const string & ClassID, const string & StudentID);
+
+void UpdateStudentFile(const StudentList & CurrentList, const string & ClassID);
+void LoadStudents(StudentList & CurrentList, string & ClassID);
+void CreateStudent(StudentList & CurrentList, const string & ClassID);
 
 // void ExportStudents(const char * filepath, const StudentList & list);
-void EditStudent(StudentList & list, const string & ID, const string & ClassID);
-void DeleteStudent(StudentList & list, const string & ID, const string & ClassID);
+void EditStudent(StudentList & CurrentList, const string & ClassID, const string & StudentID);
+void DeleteStudent(StudentList & CurrentList, const string & ClassID, const string & StudentID);
 
-void ListStudents(const StudentList & list);
+void ListStudents(const StudentList & CurrentList, const string & ClassID);

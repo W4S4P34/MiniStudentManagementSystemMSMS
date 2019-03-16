@@ -4,6 +4,7 @@
 #include <string>
 #include <conio.h>
 #include "Login.h"
+#include "Class.h"
 using namespace std;
 
 void ShowHelp_General();

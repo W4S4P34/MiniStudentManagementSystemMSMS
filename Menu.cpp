@@ -42,10 +42,10 @@ void Menu_Student(const string & ID) {
 
 	// potentially dangerous?
 	StudentList CurrentList;
-	LoadStudents(ClassID, CurrentList);
+	LoadStudents(CurrentList, ClassID);
 
 	// Start-up script
-	ShowInfo(StudentID, CurrentList);
+	ShowInfo(CurrentList, ClassID, StudentID);
 	cout << "\n";
 	ShowHelp_General();
 	ShowHelp_Student();
@@ -64,7 +64,7 @@ void Menu_Student(const string & ID) {
 		if (c == "logout" || c == "-") { break; }
 		else if (c == "quit") { exit(EXIT_SUCCESS); }
 		else if (c == "cls") { system("CLS"); }
-		else if (c == "info") { ShowInfo(StudentID, CurrentList); }
+		else if (c == "info") { ShowInfo(CurrentList, ClassID, StudentID); }
 		else if (c == "help") { ShowHelp_General(); ShowHelp_Student(); }
 		
 		else if (c == "passwd") {
@@ -136,7 +136,7 @@ void Menu_Admin(const string & ID) {
 		}
 
 		else if (c == "timport") {
-			ImportStudents(ClassID, CurrentList);
+			ImportStudents(CurrentList, ClassID);
 		}
 
 		else if (c == "tload") {
@@ -145,7 +145,7 @@ void Menu_Admin(const string & ID) {
 		else if (c.substr(0, strlen("tload")) == "tload") {
 			ClassID = c.substr(strlen("tload") + 1);
 			if (ClassID.find_first_not_of(' ') != string::npos) {
-				LoadStudents(ClassID, CurrentList);
+				LoadStudents(CurrentList, ClassID);
 			}
 			else {
 				cout << "Usage: tload <Class ID>\n";
@@ -159,7 +159,7 @@ void Menu_Admin(const string & ID) {
 		}
 
 		else if (c == "tlist") {
-			ListStudents(CurrentList);
+			ListStudents(CurrentList, ClassID);
 		}
 
 		else if (c == "tlookup") {
@@ -168,7 +168,7 @@ void Menu_Admin(const string & ID) {
 		else if (c.substr(0, strlen("tlookup")) == "tlookup") {
 			string StudentID = c.substr(strlen("tlookup")+1);
 			if (StudentID.find_first_not_of(' ') != string::npos) {
-				ShowInfo(StudentID, CurrentList);
+				ShowInfo(CurrentList, ClassID, StudentID);
 			}
 			else {
 				cout << "Usage: tlookup <Student ID>\n";
@@ -176,7 +176,7 @@ void Menu_Admin(const string & ID) {
 		}
 
 		else if (c == "tadd") {
-			CreateStudent(ClassID, CurrentList);
+			CreateStudent(CurrentList, ClassID);
 		}
 
 		else if (c == "tedit") {
@@ -185,7 +185,7 @@ void Menu_Admin(const string & ID) {
 		else if (c.substr(0, strlen("tedit")) == "tedit") {
 			string StudentID = c.substr(strlen("tedit") + 1);
 			if (StudentID.find_first_not_of(' ') != string::npos) {
-				EditStudent(CurrentList, StudentID, ClassID);
+				EditStudent(CurrentList, ClassID, StudentID);
 			}
 			else {
 				cout << "Usage: tedit <Student ID>\n";
@@ -198,11 +198,15 @@ void Menu_Admin(const string & ID) {
 		else if (c.substr(0, strlen("tdelete")) == "tdelete") {
 			string StudentID = c.substr(strlen("tdelete") + 1);
 			if (StudentID.find_first_not_of(' ') != string::npos) {
-				DeleteStudent(CurrentList, StudentID, ClassID);
+				DeleteStudent(CurrentList, ClassID, StudentID);
 			}
 			else {
 				cout << "Usage: tdelete <Student ID>\n";
 			}
+		}
+
+		else if (c == "clist") {
+			ListClasses();
 		}
 	
 		else { cout << "Invalid command.\n"; }
