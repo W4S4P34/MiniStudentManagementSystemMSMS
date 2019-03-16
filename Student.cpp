@@ -181,19 +181,16 @@ void EditStudent(StudentList & list, const string & ID, const string & ClassID) 
 	switch (info) {
 		case 1: {
 			cout << "Enter new Last name: ";
-			while (cin.get() != '\n');
 			getline(cin, current->data.LastName, '\n');
 			break;
 		}
 		case 2: {
 			cout << "Enter new First name: ";
-			while (cin.get() != '\n');
 			getline(cin, current->data.FirstName, '\n');
 			break;
 		}
 		case 3: {
 			cout << "Enter new Gender: ";
-			while (cin.get() != '\n');
 			getline(cin, current->data.Gender);
 			break;
 		}
