@@ -32,17 +32,17 @@ struct StudentList {
 	~StudentList();
 };
 
-// CurrentList, ClassID, StudentID
+void NormalizeClassID(string & ClassID);
 
-void ImportStudents(StudentList & CurrentList, string & ClassID);
+void ImportStudents(const string & FilePath, const string & ClassID);
 void ShowInfo(const StudentList & CurrentList, const string & ClassID, const string & StudentID);
 
 void UpdateStudentFile(const StudentList & CurrentList, const string & ClassID);
-void LoadStudents(StudentList & CurrentList, string & ClassID);
-void CreateStudent(StudentList & CurrentList, const string & ClassID);
+void LoadStudents(StudentList & CurrentList, const string & ClassID);
+void CreateStudent(StudentList & CurrentList, const string & ClassID, const Student & Student_New);
 
-// void ExportStudents(const char * filepath, const StudentList & list);
 void EditStudent(StudentList & CurrentList, const string & ClassID, const string & StudentID);
 void DeleteStudent(StudentList & CurrentList, const string & ClassID, const string & StudentID);
 
 void ListStudents(const StudentList & CurrentList, const string & ClassID);
+void MoveStudent(StudentList & CurrentList, const string & ClassID_Old, const string & ClassID_New, const string & StudentID);

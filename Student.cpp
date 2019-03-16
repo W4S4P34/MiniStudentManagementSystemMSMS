@@ -14,21 +14,12 @@ StudentList::~StudentList() {
 	}
 }
 
-void ImportStudents(StudentList & CurrentList, string & ClassID) {
-	cout << "Enter filename: ";
-	string filename;
-	getline(cin, filename);
-	cout << GetPath("../import/student_info/" + filename) << endl;
-
-	cout << "Enter class ID: ";
-	getline(cin, ClassID);
-	if (ClassID.empty()) {
-		cout << "Invalid class ID.\n";
-		return;
-	}
+void NormalizeClassID(string & ClassID) {
 	for (size_t i = 0; i < ClassID.length(); i++)
 		ClassID[i] = ::toupper(ClassID[i]);
+}
 
+void ImportStudents(const string & FilePath, const string & ClassID) {
 	fstream ExistingClass;
 	ExistingClass.open(GetPath("Classes/" + ClassID + ".txt"), fstream::in);
 	if (ExistingClass.is_open()) {
@@ -38,7 +29,7 @@ void ImportStudents(StudentList & CurrentList, string & ClassID) {
 	}
 
 	ifstream file;
-	file.open(GetPath("../import/student_info/" + filename));
+	file.open(GetPath("../import/student_info/" + FilePath));
 
 	if (!file.is_open()) {
 		// return instead of forcefully killing the whole program
@@ -70,11 +61,11 @@ void ImportStudents(StudentList & CurrentList, string & ClassID) {
 	}
 
 	UpdateStudentFile(temp, ClassID);
-	cout << "Successfully imported.\n";
 
 	temp.~StudentList();
+	cout << "Successfully imported " << ClassID << ".\n";
 
-	LoadStudents(CurrentList, ClassID);
+	// LoadStudents(CurrentList, ClassID);
 }
 
 void ShowInfo(const StudentList & CurrentList, const string & ClassID, const string & StudentID) {
@@ -120,10 +111,7 @@ void UpdateStudentFile(const StudentList & CurrentList, const string & ClassID) 
 	cout << "Successfully updated " << ClassID << ".\n";
 }
 
-void LoadStudents(StudentList & CurrentList, string & ClassID) {
-	for (size_t i = 0; i < ClassID.length(); i++)
-		ClassID[i] = ::toupper(ClassID[i]);
-
+void LoadStudents(StudentList & CurrentList, const string & ClassID) {
 	ifstream file;
 	file.open(GetPath("Classes/" + ClassID + ".txt"));
 
@@ -158,25 +146,15 @@ void LoadStudents(StudentList & CurrentList, string & ClassID) {
 	cout << "Successfully loaded " << ClassID << ".\n";
 }
 
-void CreateStudent(StudentList & CurrentList, const string & ClassID) {
+void CreateStudent(StudentList & CurrentList, const string & ClassID, const Student & Student_New) {
 	if (ClassID.empty()) {
 		cout << "ERROR: No class loaded.\n";
 		return;
 	}
-	string ID, LastName, FirstName, Gender;
-	Birth DOB;
-	cout << "ID: "; getline(cin, ID);
-	cout << "Last name: "; getline(cin, LastName);
-	cout << "First name: "; getline(cin, FirstName);
-	cout << "Gender: "; getline(cin, Gender);
-	cout << "Birth/Year: "; cin >> DOB.y;
-	cout << "Birth/Month: "; cin >> DOB.m;
-	cout << "Birth/Day: "; cin >> DOB.d;
-	while (cin.get() != '\n');
-	CurrentList.AddStudent({ ID, LastName, FirstName, Gender, DOB });
-	CreateLogin(ID, ClassID);
+	CurrentList.AddStudent({ Student_New.ID, Student_New.LastName, Student_New.FirstName, Student_New.Gender, Student_New.DOB });
+	CreateLogin(Student_New.ID, ClassID);
 	UpdateStudentFile(CurrentList, ClassID);
-	cout << "Successfully created student " << ID << " in class " << ClassID << ".\n";
+	cout << "Successfully created student " << Student_New.ID << " in class " << ClassID << ".\n";
 }
 
 void EditStudent(StudentList & CurrentList, const string & ClassID, const string & StudentID) {
@@ -287,4 +265,28 @@ void ListStudents(const StudentList & CurrentList, const string & ClassID) {
 			<< endl;
 		current = current->next;
 	}
+}
+
+void MoveStudent(StudentList & CurrentList, const string & ClassID_Old, const string & ClassID_New, const string & StudentID) {
+	StudentList temp;
+	Student CurrentStudent;
+
+	StudentList::node * current = CurrentList.head;
+	while (current != nullptr) {
+		if (current->data.ID == StudentID) {
+			CurrentStudent = current->data;
+			break;
+		}
+		current = current->next;
+	}
+	if (current == nullptr) {
+		cout << "ERROR: Student " << StudentID << " not found.\n";
+		return;
+	}
+	DeleteStudent(CurrentList, ClassID_Old, CurrentStudent.ID);
+
+	LoadStudents(temp, ClassID_New);
+	CreateStudent(temp, ClassID_New, CurrentStudent);
+
+	temp.~StudentList();
 }
