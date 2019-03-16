@@ -150,6 +150,7 @@ void CreateStudent(const string & ClassID, StudentList & list) {
 	cout << "Birth/Year: "; cin >> DOB.y;
 	cout << "Birth/Month: "; cin >> DOB.m;
 	cout << "Birth/Day: "; cin >> DOB.d;
+	while (cin.get() != '\n');
 	list.AddStudent({ ID, LastName, FirstName, Gender, DOB });
 	CreateLogin(ID, ClassID);
 	UpdateStudentFile(ClassID, list);
