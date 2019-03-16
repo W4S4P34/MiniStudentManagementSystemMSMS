@@ -1,6 +1,6 @@
 #include "Login.h"
 
-bool doLoginFilesExist() {
+bool LoginFilesExist() {
 	ifstream test;
 	bool check = true;
 
@@ -9,29 +9,26 @@ bool doLoginFilesExist() {
 		cout << "Admin login list does not exist.\n";
 		check = false;
 	}
-	test.close();
 
 	test.open(GetPath(LOGIN_LIST_LECTURER));
 	if (!test.is_open()) {
 		cout << "Lecturer login list does not exist.\n";
 		check = false;
 	}
-	test.close();
 
 	test.open(GetPath(LOGIN_LIST_STUDENT));
 	if (!test.is_open()) {
 		cout << "Student login list does not exist.\n";
 		check = false;
 	}
-	test.close();
 
 	return check;
 }
 
 void LoginMenu(string & ID, char & AccessClass) {
 	cout << "(Type \"quit\" in ID to quit.)\n\n";
+
 	do {
-		
 		cout << "ID: ";
 		getline(cin, ID);
 		if (ID == "quit") exit(EXIT_SUCCESS);
@@ -51,14 +48,12 @@ string GetPassword() {
 	const char RETURN = 13; // CR; 10=LF
 
 	string Password;
-	string skip;
 	unsigned char c;
 	while ((c = _getch()) != RETURN) {
 		if (c == BACKSPACE) {
 			if (Password.length() != 0) {
 				cout << "\b \b";
 				Password.resize(Password.size() - 1);
-				// Password.pop_back() : C++11
 			}
 		}
 		else if (c == 0 || c == 224) {
@@ -74,50 +69,50 @@ string GetPassword() {
 }
 
 char Authenticate(string & ID, const string & Password) {
-	ifstream LoginList;
+	ifstream LoginFile;
 	char AccessClass;
 
 	if (ID.substr(0, 5) == "admin") {
-		LoginList.open(GetPath(LOGIN_LIST_ADMIN));
+		LoginFile.open(GetPath(LOGIN_LIST_ADMIN));
 		AccessClass = AC_ADMIN;
 	}
 	else if ((ID[0] >= 'A' && ID[0] <= 'Z') || (ID[0] >= 'a' && ID[0] <= 'z')) {
-		LoginList.open(GetPath(LOGIN_LIST_LECTURER));
+		LoginFile.open(GetPath(LOGIN_LIST_LECTURER));
 		AccessClass = AC_LECTURER;
 	}
 	else if (ID[0] >= '1' && ID[0] <= '9') {
-		LoginList.open(GetPath(LOGIN_LIST_STUDENT));
+		LoginFile.open(GetPath(LOGIN_LIST_STUDENT));
 		AccessClass = AC_STUDENT;
 	}
 	else {
 		return AC_INVALID;
 	}
 
-	if (!LoginList.is_open()) {
+	if (!LoginFile.is_open()) {
 		cout << "ERROR: Something went wrong. Check if login files still exist.\n";
 		return AC_INVALID;
 	}
 
 	if (AccessClass == AC_STUDENT) {
-		string ID_compare, Password_compare, skip;
-		while (!LoginList.eof()) {
-			getline(LoginList, ID_compare, '@');
-			getline(LoginList, skip, ',');
-			getline(LoginList, Password_compare, '\n');
+		string ID_compare, Password_compare, ClassID;
+		while (!LoginFile.eof()) {
+			getline(LoginFile, ID_compare, '@');
+			getline(LoginFile, ClassID, ',');
+			getline(LoginFile, Password_compare, '\n');
 			if (ID_compare == ID && sha1(Password) == Password_compare) {
-				LoginList.close();
-				ID = ID_compare + '@' + skip;
+				LoginFile.close();
+				ID = ID_compare + '@' + ClassID;
 				return AccessClass;
 			}
 		}
 	}
 	else {
 		string ID_compare, Password_compare;
-		while (!LoginList.eof()) {
-			getline(LoginList, ID_compare, ',');
-			getline(LoginList, Password_compare, '\n');
+		while (!LoginFile.eof()) {
+			getline(LoginFile, ID_compare, ',');
+			getline(LoginFile, Password_compare, '\n');
 			if (ID_compare == ID && sha1(Password) == Password_compare) {
-				LoginList.close();
+				LoginFile.close();
 				return AccessClass;
 			}
 		}
@@ -125,86 +120,144 @@ char Authenticate(string & ID, const string & Password) {
 	return AC_INVALID;
 }
 
-void ChangePassword(const string & ID, const char & AccessClass) {
-	fstream LoginList;
+void ChangePassword(const string & ID, const char & AccessClass, const string & Password_New) {
+	fstream LoginFile;
 	switch (AccessClass) {
 		case AC_ADMIN:
-			LoginList.open(GetPath(LOGIN_LIST_ADMIN));
+			LoginFile.open(GetPath(LOGIN_LIST_ADMIN));
 			break;
 		case AC_LECTURER:
-			LoginList.open(GetPath(LOGIN_LIST_LECTURER));
+			LoginFile.open(GetPath(LOGIN_LIST_LECTURER));
 			break;
 		case AC_STUDENT:
-			LoginList.open(GetPath(LOGIN_LIST_STUDENT));
+			LoginFile.open(GetPath(LOGIN_LIST_STUDENT));
 			break;
 	}
 
-	if (!LoginList.is_open()) {
+	if (!LoginFile.is_open()) {
 		cout << "ERROR: Something went wrong. Check if login files still exist.\n";
 		return;
-	}
-
-	string Password_new;
-	string Password_new_re;
-	cout << "Enter new password: ";
-	Password_new = GetPassword();
-	cout << "\n";
-	cout << "Re-enter new password: ";
-	Password_new_re = GetPassword();
-	cout << "\n";
-
-	if (Password_new != Password_new_re) {
-		cout << "Passwords do not match. Operation aborted.\n";
 	}
 	else {
 		string ID_compare, skip;
 		streamoff SeekPosition;
-		while (!LoginList.eof()) {
-			SeekPosition = LoginList.tellg();
-			getline(LoginList, ID_compare, ',');
-			getline(LoginList, skip);
+		while (!LoginFile.eof()) {
+			SeekPosition = LoginFile.tellg();
+			getline(LoginFile, ID_compare, ',');
+			getline(LoginFile, skip);
 			if (ID_compare == ID) {
-				LoginList.seekg(SeekPosition);
-				LoginList << ID << ',' << sha1(Password_new);
+				LoginFile.seekg(SeekPosition);
+				LoginFile << ID << ',' << sha1(Password_New);
 				cout << "Password changed.";
 				break;
 			}
 		}
 	}
 
-	LoginList.close();
+	LoginFile.close();
+}
+
+void LoginList::Add(string ID, string Password) {
+	node * newnode = new node{ ID, Password, nullptr };
+	newnode->next = head;
+	head = newnode;
+}
+
+void LoginList::Remove(string ID) {
+	node * current = head;
+	node *previous = nullptr;
+	while (current != nullptr) {
+		if (current->ID == ID) {
+			if (current == head) {
+				head = head->next;
+				delete current;
+				break;
+			}
+			else if (current->next == nullptr) {
+				previous->next = nullptr;
+				delete current;
+				break;
+			}
+			else {
+				previous->next = current->next;
+				delete current;
+				break;
+			}
+		}
+		else {
+			previous = current;
+			current = current->next;
+		}
+	}
 }
 
 void CreateLogin(const string & StudentID, const string & ClassID) {
-	fstream LoginList;
-	LoginList.open(GetPath("Login/Student.txt"), fstream::app);
-	LoginList << StudentID << "@" << ClassID << ",da39a3ee5e6b4b0d3255bfef95601890afd80709" << endl;
+	fstream LoginFile;
+	LoginFile.open(GetPath(LOGIN_LIST_STUDENT), fstream::app);
+	LoginFile << StudentID << '@' << ClassID << ",da39a3ee5e6b4b0d3255bfef95601890afd80709" << endl;
+	LoginFile.close();
+}
+
+void CreateLogin(const string & LecturerID) {
+	fstream LoginFile;
+	LoginFile.open(GetPath(LOGIN_LIST_LECTURER), fstream::app);
+	LoginFile << LecturerID << ",da39a3ee5e6b4b0d3255bfef95601890afd80709" << endl;
+	LoginFile.close();
 }
 
 void DeleteLogin(const string & StudentID, const string & ClassID) {
-	ifstream LoginList;
-	LoginList.open(GetPath("Login/Student.txt"));
-	Login_LinkedList l;
-	string ID, Password, skip;
+	string ID, Password, Check;
 	string ID_to_Compare = StudentID + '@' + ClassID;
-	getline(LoginList, skip);
-	while (!LoginList.eof()) {
-		getline(LoginList, ID, ',');
-		getline(LoginList, Password, '\n');
-		l.Add(ID, Password);
+	fstream LoginFile;
+	LoginList LoginList;
+
+	LoginFile.open(GetPath(LOGIN_LIST_STUDENT), fstream::in);
+	while (!LoginFile.eof()) {
+		getline(LoginFile, Check);
+		if (
+			Check.empty()
+			|| Check == "\n" // trailing newline
+		) continue;
+		ID = Check.substr(0, Check.find_first_of(','));
+		Password = Check.substr(Check.find_first_of(',') + 1);
+		LoginList.Add(ID, Password);
 	}
-	l.Remove(ID_to_Compare);
-	LoginList.close();
+	LoginList.Remove(ID_to_Compare);
+	LoginFile.close();
 
-	//--------------------
-
-	ofstream LoginList_new;
-	LoginList_new.open(GetPath("Login/Student.txt"));
-	Login_LinkedList::node * current = l.head;
+	LoginFile.open(GetPath(LOGIN_LIST_STUDENT), fstream::out);
+	LoginList::node * current = LoginList.head;
 	while (current != nullptr) {
-		LoginList_new << current->ID << ',' << current->Password << endl;
+		LoginFile << current->ID << ',' << current->Password << endl;
 		current = current->next;
 	}
+	LoginFile.close();
+}
 
-	LoginList_new.close();
+void DeleteLogin(const string & LecturerID) {
+	string ID, Password, Check;
+	fstream LoginFile;
+	LoginList LoginList;
+
+	LoginFile.open(GetPath(LOGIN_LIST_LECTURER), fstream::in);
+	while (!LoginFile.eof()) {
+		getline(LoginFile, Check);
+		if (
+			Check.empty()
+			|| Check == "\n" // trailing newline
+			) continue;
+		ID = Check.substr(0, Check.find_first_of(','));
+		Password = Check.substr(Check.find_first_of(',') + 1);
+		LoginList.Add(ID, Password);
+	}
+	LoginList.Remove(LecturerID);
+	LoginFile.close();
+
+	LoginFile.open(GetPath(LOGIN_LIST_LECTURER), fstream::out);
+	LoginList::node * current = LoginList.head;
+	while (current != nullptr) {
+		LoginFile << current->ID << ',' << current->Password << endl;
+		current = current->next;
+	}
+	LoginFile.close();
 }
