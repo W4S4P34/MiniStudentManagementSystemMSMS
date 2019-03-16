@@ -66,7 +66,23 @@ void Menu_Student(const string & ID) {
 		else if (c == "cls") { system("CLS"); }
 		else if (c == "info") { ShowInfo(StudentID, CurrentList); }
 		else if (c == "help") { ShowHelp_General(); ShowHelp_Student(); }
-		else if (c == "passwd") { ChangePassword(ID, AC_STUDENT); }
+		
+		else if (c == "passwd") {
+			string Password_New, Password_New_Re;
+			cout << "Enter new password: ";
+			Password_New = GetPassword();
+			cout << "\n";
+			cout << "Re-enter new password: ";
+			Password_New_Re = GetPassword();
+			cout << "\n";
+
+			if (Password_New != Password_New_Re) {
+				cout << "Passwords do not match. Operation aborted.\n";
+			}
+			else {
+				ChangePassword(ID, AC_STUDENT, Password_New);
+			}
+		}
 
 		//else if (c == "checkin") { }
 		//else if (c == "listck") { }
@@ -101,7 +117,23 @@ void Menu_Admin(const string & ID) {
 		else if (c == "quit") { exit(EXIT_SUCCESS); }
 		else if (c == "cls") { system("CLS"); }
 		else if (c == "help") { ShowHelp_General(); ShowHelp_Admin(); }
-		else if (c == "passwd") { ChangePassword(ID, AC_ADMIN); }
+
+		else if (c == "passwd") {
+			string Password_New, Password_New_Re;
+			cout << "Enter new password: ";
+			Password_New = GetPassword();
+			cout << "\n";
+			cout << "Re-enter new password: ";
+			Password_New_Re = GetPassword();
+			cout << "\n";
+
+			if (Password_New != Password_New_Re) {
+				cout << "Passwords do not match. Operation aborted.\n";
+			}
+			else {
+				ChangePassword(ID, AC_ADMIN, Password_New);
+			}
+		}
 
 		else if (c == "timport") {
 			ImportStudents(ClassID, CurrentList);
@@ -172,7 +204,7 @@ void Menu_Admin(const string & ID) {
 				cout << "Usage: tdelete <Student ID>\n";
 			}
 		}
-
+	
 		else { cout << "Invalid command.\n"; }
 		cout << "\n";
 	} while (1);
