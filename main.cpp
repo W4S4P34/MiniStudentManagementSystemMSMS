@@ -8,25 +8,17 @@ int main(void) {
 	char AccessClass;
 
 	do {
-		if (!doLoginFilesExist()) {
+		if (!LoginFilesExist()) {
 			cout << "Press any key to exit.\n";
 			_getch();
 			break;
 		}
 		LoginMenu(ID, AccessClass);
 		system("CLS");
-
 		switch (AccessClass) {
-			case AC_STUDENT: {
-				Menu_Student(ID);
-				break;
-			}
-			case AC_ADMIN: {
-				Menu_Admin(ID);
-				break;
-			}
+			case AC_STUDENT: { Menu_Student(ID); break; }
+			case AC_ADMIN: { Menu_Admin(ID); break; }
 		}
-
 		system("CLS");
 	} while (1);
 	
