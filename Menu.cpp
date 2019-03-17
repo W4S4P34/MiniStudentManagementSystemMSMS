@@ -47,8 +47,12 @@ void ShowHelp_Admin() {
 		<< "YEARS & TERMS\n"
 		<< "ylist   : List academic years\n"
 		<< "yadd    : Create a year\n"
+		<< "yedit   : Rename a year\n"
+		<< "ydelete : Delete a year\n"
 		<< "tlist   : List terms in a year\n"
 		<< "tadd    : Create a term in a year\n"
+		<< "tedit   : Rename a term in a year\n"
+		<< "tdelete : Delete a term in a year\n"
 		<< "\n"
 		<< "COURSES\n"
 		<< "rlist   : List courses in a term\n"
@@ -174,7 +178,7 @@ void Menu_Admin(const string & ID) {
 		else if (c == "sadd") {
 			if (CurrentClassID.empty()) {
 				cout << "ERROR: No class loaded.\n";
-				return;
+				continue;
 			}
 			Student Student_New;
 			cout << "ID: "; getline(cin, Student_New.ID);
@@ -291,6 +295,45 @@ void Menu_Admin(const string & ID) {
 			ListYears();
 		}
 
+		else if (c == "yadd") {
+			cout << "Usage: yadd <Year>\n";
+		}
+		else if (c.substr(0, strlen("yadd")) == "yadd") {
+			string Year = c.substr(strlen("yadd") + 1);
+			Capitalize(Year);
+			if (Year.find_first_not_of(' ') != string::npos) {
+				CreateYear(Year);
+			}
+			else {
+				cout << "Usage: yadd <Year>\n";
+			}
+		}
+
+		else if (c == "yedit") {
+			string Year_Old, Year_New;
+			cout << "Enter year: "; getline(cin, Year_Old); Capitalize(Year_Old);
+			cout << "Rename " << Year_Old << " into: "; getline(cin, Year_New); Capitalize(Year_New);
+			if (Year_Old.empty() || Year_New.empty()) {
+				cout << "Empty year(s) is/are invalid.\n";
+				continue;
+			}
+			EditYear(Year_Old, Year_New);
+		}
+
+		else if (c == "ydelete") {
+			cout << "Usage: ydelete <Year>\n";
+		}
+		else if (c.substr(0, strlen("ydelete")) == "ydelete") {
+			string Year = c.substr(strlen("ydelete") + 1);
+			Capitalize(Year);
+			if (Year.find_first_not_of(' ') != string::npos) {
+				DeleteYear(Year);
+			}
+			else {
+				cout << "Usage: ydelete <Year>\n";
+			}
+		}
+
 		else if (c == "tlist") {
 			cout << "Usage: tlist <Year>\n";
 		}
@@ -305,35 +348,49 @@ void Menu_Admin(const string & ID) {
 			}
 		}
 
+		else if (c == "tadd") {
+			string Year, Term;
+			cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
+			cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
+			if (Year.empty() || Term.empty()) {
+				cout << "Empty year and/or term is invalid.\n";
+				continue;
+			}
+			CreateTerm(Year, Term);
+		}
+
+		else if (c == "tedit") {
+			string Year, Term_Old, Term_New;
+			cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
+			cout << "Enter term: "; getline(cin, Term_Old); Capitalize(Term_Old);
+			cout << "Rename " << Term_Old << " into: "; getline(cin, Term_New); Capitalize(Term_New);
+			if (Year.empty() || Term_Old.empty() || Term_New.empty()) {
+				cout << "Empty year and/or term(s) is/are invalid.\n";
+				continue;
+			}
+			EditTerm(Year, Term_Old, Term_New);
+		}
+
+		else if (c == "tdelete") {
+			string Year, Term;
+			cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
+			cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
+			if (Year.empty() || Term.empty()) {
+				cout << "Empty year and/or term is invalid.\n";
+				continue;
+			}
+			DeleteTerm(Year, Term);
+		}
+
 		else if (c == "rlist") {
 			string Year, Term;
-			cout << "Enter year: ";
-			getline(cin, Year);
-			Capitalize(Year);
-			cout << "Enter term: ";
-			getline(cin, Term);
-			Capitalize(Term);
+			cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
+			cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
+			if (Year.empty() || Term.empty()) {
+				cout << "Empty year and/or term is invalid.\n";
+				continue;
+			}
 			ListCourses(Year, Term);
-		}
-
-		else if (c == "yadd") {
-			string Year;
-			cout << "Enter year: ";
-			getline(cin, Year);
-			Capitalize(Year);
-			CreateYear(Year);
-		}
-
-		else if (c == "tadd") {
-			string Year;
-			cout << "Enter year: ";
-			getline(cin, Year);
-			Capitalize(Year);
-			string Term;
-			cout << "Enter term: ";
-			getline(cin, Term);
-			Capitalize(Term);
-			CreateTerm(Year, Term);
 		}
 
 		else { cout << "Invalid command.\n"; }
