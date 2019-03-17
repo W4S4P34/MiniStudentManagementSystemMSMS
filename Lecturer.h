@@ -6,7 +6,34 @@
 #include <string>
 using namespace std;
 
-void ListLecturers(CourseList & list);
-void CreateLecturer(CourseList & list);
-void EditLecturer(CourseList & list, string LecturerID);
-void DeleteLecturer(CourseList & list, string LecturerID);
+struct Lecturer {
+	string ID;
+	string LastName, FirstName;
+	string Gender;
+};
+
+struct LecturerList {
+	struct node {
+		Lecturer data;
+		node * next;
+	};
+	node * head = nullptr;
+
+	void AddLecturer(Lecturer New);
+	~LecturerList();
+};
+
+void LowerString(string & string);
+string GenerateID(const string & LecturerLastName, const string & LecturerFirstName);
+
+void ImportLecturer(const string & FilePath);
+void ShowInfo(const LecturerList & CurrentList, const string & LecturerID);
+
+void UpdateLecturerFile(const LecturerList & CurrentList);
+void LoadLecturer(LecturerList & CurrentList);
+void CreateLecturer(LecturerList & CurrentList, const Lecturer & Lecturer_New);
+
+void EditLecturer(LecturerList & CurrentList, const string & LecturerID);
+void DeleteLecturer(LecturerList & CurrentList, const string & LecturerID);
+
+void ListLecturers(const LecturerList & CurrentList);
