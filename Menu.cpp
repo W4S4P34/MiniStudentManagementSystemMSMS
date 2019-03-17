@@ -1,5 +1,6 @@
 #include "Menu.h"
 #include "Student.h"
+#include "Lecturer.h"
 #include "Course.h"
 
 void Capitalize(string & string) {
@@ -28,6 +29,18 @@ void ShowHelp_Student() {
 		<< "\n";
 }
 
+void ShowHelp_Lecturer() {
+	cout << "\n[LECTURER COMMANDS]\n"
+		<< "clist    : View list of courses in a term\n"
+		<< "cslist   : View list of students of a course\n"
+		<< "alist    : View attendance list of a course\n"
+		<< "aedit    : Edit an attendance\n"
+		<< "scimport : Import scoreboard of a course\n"
+		<< "sclist   : View a scoreboard\n"
+		<< "scedit   : Edit scores of a student\n"
+		<< "\n";
+}
+
 void ShowHelp_Admin() {
 	cout << "\n[ADMIN COMMANDS]\n"
 		<< "STUDENTS\n"
@@ -37,6 +50,14 @@ void ShowHelp_Admin() {
 		<< "sedit   : Edit a student\n"
 		<< "smove   : Move a student to another class\n"
 		<< "sdelete : Remove a student\n"
+		<< "\n"
+		<< "LECTURERS\n"
+		<< "limport : Import lecturers\n"
+		<< "llist   : List lecturers\n"
+		<< "llookup : Find information of a lecturer\n"
+		<< "ladd    : Create a lecturer\n"
+		<< "ledit   : Edit a lecturer\n"
+		<< "ldelete : Delete a lecturer\n"
 		<< "\n"
 		<< "CLASSES\n"
 		<< "cimport : Import students of a class (from a CSV file)\n"
@@ -117,13 +138,69 @@ void Menu_Student(const string & ID) {
 	} while (1);
 }
 
+void Menu_Lecturer(const string & ID) {
+	LecturerList CurrentLecturerList;
+	LoadLecturer(CurrentLecturerList);
+
+	// Start-up script
+	ShowInfo(CurrentLecturerList, ID);
+	cout << "\n";
+	ShowHelp_General();
+	ShowHelp_Lecturer();
+	// End of start-up script
+
+	// Intepreter
+	do {
+		string c;
+		cout << "(" << ID << ")> ";
+		getline(cin, c);
+
+		// case-insensitivity
+		for (size_t i = 0; i < c.length(); i++)
+			c[i] = ::tolower(c[i]);
+
+		if (c == "logout" || c == "-") { break; }
+		else if (c == "quit" || c == "exit") { exit(EXIT_SUCCESS); }
+		else if (c == "cls") { system("CLS"); }
+		else if (c == "info") { ShowInfo(CurrentLecturerList, ID); }
+		else if (c == "help") { ShowHelp_General(); ShowHelp_Lecturer(); }
+
+		else if (c == "passwd") {
+			string Password_New, Password_New_Re;
+			cout << "Enter new password: ";
+			Password_New = GetPassword();
+			cout << "\n";
+			cout << "Re-enter new password: ";
+			Password_New_Re = GetPassword();
+			cout << "\n";
+
+			if (Password_New != Password_New_Re) {
+				cout << "Passwords do not match. Operation aborted.\n";
+			}
+			else {
+				ChangePassword(ID, AC_LECTURER, Password_New);
+			}
+		}
+
+		//else if (c == "checkin") { }
+		//else if (c == "listck") { }
+		//else if (c == "sched") { }
+		//else if (c == "score") { }
+
+		else { cout << "Invalid command.\n"; }
+		cout << "\n";
+	} while (1);
+}
+
 void Menu_Admin(const string & ID) {
 	StudentList CurrentList;
+	LecturerList CurrentLecturerList;
 	string CurrentClassID;
 
 	// Start-up script
 	ShowHelp_General();
 	ShowHelp_Admin();
+	LoadLecturer(CurrentLecturerList);
 	// End of start-up script
 
 	// Intepreter
@@ -250,6 +327,77 @@ void Menu_Admin(const string & ID) {
 			}
 		}
 		
+		else if (c == "limport") {
+			string FileName;
+			cout << "Enter filename: "; getline(cin, FileName);
+			if (FileName.empty()) {
+				cout << "Invalid filename is invalid.\n";
+				continue;
+			}
+			cout << GetPath("../Import/Lecturers/" + FileName) << endl;
+			ImportLecturer(FileName, CurrentLecturerList);
+		}
+
+		else if (c == "llist") {
+			ListLecturers(CurrentLecturerList);
+		}
+
+		else if (c == "llookup") {
+			cout << "Usage: llookup <Lecturer ID>\n";
+		}
+		else if (c.substr(0, strlen("llookup")) == "llookup") {
+			string LecturerID = c.substr(strlen("llookup") + 1);
+			if (LecturerID.find_first_not_of(' ') != string::npos) {
+				ShowInfo(CurrentLecturerList, LecturerID);
+			}
+			else {
+				cout << "Usage: llookup <Lecturer ID>\n";
+			}
+		}
+
+		else if (c == "ladd") {
+			Lecturer Lecturer_New;
+			cout << "Last name: "; getline(cin, Lecturer_New.LastName);
+			cout << "First name: "; getline(cin, Lecturer_New.FirstName);
+			cout << "Gender: "; getline(cin, Lecturer_New.Gender);
+			if (
+				Lecturer_New.LastName.empty()
+				|| Lecturer_New.FirstName.empty()
+				|| Lecturer_New.Gender.empty()
+				) {
+				cout << "Empty value(s) is/are not allowed.\n";
+				continue;
+			}
+			Lecturer_New.ID = GenerateID(Lecturer_New.LastName, Lecturer_New.FirstName);
+			CreateLecturer(CurrentLecturerList, Lecturer_New);
+		}
+
+		else if (c == "ledit") {
+			cout << "Usage: ledit <Lecturer ID>\n";
+		}
+		else if (c.substr(0, strlen("ledit")) == "ledit") {
+			string LecturerID = c.substr(strlen("ledit") + 1);
+			if (LecturerID.find_first_not_of(' ') != string::npos) {
+				EditLecturer(CurrentLecturerList, LecturerID);
+			}
+			else {
+				cout << "Usage: ledit <Lecturer ID>\n";
+			}
+		}
+
+		else if (c == "ldelete") {
+			cout << "Usage: ldelete <Lecturer ID>\n";
+		}
+		else if (c.substr(0, strlen("ldelete")) == "ldelete") {
+			string LecturerID = c.substr(strlen("ldelete") + 1);
+			if (LecturerID.find_first_not_of(' ') != string::npos) {
+				DeleteLecturer(CurrentLecturerList, LecturerID);
+			}
+			else {
+				cout << "Usage: ldelete <Lecturer ID>\n";
+			}
+		}
+
 		else if (c == "cimport") {
 			cout << "Enter filename: ";
 			string filename;

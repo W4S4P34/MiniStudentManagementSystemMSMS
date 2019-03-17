@@ -17,6 +17,7 @@ int main(void) {
 		system("CLS");
 		switch (AccessClass) {
 			case AC_STUDENT: { Menu_Student(ID); break; }
+			case AC_LECTURER: { Menu_Lecturer(ID); break; }
 			case AC_ADMIN: { Menu_Admin(ID); break; }
 		}
 		system("CLS");
