@@ -38,7 +38,7 @@ string GenerateID(const string & LecturerLastName, const string & LecturerFirstN
 	return ID + tempFirstName;
 }
 
-void ImportLecturer(const string & FilePath) {
+void ImportLecturer(const string & FilePath, LecturerList & CurrentLecturerList) {
 	fstream ExistingFile;
 	ExistingFile.open(GetPath("Lecturers/Lecturers.txt"), fstream::in);
 	if (ExistingFile.is_open()) {
@@ -48,7 +48,7 @@ void ImportLecturer(const string & FilePath) {
 	}
 
 	ifstream file;
-	file.open(GetPath("../import/Lecturers/" + FilePath));
+	file.open(GetPath("../Import/Lecturers/" + FilePath));
 
 	if (!file.is_open()) {
 		cout << "ERROR: Unable to open lecturer list.\n";
@@ -69,6 +69,7 @@ void ImportLecturer(const string & FilePath) {
 	}
 
 	UpdateLecturerFile(temp);
+	LoadLecturer(CurrentLecturerList);
 
 	temp.~LecturerList();
 	cout << "Successfully imported Lecturers's data.\n";
@@ -96,7 +97,7 @@ void ShowInfo(const LecturerList & CurrentList, const string & LecturerID)
 void UpdateLecturerFile(const LecturerList & CurrentList)
 {
 	ofstream file;
-	file.open(GetPath("Classes/Lecturers/Lecturers.txt"));
+	file.open(GetPath("Lecturers/Lecturers.txt"));
 	if (!file.is_open()) {
 		cout << "ERROR: Unable to create file.\n";
 		return;
@@ -123,21 +124,22 @@ void LoadLecturer(LecturerList & CurrentList)
 		return;
 	}
 
-
 	CurrentList.~LecturerList();
 
 	string ID, LastName, FirstName, Gender;
 	string Check;
 	while (!file.eof()) {
+		streamoff BeginOfLine = file.tellg();
 		getline(file, Check);
 		if (
 			Check.empty()
 			|| Check == "\n" // trailing newline
 			) continue;
+		file.seekg(BeginOfLine);
 		getline(file, ID, ',');
 		getline(file, LastName, ',');
 		getline(file, FirstName, ',');
-		getline(file, Gender, ',');
+		getline(file, Gender);
 		CurrentList.AddLecturer({ ID, LastName, FirstName, Gender });
 	}
 

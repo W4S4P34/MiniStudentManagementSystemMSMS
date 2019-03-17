@@ -18,7 +18,7 @@ struct LecturerList {
 		node * next;
 	};
 	node * head = nullptr;
-
+	
 	void AddLecturer(Lecturer New);
 	~LecturerList();
 };
@@ -26,7 +26,7 @@ struct LecturerList {
 void LowerString(string & string);
 string GenerateID(const string & LecturerLastName, const string & LecturerFirstName);
 
-void ImportLecturer(const string & FilePath);
+void ImportLecturer(const string & FilePath, LecturerList & CurrentLecturerList);
 void ShowInfo(const LecturerList & CurrentList, const string & LecturerID);
 
 void UpdateLecturerFile(const LecturerList & CurrentList);
