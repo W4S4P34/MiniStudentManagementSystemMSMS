@@ -37,8 +37,8 @@ void CreateTerm(const string & Year, const string & Term);
 void EditTerm(const string & Year, const string & Term_Old, const string & Term_New);
 void DeleteTerm(const string & Year, const string & Term);
 
+void ListCourses(const string & Year, const string & Term);
 //void ImportCourse(const char * filepath, CourseList & list);
-//void ListCourses(const string & Year, const string & Term);
 //void CreateCourse(CourseList & list);
 //void EditCourse(CourseList & list);
 //void DeleteCourse(CourseList & list);
