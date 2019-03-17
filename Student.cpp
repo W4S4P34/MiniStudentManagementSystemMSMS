@@ -14,11 +14,6 @@ StudentList::~StudentList() {
 	}
 }
 
-void NormalizeClassID(string & ClassID) {
-	for (size_t i = 0; i < ClassID.length(); i++)
-		ClassID[i] = ::toupper(ClassID[i]);
-}
-
 void ImportStudents(const string & FilePath, const string & ClassID) {
 	fstream ExistingClass;
 	ExistingClass.open(GetPath("Classes/" + ClassID + ".txt"), fstream::in);

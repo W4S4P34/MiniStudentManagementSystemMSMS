@@ -7,6 +7,8 @@
 #include "Class.h"
 using namespace std;
 
+void Capitalize(string & string);
+
 void ShowHelp_General();
 void ShowHelp_Student();
 // void ShowHelp_Lecturer();

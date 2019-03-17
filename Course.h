@@ -28,17 +28,17 @@ struct CourseList {
 
 // #include <filesystem>
 void ListYears();
-void CreateYear();
+void CreateYear(const string & Year);
 void EditYear(); //?
 void DeleteYear();
 
-void ListTerms();
-void CreateTerm();
+void ListTerms(const string & Year);
+void CreateTerm(const string & Year, const string & Term);
 void EditTerm(); //?
 void DeleteTerm();
 
 void ImportCourse(const char * filepath, CourseList & list);
-void ListCourses();
+void ListCourses(const string & Year, const string & Term);
 void CreateCourse(CourseList & list);
 void EditCourse(CourseList & list);
 void DeleteCourse(CourseList & list);
