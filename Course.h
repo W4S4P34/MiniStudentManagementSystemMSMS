@@ -2,31 +2,18 @@
 
 #include "Class.h"
 #include <string>
+#include <ctime>
 using namespace std;
-
-struct DateTime {
-	short d, m;
-	int y;
-	string dow; // day of week
-	short hh, mm;
-};
 
 struct Course {
 	string ID;
 	string Name;
-	Class _Class; // change the name
-	string LecturerID;
-	DateTime Start, End;
-
-	// machine-readable dates
-	// TO-DO: UNIX timestamps
+	string ClassID;
+	// string LecturerID;
+	tm Start, End;
+	string Room;
 };
 
-struct CourseList {
-	Course * head = nullptr;
-};
-
-// #include <filesystem>
 void ListYears();
 void CreateYear(const string & Year);
 void EditYear(const string & Year_Old, const string & Year_New);
@@ -38,10 +25,10 @@ void EditTerm(const string & Year, const string & Term_Old, const string & Term_
 void DeleteTerm(const string & Year, const string & Term);
 
 void ListCourses(const string & Year, const string & Term);
-//void ImportCourse(const char * filepath, CourseList & list);
-//void CreateCourse(CourseList & list);
+void ImportCourse(const string & FileName, const string & Year, const string & Term);
+void CreateCourse(const string & Year, const string & Term, Course & Course_New);
+void DeleteCourse(const string & Year, const string & Term, const string & CourseID, const string & ClassID);
 //void EditCourse(CourseList & list);
-//void DeleteCourse(CourseList & list);
 //
 //void ListStudents_Course(CourseList & list, string CourseID);
 //void AddStudent_Course(CourseList & list, string StudentID);
