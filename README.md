@@ -1,9 +1,13 @@
-# StudentManagerProgram-SMP--G1
-Manage the database of students!
+# MSMS
+(formerly `StudentManagerProgram-SMP--G1`)
+> "Manage the database of students!"
+
+---
+
+SHA-1 is used for password hashing/authentication.\
+<http://www.zedwood.com/article/cpp-sha1-function>
 
 ```
-  sha1.h - header of
- 
     ============
     SHA-1 in C++
     ============
@@ -17,52 +21,82 @@ Manage the database of students!
     Translation to simpler C++ Code
         -- Volker Grabsch <vog@notjusthosting.com>
 ```
+
+---
+
+Code tree:
+
 ```
-/StudentManagerProgram-SMP--G1/
-|   Login.cpp
+/MSMS/
+|
+|   main.cpp				main()
+|   _FILES_.h				Path to data tree
+|
+|   Login.cpp				Login facilities
 |   Login.h
-|   main.cpp
-|   Menu.cpp
+|   Menu.cpp				Usermenu
 |   Menu.h
 |
-|---sha1
-|      sha1.cpp
-|      sha1.h
-|   
-+---data
-|   +---Attendances
-|   |       Class1_Course1_Day1.txt
-|   |       
-|   +---Info
-|   |       Lecturer.txt
-|   |       Student.txt
-|   |       
-|   +---Login
-|   |       Admin.txt
-|   |       Lecturer.txt
-|   |       Student.txt
-|   |       
-|   +---Scores
-|   |       Class1_Course1.txt
-|   |       
-|   \---Terms
-|           Class1_Course1.txt
-|           
-+---import
-|   +---courses
-|   |       18CLC1 course.csv
-|   |       18CLC2 course.csv
-|   |       18CLC3 course.csv
-|   |       18CLC4 course.csv
-|   |       18CLC5 course.csv
-|   |       18CLC6 course.csv
-|   |       
-|   \---student_info
-|           18CLC1.csv
-|           18CLC2.csv
-|           18CLC3.csv
-|           18CLC4.csv
-|           18CLC5.csv
-|           18CLC6.csv
-|      
+|   Student.cpp				Individual students
+|   Student.h
+|   Lecturer.cpp			Lecturers
+|   Lecturer.h
+|   Class.cpp				Classes (list of students)
+|   Class.h
+|
+|   Course.cpp				Courses (list of sessions)
+|   Course.h
+|   Attendance.cpp			Course attendance lists
+|   Attendance.h
+|   Score.cpp				Course scoreboards
+|   Score.h
+|
+├───sha1					SHA-1 (used by Login.h)
+|       sha1.cpp
+|       sha1.h
+```
+
+\
+Data tree (i.e. where `MSMS` put files in)
+
+```
+├───Data
+|   ├───Classes
+|   |       18CLC1.txt
+|   |       18CLC2.txt
+|   |
+|   ├───Courses
+|   |   └───2018
+|   |       ├───T1
+|   |       └───T2
+|   |           └───CTT008
+|   |               |   Info.txt
+|   |               |
+|   |               ├───Tue
+|   |               |       Attendance.txt
+|   |               |       Score.txt
+|   |               |
+|   |               └───Wed
+|   |                       Attendance.txt
+|   |                       Score.txt
+|   |
+|   ├───Lecturers
+|   |       Lecturers.txt
+|   |
+|   └───Login
+|           Admin.txt
+|           Lecturer.txt
+|           Student.txt
+|
+└───Import
+    ├───Courses
+    |       18CLC1 course.csv
+    |       18CLC2 course.csv
+    |
+    ├───Lecturers
+    |       Lecturers.csv
+    |
+    └───Student_Info
+            18CLC1.csv
+            18CLC2.csv      
 ```
