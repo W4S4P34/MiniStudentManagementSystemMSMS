@@ -76,7 +76,11 @@ void ShowHelp_Admin() {
 		<< "tdelete : Delete a term in a year\n"
 		<< "\n"
 		<< "COURSES\n"
+		<< "rimport : Import a course (from a CSV file)\n"
 		<< "rlist   : List courses in a term\n"
+		<< "radd    : Create a course\n"
+		<< "redit   : Edit a course's information\n"
+		<< "rdelete : Delete a course\n"
 		<< "\n";
 }
 
@@ -539,6 +543,86 @@ void Menu_Admin(const string & ID) {
 				continue;
 			}
 			ListCourses(Year, Term);
+		}
+
+		else if (c == "rimport") {
+			string FileName, Year, Term;
+			cout << "Enter filename: "; getline(cin, FileName);
+			cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
+			cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
+			if ( FileName.empty() || Year.empty() || Term.empty() ) {
+				cout << "Empty filename, year and/or term is invalid.\n";
+				continue;
+			}
+			cout << GetPath("../Import/Courses/" + FileName) << endl;
+			ImportCourse(FileName, Year, Term);
+		}
+
+		else if (c == "radd") {
+			string Year, Term;
+			cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
+			cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
+			if (Year.empty() || Term.empty()) {
+				cout << "Empty year and/or term is invalid.\n";
+				continue;
+			}
+
+			Course Course_New;
+			cout << "Course ID: "; getline(cin, Course_New.ID); Capitalize(Course_New.ID);
+			cout << "Course name: "; getline(cin, Course_New.Name);
+			// cout << "Lecturer ID: "; getline(cin, Course_New.LecturerID);
+			cout << "Class ID: "; getline(cin, Course_New.ClassID); Capitalize(Course_New.ClassID);
+			cout << "Room: "; getline(cin, Course_New.Room); Capitalize(Course_New.Room);
+
+			string StartY, StartM, StartD, StartHH, StartMM;
+			string EndY, EndM, EndD, EndHH, EndMM;
+			string DoW;
+			cout << "Enter Start year: "; getline(cin, StartY);
+			cout << "Enter Start month: "; getline(cin, StartM);
+			cout << "Enter Start day: "; getline(cin, StartD);
+			cout << "Enter Start hour: "; getline(cin, StartHH);
+			cout << "Enter Start minute: "; getline(cin, StartMM);
+			cout << "Enter End year: "; getline(cin, EndY);
+			cout << "Enter End month: "; getline(cin, EndM);
+			cout << "Enter End day: "; getline(cin, EndD);
+			cout << "Enter End hour: "; getline(cin, EndHH);
+			cout << "Enter End minute: "; getline(cin, EndMM);
+			cout << "Enter Day of Week: "; getline(cin, DoW); Capitalize(DoW);
+
+			Course_New.Start.tm_year = stoi(StartY); Course_New.Start.tm_year -= 1900;
+			Course_New.Start.tm_mon = stoi(StartM); Course_New.Start.tm_mon -= 1;
+			Course_New.Start.tm_mday = stoi(StartD);
+			Course_New.Start.tm_hour = stoi(StartHH);
+			Course_New.Start.tm_min = stoi(StartMM);
+			if (DoW == "SUN") Course_New.Start.tm_wday = 0;
+			else if (DoW == "MON") Course_New.Start.tm_wday = 1;
+			else if (DoW == "TUE") Course_New.Start.tm_wday = 2;
+			else if (DoW == "WED") Course_New.Start.tm_wday = 3;
+			else if (DoW == "THU") Course_New.Start.tm_wday = 4;
+			else if (DoW == "FRI") Course_New.Start.tm_wday = 5;
+			else if (DoW == "SAT") Course_New.Start.tm_wday = 6;
+
+			Course_New.End.tm_year = stoi(EndY); Course_New.End.tm_year -= 1900;
+			Course_New.End.tm_mon = stoi(EndM); Course_New.End.tm_mon -= 1;
+			Course_New.End.tm_mday = stoi(EndD);
+			Course_New.End.tm_hour = stoi(EndHH);
+			Course_New.End.tm_min = stoi(EndMM);
+			Course_New.End.tm_wday = Course_New.Start.tm_wday;
+
+			CreateCourse(Year, Term, Course_New);
+		}
+
+		else if (c == "rdelete") {
+			string Year, Term, CourseID, ClassID, DayOfWeek;
+			cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
+			cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
+			cout << "Enter course ID: "; getline(cin, CourseID); Capitalize(CourseID);
+			cout << "Enter class ID: "; getline(cin, ClassID); Capitalize(ClassID);
+			if (Year.empty() || Term.empty() || CourseID.empty() || ClassID.empty()) {
+				cout << "Empty year, term and/or course information is invalid.\n";
+				continue;
+			}
+			DeleteCourse(Year, Term, CourseID, ClassID);
 		}
 
 		else { cout << "Invalid command.\n"; }
