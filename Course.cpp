@@ -118,6 +118,11 @@ void ListCourses(const string & Year, const string & Term) {
 }
 
 void CreateCourse(const string & Year, const string & Term, Course & Course_New) {
+	StudentList temp;
+	LoadStudents(temp, Course_New.ClassID);
+	if (temp.head == nullptr) return;
+	StudentList::node * current;
+
 	fs::path p;
 
 	p = GetPath("Courses/" + Year + "/" + Term);
@@ -148,10 +153,6 @@ void CreateCourse(const string & Year, const string & Term, Course & Course_New)
 			<< ":" << Course_New.End.tm_min
 			<< " " << wday_name[Course_New.End.tm_wday] << endl;
 	InfoFile.close();
-
-	StudentList temp;
-	LoadStudents(temp, Course_New.ClassID);
-	StudentList::node * current;
 
 	ofstream AttendanceFile;
 	AttendanceFile.open(GetPath("Courses/" + Year + "/" + Term + "/" + Course_New.ID + "_" + Course_New.ClassID + "_" + wday_name[Course_New.Start.tm_wday] + "/Attendance.txt"));
@@ -253,7 +254,6 @@ void ImportCourse(const string & FileName, const string & Year, const string & T
 	}
 
 	file.close();
-	cout << "Successfully imported courses.\n";
 }
 
 void DeleteCourse(const string & Year, const string & Term, const string & CourseID, const string & ClassID) {
