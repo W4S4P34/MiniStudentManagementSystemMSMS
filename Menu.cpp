@@ -2,6 +2,7 @@
 #include "Student.h"
 #include "Lecturer.h"
 #include "Course.h"
+#include "Score.h"
 
 void Capitalize(string & string) {
 	for (size_t i = 0; i < string.length(); i++)
@@ -81,6 +82,11 @@ void ShowHelp_Admin() {
 		<< "radd    : Create a course\n"
 		<< "redit   : Edit a course's information\n"
 		<< "rdelete : Delete a course\n"
+		<< "\n"
+		<< "SCOREBOARD\n"
+		<< "scview  : View the scoreboard of a course\n"
+		<< "sclookup: View the scoreboard of a specific student in a course\n"
+		<< "scedit  : Edit an entry in the scoreboard\n"
 		<< "\n";
 }
 
@@ -202,9 +208,10 @@ void Menu_Admin(const string & ID) {
 	string CurrentClassID;
 
 	// Start-up script
+	LoadLecturer(CurrentLecturerList);
+	cout << "\n";
 	ShowHelp_General();
 	ShowHelp_Admin();
-	LoadLecturer(CurrentLecturerList);
 	// End of start-up script
 
 	// Intepreter
@@ -623,6 +630,70 @@ void Menu_Admin(const string & ID) {
 				continue;
 			}
 			DeleteCourse(Year, Term, CourseID, ClassID);
+		}
+
+		else if (c == "scview") {
+			string Year, Term, CourseID, ClassID;
+			cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
+			cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
+			cout << "Enter course ID: "; getline(cin, CourseID); Capitalize(CourseID);
+			cout << "Enter class ID: "; getline(cin, ClassID); Capitalize(ClassID);
+			ViewScoreboard(Year + "/" + Term + "/" + CourseID + "_" + ClassID);
+		}
+
+		else if (c == "sclookup") {
+			string Year, Term, CourseID, ClassID, StudentID;
+			cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
+			cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
+			cout << "Enter course ID: "; getline(cin, CourseID); Capitalize(CourseID);
+			cout << "Enter class ID: "; getline(cin, ClassID); Capitalize(ClassID);
+			cout << "Enter student ID: "; getline(cin, StudentID); Capitalize(StudentID);
+			LookupScoreboard(Year + "/" + Term + "/" + CourseID + "_" + ClassID, StudentID);
+		}
+
+		else if (c == "scedit") {
+			string Year, Term, CourseID, ClassID;
+			cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
+			cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
+			cout << "Enter course ID: "; getline(cin, CourseID); Capitalize(CourseID);
+			cout << "Enter class ID: "; getline(cin, ClassID); Capitalize(ClassID);
+
+			Scoreboard temp; // only for testing if y/t/r/c exists
+			LoadScoreboard(temp, Year + "/" + Term + "/" + CourseID + "_" + ClassID);
+			if (temp.head == nullptr) continue;
+
+			string StudentID;
+			cout << "Enter student ID: "; getline(cin, StudentID); Capitalize(StudentID);
+
+			Scoreboard::node * target = temp.head;
+			bool found = false;
+			while (target != nullptr) {
+				if (target->ID == StudentID) {
+					found = true;
+					break;
+				}
+				target = target->next;
+			}
+			if (!found) {
+				cout << "Student " << StudentID << " not found.\n";
+				continue;
+			}
+
+			cout << "Current scores:\n"
+				<< "Midterm = " << setprecision(3) << target->Midterm << "\n"
+				<< "Final = " << setprecision(3) << target->Final << "\n"
+				<< "Lab = " << setprecision(3) << target->Lab << "\n"
+				<< "Bonus = " << setprecision(3) << target->Bonus << "\n";
+
+			cout << "New scores:\n";
+			float Midterm, Final, Lab, Bonus;
+			cout << "Midterm = "; cin >> Midterm;
+			cout << "Final = "; cin >> Final;
+			cout << "Lab = "; cin >> Lab;
+			cout << "Bonus = "; cin >> Bonus;
+			while (cin.get() != '\n');
+
+			EditScoreboard(Year + "/" + Term + "/" + CourseID + "_" + ClassID, StudentID, Midterm, Final, Lab, Bonus);
 		}
 
 		else { cout << "Invalid command.\n"; }
