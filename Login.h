@@ -9,7 +9,8 @@
 using namespace std;
 
 // SHA-1: 80 bits
-// Empty password: da39a3ee5e6b4b0d3255bfef95601890afd80709
+// Empty password (default): da39a3ee5e6b4b0d3255bfef95601890afd80709
+// Use constexpr auto instead of using #define
 
 constexpr auto AC_ADMIN = 0;
 constexpr auto AC_LECTURER = 1;
@@ -27,6 +28,7 @@ struct LoginList {
 	void Remove(string ID);
 };
 
+// Functions interact with identification
 bool LoginFilesExist();
 void LoginMenu(string & ID, char & AccessClass);
 string GetPassword();

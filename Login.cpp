@@ -4,6 +4,7 @@ bool LoginFilesExist() {
 	ifstream test;
 	bool check = true;
 
+	//Get path of Login files declared in "_FILES.h"
 	test.open(GetPath(LOGIN_LIST_ADMIN));
 	if (!test.is_open()) {
 		cout << "Admin login list does not exist.\n";
@@ -34,6 +35,7 @@ void LoginMenu(string & ID, char & AccessClass) {
 		if (ID == "quit") exit(EXIT_SUCCESS);
 		string Password;
 		cout << "Password: ";
+		// GetPassword() help us cover the passwork with a mask filled with '*' characters
 		Password = GetPassword();
 		cout << "\n";
 		AccessClass = Authenticate(ID, Password);
@@ -72,6 +74,7 @@ char Authenticate(string & ID, const string & Password) {
 	ifstream LoginFile;
 	char AccessClass;
 
+	// Identify who is logging in this system
 	if (ID.substr(0, 5) == "admin") {
 		LoginFile.open(GetPath(LOGIN_LIST_ADMIN));
 		AccessClass = AC_ADMIN;
