@@ -25,12 +25,11 @@ void LoadScoreboard(Scoreboard & list, const string & CoursePath);
 void UpdateScoreboard(const Scoreboard & list, const string & CoursePath);
 
 // public
-void ViewScoreboard(const string & CoursePath);
-void LookupScoreboard(const string & CoursePath, const string & StudentID);
-void EditScoreboard(const string & CoursePath, const string & StudentID, const float & Midterm, const float & Final, const float & Lab, const float & Bonus);
-
-//void ImportScoreboard(const char * filepath, ScoreboardList & list);
-//void ExportScoreboard(const char * filepath, const ScoreboardList & list);
-//void GetScoreboard(const string & ClassID, const string & CourseID, ScoreboardList & list);
-//void ViewScoreboard(ScoreboardList & list);
-//void EditScoreboard(ScoreboardList & list, const string & StudentID);
+void ImportScoreboard(const string & filepath, const string & CoursePath);
+void ExportScoreboard(const string & filepath, const string & CoursePath);
+//void ViewScoreboard(const string & CoursePath);
+void ViewScoreboard(const Scoreboard & list);
+//void ViewScoreboard(const string & CoursePath, const string & StudentID);
+void ViewScoreboard(const Scoreboard & list, const string & StudentID);
+//void EditScoreboard(const string & CoursePath, const string & StudentID, const float & Midterm, const float & Final, const float & Lab, const float & Bonus);
+void EditScoreboard(const Scoreboard & list, const string & CoursePath, const string & StudentID, const float & Midterm, const float & Final, const float & Lab, const float & Bonus);

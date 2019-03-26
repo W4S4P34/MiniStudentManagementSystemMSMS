@@ -632,69 +632,69 @@ void Menu_Admin(const string & ID) {
 			DeleteCourse(Year, Term, CourseID, ClassID);
 		}
 
-		else if (c == "scview") {
-			string Year, Term, CourseID, ClassID;
-			cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
-			cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
-			cout << "Enter course ID: "; getline(cin, CourseID); Capitalize(CourseID);
-			cout << "Enter class ID: "; getline(cin, ClassID); Capitalize(ClassID);
-			ViewScoreboard(Year + "/" + Term + "/" + CourseID + "_" + ClassID);
-		}
+		//else if (c == "scview") {
+		//	string Year, Term, CourseID, ClassID;
+		//	cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
+		//	cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
+		//	cout << "Enter course ID: "; getline(cin, CourseID); Capitalize(CourseID);
+		//	cout << "Enter class ID: "; getline(cin, ClassID); Capitalize(ClassID);
+		//	ViewScoreboard(Year + "/" + Term + "/" + CourseID + "_" + ClassID);
+		//}
 
-		else if (c == "sclookup") {
-			string Year, Term, CourseID, ClassID, StudentID;
-			cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
-			cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
-			cout << "Enter course ID: "; getline(cin, CourseID); Capitalize(CourseID);
-			cout << "Enter class ID: "; getline(cin, ClassID); Capitalize(ClassID);
-			cout << "Enter student ID: "; getline(cin, StudentID); Capitalize(StudentID);
-			LookupScoreboard(Year + "/" + Term + "/" + CourseID + "_" + ClassID, StudentID);
-		}
+		//else if (c == "sclookup") {
+		//	string Year, Term, CourseID, ClassID, StudentID;
+		//	cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
+		//	cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
+		//	cout << "Enter course ID: "; getline(cin, CourseID); Capitalize(CourseID);
+		//	cout << "Enter class ID: "; getline(cin, ClassID); Capitalize(ClassID);
+		//	cout << "Enter student ID: "; getline(cin, StudentID); Capitalize(StudentID);
+		//	ViewScoreboard(Year + "/" + Term + "/" + CourseID + "_" + ClassID, StudentID);
+		//}
 
-		else if (c == "scedit") {
-			string Year, Term, CourseID, ClassID;
-			cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
-			cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
-			cout << "Enter course ID: "; getline(cin, CourseID); Capitalize(CourseID);
-			cout << "Enter class ID: "; getline(cin, ClassID); Capitalize(ClassID);
+		//else if (c == "scedit") {
+		//	string Year, Term, CourseID, ClassID;
+		//	cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
+		//	cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
+		//	cout << "Enter course ID: "; getline(cin, CourseID); Capitalize(CourseID);
+		//	cout << "Enter class ID: "; getline(cin, ClassID); Capitalize(ClassID);
 
-			Scoreboard temp; // only for testing if y/t/r/c exists
-			LoadScoreboard(temp, Year + "/" + Term + "/" + CourseID + "_" + ClassID);
-			if (temp.head == nullptr) continue;
+		//	Scoreboard temp; // only for testing if y/t/r/c exists
+		//	LoadScoreboard(temp, Year + "/" + Term + "/" + CourseID + "_" + ClassID);
+		//	if (temp.head == nullptr) continue;
 
-			string StudentID;
-			cout << "Enter student ID: "; getline(cin, StudentID); Capitalize(StudentID);
+		//	string StudentID;
+		//	cout << "Enter student ID: "; getline(cin, StudentID); Capitalize(StudentID);
 
-			Scoreboard::node * target = temp.head;
-			bool found = false;
-			while (target != nullptr) {
-				if (target->ID == StudentID) {
-					found = true;
-					break;
-				}
-				target = target->next;
-			}
-			if (!found) {
-				cout << "Student " << StudentID << " not found.\n";
-				continue;
-			}
+		//	Scoreboard::node * target = temp.head;
+		//	bool found = false;
+		//	while (target != nullptr) {
+		//		if (target->ID == StudentID) {
+		//			found = true;
+		//			break;
+		//		}
+		//		target = target->next;
+		//	}
+		//	if (!found) {
+		//		cout << "Student " << StudentID << " not found.\n";
+		//		continue;
+		//	}
 
-			cout << "Current scores:\n"
-				<< "Midterm = " << setprecision(3) << target->Midterm << "\n"
-				<< "Final = " << setprecision(3) << target->Final << "\n"
-				<< "Lab = " << setprecision(3) << target->Lab << "\n"
-				<< "Bonus = " << setprecision(3) << target->Bonus << "\n";
+		//	cout << "Current scores:\n"
+		//		<< "Midterm = " << setprecision(3) << target->Midterm << "\n"
+		//		<< "Final = " << setprecision(3) << target->Final << "\n"
+		//		<< "Lab = " << setprecision(3) << target->Lab << "\n"
+		//		<< "Bonus = " << setprecision(3) << target->Bonus << "\n";
 
-			cout << "New scores:\n";
-			float Midterm, Final, Lab, Bonus;
-			cout << "Midterm = "; cin >> Midterm;
-			cout << "Final = "; cin >> Final;
-			cout << "Lab = "; cin >> Lab;
-			cout << "Bonus = "; cin >> Bonus;
-			while (cin.get() != '\n');
+		//	cout << "New scores:\n";
+		//	float Midterm, Final, Lab, Bonus;
+		//	cout << "Midterm = "; cin >> Midterm;
+		//	cout << "Final = "; cin >> Final;
+		//	cout << "Lab = "; cin >> Lab;
+		//	cout << "Bonus = "; cin >> Bonus;
+		//	while (cin.get() != '\n');
 
-			EditScoreboard(Year + "/" + Term + "/" + CourseID + "_" + ClassID, StudentID, Midterm, Final, Lab, Bonus);
-		}
+		//	EditScoreboard(Year + "/" + Term + "/" + CourseID + "_" + ClassID, StudentID, Midterm, Final, Lab, Bonus);
+		//}
 
 		else { cout << "Invalid command.\n"; }
 		cout << "\n";

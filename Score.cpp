@@ -111,14 +111,9 @@ void UpdateScoreboard(const Scoreboard & list, const string & CoursePath) {
 }
 
 // thêm họ tên SV thay vì chỉ ID?
-void ViewScoreboard(const string & CoursePath) {
-	Scoreboard temp;
-	LoadScoreboard(temp, CoursePath);
-
-	if (temp.head == nullptr) return;
-
+void ViewScoreboard(const Scoreboard & list) {
 	cout << "Sequential order in each entry: Midterm, Final, Lab, Bonus.\n";
-	Scoreboard::node * current = temp.head;
+	Scoreboard::node * current = list.head;
 	while (current != nullptr) {
 		cout << current->ID << " : "
 			<< setprecision(3) << current->Midterm << "; "
@@ -130,11 +125,8 @@ void ViewScoreboard(const string & CoursePath) {
 	}
 }
 
-void LookupScoreboard(const string & CoursePath, const string & StudentID) {
-	Scoreboard temp;
-	LoadScoreboard(temp, CoursePath);
-
-	Scoreboard::node * target = temp.head;
+void ViewScoreboard(const Scoreboard & list, const string & StudentID) {
+	Scoreboard::node * target = list.head;
 	while (target != nullptr && target->ID != StudentID)
 		target = target->next;
 	if (target == nullptr) {
@@ -151,12 +143,9 @@ void LookupScoreboard(const string & CoursePath, const string & StudentID) {
 	cout << "\n";
 }
 
-void EditScoreboard(const string & CoursePath, const string & StudentID, const float & Midterm, const float & Final, const float & Lab, const float & Bonus) {
-	Scoreboard temp;
-	LoadScoreboard(temp, CoursePath);
-
+void EditScoreboard(const Scoreboard & list, const string & CoursePath, const string & StudentID, const float & Midterm, const float & Final, const float & Lab, const float & Bonus) {
 	bool found = false;
-	Scoreboard::node * current = temp.head;
+	Scoreboard::node * current = list.head;
 	while (current != nullptr) {
 		if (current->ID == StudentID) {
 			current->Midterm = Midterm;
@@ -174,6 +163,34 @@ void EditScoreboard(const string & CoursePath, const string & StudentID, const f
 		return;
 	}
 
-	UpdateScoreboard(temp, CoursePath);
+	UpdateScoreboard(list, CoursePath);
 	cout << "Successfully edited scores for " << StudentID << ".\n";
+}
+
+void ImportScoreboard(const string & filepath, const string & CoursePath) {
+	ifstream importfile;
+	ofstream exportfile;
+	importfile.open(GetPath("../Import/Scoreboards/" + filepath + ".csv"));
+	exportfile.open(GetPath("Courses/" + CoursePath + "_" + "Score.txt"));
+
+	if (!importfile.is_open()) {
+		cout << "Unable to open file. Check your filename.\n";
+		return;
+	}
+
+	string skip, copy;
+	getline(importfile, skip);
+	while (!importfile.eof()) {
+		getline(importfile, copy);
+		exportfile << copy << endl;
+	}
+	importfile.close();
+	exportfile.close();
+}
+
+
+void ExportScoreboard(const string & filepath, const string & CoursePath) {
+	ofstream file;
+	file.open(GetPath("Courses/" + CoursePath + "_" + "Score.txt"));
+	
 }
