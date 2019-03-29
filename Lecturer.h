@@ -1,10 +1,5 @@
 #pragma once
-
-#include "Course.h"
-#include <iostream>
-#include <fstream>
-#include <string>
-using namespace std;
+#include "_INCLUDES_.h"
 
 struct Lecturer {
 	string ID;

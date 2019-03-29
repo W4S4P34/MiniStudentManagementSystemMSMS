@@ -1,7 +1,4 @@
-#include "Login.h"
-#include "Menu.h"
-#include "Student.h"
-using namespace std;
+#include "_INCLUDES_.h"
 
 int main() {
 	string ID;

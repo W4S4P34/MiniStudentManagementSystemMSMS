@@ -1,11 +1,5 @@
 #pragma once
-
-#include "_FILES_.h"
-#include <iostream>
-#include <iomanip> // setprecision
-#include <fstream>
-#include <string>
-using namespace std;
+#include "_INCLUDES_.h"
 
 struct Scoreboard {
 	struct node {

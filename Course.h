@@ -1,9 +1,5 @@
 #pragma once
-
-#include "Class.h"
-#include <string>
-#include <ctime>
-using namespace std;
+#include "_INCLUDES_.h"
 
 struct Course {
 	string ID;

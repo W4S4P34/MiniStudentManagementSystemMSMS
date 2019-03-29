@@ -1,13 +1,5 @@
 #pragma once
-
-#include "_FILES_.h"
-#include "Login.h"
-#include <iostream>
-#include <iomanip> // setw, setfill
-#include <string>
-#include <iostream>
-#include <fstream>
-using namespace std;
+#include "_INCLUDES_.h"
 
 struct Birth {
 	short d, m;
@@ -44,3 +36,5 @@ void DeleteStudent(StudentList & CurrentList, const string & ClassID, const stri
 
 void ListStudents(const StudentList & CurrentList, const string & ClassID);
 void MoveStudent(StudentList & CurrentList, const string & ClassID_Old, const string & ClassID_New, const string & StudentID);
+
+void ListClasses();

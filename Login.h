@@ -1,12 +1,5 @@
 #pragma once
-
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <conio.h>
-#include "_FILES_.h"
-#include "sha1/sha1.h"
-using namespace std;
+#include "_INCLUDES_.h"
 
 // SHA-1: 80 bits
 // Empty password (default): da39a3ee5e6b4b0d3255bfef95601890afd80709

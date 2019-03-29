@@ -1,19 +1,18 @@
 #pragma once
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <conio.h>
-#include "Login.h"
-#include "Class.h"
-using namespace std;
+#include "_INCLUDES_.h"
 
+// General/common functions
 void Capitalize(string & string);
-
 void ShowHelp_General();
-void ShowHelp_Student();
-void ShowHelp_Lecturer();
-void ShowHelp_Admin();
 
+// Student
+void ShowHelp_Student();
 void Menu_Student(const string & ID);
+
+// Lecturer
+void ShowHelp_Lecturer();
 void Menu_Lecturer(const string & ID);
+
+// Admin
+void ShowHelp_Admin();
 void Menu_Admin(const string & ID);

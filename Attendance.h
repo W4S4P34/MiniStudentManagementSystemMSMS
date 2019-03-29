@@ -1,7 +1,5 @@
 #pragma once
-
-#include <string>
-using namespace std;
+#include "_INCLUDES_.h"
 
 class AttendanceList {
 	string ClassID;
