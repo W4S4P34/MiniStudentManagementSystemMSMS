@@ -15,10 +15,10 @@ void Menu_Student(const string & ID) {
 
 	// potentially dangerous?
 	StudentList CurrentList;
-	LoadStudents(CurrentList, CurrentClassID);
+	LoadClass(CurrentList, CurrentClassID);
 
 	// Start-up script
-	ShowInfo(CurrentList, CurrentClassID, StudentID);
+	LookupStudent(CurrentList, CurrentClassID, StudentID);
 	cout << "\n";
 	ShowHelp_General();
 	ShowHelp_Student();
@@ -37,7 +37,7 @@ void Menu_Student(const string & ID) {
 		if (c == "logout" || c == "-") { break; }
 		else if (c == "quit" || c == "exit") { exit(EXIT_SUCCESS); }
 		else if (c == "cls") { system("CLS"); }
-		else if (c == "info") { ShowInfo(CurrentList, CurrentClassID, StudentID); }
+		else if (c == "info") { LookupStudent(CurrentList, CurrentClassID, StudentID); }
 		else if (c == "help") { ShowHelp_General(); ShowHelp_Student(); }
 
 		else if (c == "passwd") {

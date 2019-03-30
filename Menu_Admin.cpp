@@ -1,6 +1,7 @@
 #include "Menu.h"
 
-void ShowHelp_Admin() {
+void ShowHelp_Admin()
+{
 	cout << "\n[ADMIN COMMANDS]\n"
 		<< "STUDENTS\n"
 		<< "slist   : View list of students in a class\n"
@@ -75,7 +76,8 @@ void Menu_Admin(const string & ID) {
 		else if (c == "cls") { system("CLS"); }
 		else if (c == "help") { ShowHelp_General(); ShowHelp_Admin(); }
 
-		else if (c == "passwd") {
+		else if (c == "passwd")
+		{
 			string Password_New, Password_New_Re;
 			cout << "Enter new password: ";
 			Password_New = GetPassword();
@@ -92,7 +94,10 @@ void Menu_Admin(const string & ID) {
 			}
 		}
 
-		else if (c == "slist") {
+		///////////////////////////////////////////////////////////////////////////////
+
+		else if (c == "slist")
+		{
 			ListStudents(CurrentList, CurrentClassID);
 		}
 
@@ -102,7 +107,7 @@ void Menu_Admin(const string & ID) {
 		else if (c.substr(0, strlen("slookup")) == "slookup") {
 			string StudentID = c.substr(strlen("slookup") + 1);
 			if (StudentID.find_first_not_of(' ') != string::npos) {
-				ShowInfo(CurrentList, CurrentClassID, StudentID);
+				LookupStudent(CurrentList, CurrentClassID, StudentID);
 			}
 			else {
 				cout << "Usage: slookup <Student ID>\n";
@@ -114,7 +119,7 @@ void Menu_Admin(const string & ID) {
 				cout << "ERROR: No class loaded.\n";
 				continue;
 			}
-			Student Student_New;
+			StudentList::Student Student_New;
 			cout << "ID: "; getline(cin, Student_New.ID);
 			cout << "Last name: "; getline(cin, Student_New.LastName);
 			cout << "First name: "; getline(cin, Student_New.FirstName);
@@ -183,6 +188,8 @@ void Menu_Admin(const string & ID) {
 				cout << "Usage: sdelete <Student ID>\n";
 			}
 		}
+
+		///////////////////////////////////////////////////////////////////////////////
 		
 		else if (c == "limport") {
 			string FileName;
@@ -196,7 +203,7 @@ void Menu_Admin(const string & ID) {
 		}
 
 		else if (c == "llist") {
-			ListLecturers(CurrentLecturerList);
+			ListLecturer(CurrentLecturerList);
 		}
 
 		else if (c == "llookup") {
@@ -205,7 +212,7 @@ void Menu_Admin(const string & ID) {
 		else if (c.substr(0, strlen("llookup")) == "llookup") {
 			string LecturerID = c.substr(strlen("llookup") + 1);
 			if (LecturerID.find_first_not_of(' ') != string::npos) {
-				ShowInfo(CurrentLecturerList, LecturerID);
+				LookupLecturer(CurrentLecturerList, LecturerID);
 			}
 			else {
 				cout << "Usage: llookup <Lecturer ID>\n";
@@ -213,20 +220,19 @@ void Menu_Admin(const string & ID) {
 		}
 
 		else if (c == "ladd") {
-			Lecturer Lecturer_New;
-			cout << "Last name: "; getline(cin, Lecturer_New.LastName);
-			cout << "First name: "; getline(cin, Lecturer_New.FirstName);
-			cout << "Gender: "; getline(cin, Lecturer_New.Gender);
+			string LastName, FirstName, Gender;
+			cout << "Last name: "; getline(cin, LastName);
+			cout << "First name: "; getline(cin, FirstName);
+			cout << "Gender: "; getline(cin, Gender);
 			if (
-				Lecturer_New.LastName.empty()
-				|| Lecturer_New.FirstName.empty()
-				|| Lecturer_New.Gender.empty()
+				LastName.empty()
+				|| FirstName.empty()
+				|| Gender.empty()
 				) {
 				cout << "Empty value(s) is/are not allowed.\n";
 				continue;
 			}
-			Lecturer_New.ID = GenerateID(Lecturer_New.LastName, Lecturer_New.FirstName);
-			CreateLecturer(CurrentLecturerList, Lecturer_New);
+			CreateLecturer(CurrentLecturerList, LastName, FirstName, Gender);
 		}
 
 		else if (c == "ledit") {
@@ -269,11 +275,11 @@ void Menu_Admin(const string & ID) {
 				continue;
 			}
 			Capitalize(ClassID_New);
-			ImportStudents(filename, ClassID_New);
+			ImportClass(filename, ClassID_New);
 		}
 
 		else if (c == "clist") {
-			ListClasses();
+			ListClass();
 		}
 
 		else if (c == "cload") {
@@ -283,7 +289,7 @@ void Menu_Admin(const string & ID) {
 			CurrentClassID = c.substr(strlen("cload") + 1);
 			Capitalize(CurrentClassID);
 			if (CurrentClassID.find_first_not_of(' ') != string::npos) {
-				LoadStudents(CurrentList, CurrentClassID);
+				LoadClass(CurrentList, CurrentClassID);
 			}
 			else {
 				cout << "Usage: cload <Class ID>\n";

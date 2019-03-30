@@ -17,7 +17,7 @@ void Menu_Lecturer(const string & ID) {
 	LoadLecturer(CurrentLecturerList);
 
 	// Start-up script
-	ShowInfo(CurrentLecturerList, ID);
+	LookupLecturer(CurrentLecturerList, ID);
 	cout << "\n";
 	ShowHelp_General();
 	ShowHelp_Lecturer();
@@ -36,7 +36,7 @@ void Menu_Lecturer(const string & ID) {
 		if (c == "logout" || c == "-") { break; }
 		else if (c == "quit" || c == "exit") { exit(EXIT_SUCCESS); }
 		else if (c == "cls") { system("CLS"); }
-		else if (c == "info") { ShowInfo(CurrentLecturerList, ID); }
+		else if (c == "info") { LookupLecturer(CurrentLecturerList, ID); }
 		else if (c == "help") { ShowHelp_General(); ShowHelp_Lecturer(); }
 
 		else if (c == "passwd") {

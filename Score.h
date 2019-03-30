@@ -1,29 +1,27 @@
 #pragma once
 #include "_INCLUDES_.h"
 
-struct Scoreboard {
-	struct node {
+struct ScoreList
+{
+	struct Score {
 		string ID;
 		float Midterm, Final, Lab, Bonus;
-		node * next;
+		Score * next;
 	};
-	node * head = nullptr;
+	Score * head = nullptr;
 
-	void Add(string ID, float Midterm, float Final, float Lab, float Bonus);
-	void Delete(string ID);
-	~Scoreboard();
+	void Add(const string & ID, const float & Midterm, const float & Final, const float & Lab, const float & Bonus);
+	void Delete(const string & ID);
+	~ScoreList();
 };
 
-// internal
-void LoadScoreboard(Scoreboard & list, const string & CoursePath);
-void UpdateScoreboard(const Scoreboard & list, const string & CoursePath);
+///////////////////////////////////////////////////////////////////////////////
 
-// public
-void ImportScoreboard(const string & filepath, const string & CoursePath);
-void ExportScoreboard(const string & filepath, const string & CoursePath);
-//void ViewScoreboard(const string & CoursePath);
-void ViewScoreboard(const Scoreboard & list);
-//void ViewScoreboard(const string & CoursePath, const string & StudentID);
-void ViewScoreboard(const Scoreboard & list, const string & StudentID);
-//void EditScoreboard(const string & CoursePath, const string & StudentID, const float & Midterm, const float & Final, const float & Lab, const float & Bonus);
-void EditScoreboard(const Scoreboard & list, const string & CoursePath, const string & StudentID, const float & Midterm, const float & Final, const float & Lab, const float & Bonus);
+void LoadScore(ScoreList & List, const string & CoursePath);
+void UpdateScore(const ScoreList & List, const string & CoursePath);
+
+void ImportScore(const string & FileName, const string & CoursePath);
+void ExportScore(const string & FileName, const ScoreList & List, const string & CoursePath);
+void ViewScore(const ScoreList & List);
+void ViewScore(const ScoreList & List, const string & StudentID);
+void EditScore(ScoreList & List, const string & CoursePath, const string & StudentID, const float & Midterm, const float & Final, const float & Lab, const float & Bonus);

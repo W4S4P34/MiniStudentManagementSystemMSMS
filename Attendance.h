@@ -1,30 +1,29 @@
 #pragma once
 #include "_INCLUDES_.h"
 
-class AttendanceList {
-	string ClassID;
-	string CourseID;
-	
-	// per student
+struct AttendanceList
+{
 	struct Attendance {
-		string StudentID;
-		string Marks; // list of check-ins
+		string ID;
+		string CheckIns;
 		Attendance * next;
 	};
-
 	Attendance * head = nullptr;
+
+	void Add(const string & ID, const string & CheckIns);
+	void Delete(const string & ID);
+	~AttendanceList();
 };
 
-// student
-void CheckIn(AttendanceList & list, const string & StudentID);
+///////////////////////////////////////////////////////////////////////////////
 
-// internal
-void LoadAttendance(AttendanceList & list, const string & CoursePath);
-void UpdateAttendance(const AttendanceList & list, const string & CoursePath);
+void CheckIn(AttendanceList & List, const string & StudentID);
 
-// public
-void ImportAttendance(const string & filepath, const string & CoursePath);
-void ExportAttendance(const string & filepath, const string & CoursePath);
-void ViewAttendance(const AttendanceList & list);
-void ViewAttendance(const AttendanceList & list, const string & StudentID);
-void EditAttendance(AttendanceList & list, const string & StudentID);
+void LoadAttendance(AttendanceList & List, const string & CoursePath);
+void UpdateAttendance(const AttendanceList & List, const string & CoursePath);
+
+void ImportAttendance(const string & FileName, const string & CoursePath);
+void ExportAttendance(const string & FileName, const AttendanceList & List, const string & CoursePath);
+void ViewAttendance(const AttendanceList & List);
+void ViewAttendance(const AttendanceList & List, const string & StudentID);
+void EditAttendance(AttendanceList & List, const string & CoursePath, const string & StudentID, const size_t & Week, const bool & State);

@@ -1,11 +1,13 @@
 #include "Menu.h"
 
-void Capitalize(string & string) {
+void Capitalize(string & string)
+{
 	for (size_t i = 0; i < string.length(); i++)
 		string[i] = ::toupper(string[i]);
 }
 
-void ShowHelp_General() {
+void ShowHelp_General()
+{
 	cout << "[SHARED COMMANDS]\n"
 		<< "logout : Log out\n"
 		<< "-      : Log out\n"

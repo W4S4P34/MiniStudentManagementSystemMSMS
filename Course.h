@@ -5,7 +5,7 @@ struct Course {
 	string ID;
 	string Name;
 	string ClassID;
-	// string LecturerID;
+	string LecturerID;
 	tm Start, End;
 	string Room;
 };
@@ -24,11 +24,11 @@ void ListCourses(const string & Year, const string & Term);
 void ImportCourse(const string & FileName, const string & Year, const string & Term);
 void CreateCourse(const string & Year, const string & Term, Course & Course_New);
 void DeleteCourse(const string & Year, const string & Term, const string & CourseID, const string & ClassID);
+
 //void EditCourse(CourseList & list);
 //
 //void ListStudents_Course(CourseList & list, string CourseID);
 //void AddStudent_Course(CourseList & list, string StudentID);
 //void RemoveStudent_Course(CourseList & list, string StudentID); // Unenroll();
 //
-//// da hell
 //void ViewSchedule(const CourseList & list, string StudentID);

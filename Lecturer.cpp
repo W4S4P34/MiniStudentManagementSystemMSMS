@@ -1,42 +1,89 @@
 #include "Lecturer.h"
 
-void LecturerList::AddLecturer(Lecturer New) {
-	node * newnode = new node{ New, nullptr };
-	newnode->next = head;
-	head = newnode;
+void LecturerList::Add(const string & ID, const string & LastName, const string & FirstName, const string & Gender)
+{
+	Lecturer * newLecturer = new Lecturer{ ID, LastName, FirstName, Gender };
+
+	if (head == nullptr) {
+		head = newLecturer;
+	}
+	else {
+		Lecturer * append = head;
+		while (append->next != nullptr) append = append->next;
+		append->next = newLecturer;
+	}
+}
+
+void LecturerList::Delete(const string & ID)
+{
+	LecturerList::Lecturer * current = head;
+	LecturerList::Lecturer * previous = nullptr;
+
+	while (current != nullptr) {
+		if (current->ID == ID) {
+			if (current == head) {
+				head = head->next;
+				delete current;
+				break;
+			}
+			else if (current->next == nullptr) {
+				previous->next = nullptr;
+				delete current;
+				break;
+			}
+			else {
+				previous->next = current->next;
+				delete current;
+				break;
+			}
+		}
+		else {
+			previous = current;
+			current = current->next;
+		}
+	}
 }
 
 LecturerList::~LecturerList() {
 	while (head != nullptr) {
-		node * current = head;
+		Lecturer * current = head;
 		head = current->next;
 		delete current;
 	}
 }
 
-void LowerString(string & string) {
+///////////////////////////////////////////////////////////////////////////////
+
+void LowerString(string & string)
+{
 	for (size_t i = 0; i < string.length(); i++)
 		string[i] = ::tolower(string[i]);
 }
 
-string GenerateID(const string & LecturerLastName, const string & LecturerFirstName)
+string GenerateID(const string & LastName, const string & FirstName)
 {
-	string tempLastName = LecturerLastName;
-	LowerString(tempLastName);
 	string ID;
-	while (tempLastName.length() != 0)
+
+	string LastName_copy = LastName;
+	LowerString(LastName_copy);
+	while (LastName_copy.length() != 0)
 	{
-		ID += tempLastName.substr(0, 1);
-		int cut = tempLastName.find_first_of(" ");
+		ID += LastName_copy.substr(0, 1);
+		int cut = LastName_copy.find_first_of(" ");
 		if (cut != -1)
-			tempLastName.erase(0, cut + 1);
+			LastName_copy.erase(0, cut + 1);
 		else
 			break;
 	}
-	string tempFirstName = LecturerFirstName;
-	LowerString(tempFirstName);
-	return ID + tempFirstName;
+
+	string FirstName_copy = FirstName;
+	LowerString(FirstName_copy);
+	ID += FirstName_copy;
+
+	return ID;
 }
+
+///////////////////////////////////////////////////////////////////////////////
 
 void ImportLecturer(const string & FilePath, LecturerList & CurrentLecturerList) {
 	fstream ExistingFile;
@@ -49,7 +96,6 @@ void ImportLecturer(const string & FilePath, LecturerList & CurrentLecturerList)
 
 	ifstream file;
 	file.open(GetPath("../Import/Lecturers/" + FilePath));
-
 	if (!file.is_open()) {
 		cout << "ERROR: Unable to open lecturer list.\n";
 		return;
@@ -57,14 +103,13 @@ void ImportLecturer(const string & FilePath, LecturerList & CurrentLecturerList)
 
 	LecturerList temp;
 	string ID, LastName, FirstName, Gender;
-
 	while (!file.eof())
 	{
 		getline(file, LastName, ',');
 		getline(file, FirstName, ',');
 		getline(file, Gender);
 		ID = GenerateID(LastName, FirstName);
-		temp.AddLecturer({ ID, LastName, FirstName, Gender});
+		temp.Add(ID, LastName, FirstName, Gender);
 		CreateLogin(ID);
 	}
 
@@ -72,21 +117,21 @@ void ImportLecturer(const string & FilePath, LecturerList & CurrentLecturerList)
 	LoadLecturer(CurrentLecturerList);
 
 	temp.~LecturerList();
-	cout << "Successfully imported Lecturers's data.\n";
+	cout << "Successfully imported Lecturers's \n";
 }
 
-void ShowInfo(const LecturerList & CurrentList, const string & LecturerID)
+void LookupLecturer(const LecturerList & List, const string & LecturerID)
 {
-	if (CurrentList.head == nullptr) {
+	if (List.head == nullptr) {
 		cout << "ERROR: No lecturer loaded.\n";
 		return;
 	}
-	LecturerList::node * current = CurrentList.head;
+	LecturerList::Lecturer * current = List.head;
 	while (current != nullptr) {
-		if (LecturerID == current->data.ID) {
-			cout << "ID: " << current->data.ID << endl;
-			cout << "Full Name: " << current->data.LastName << " " << current->data.FirstName << endl;
-			cout << "Gender: " << current->data.Gender << endl;
+		if (LecturerID == current->ID) {
+			cout << "ID: " << current->ID << endl;
+			cout << "Full Name: " << current->LastName << " " << current->FirstName << endl;
+			cout << "Gender: " << current->Gender << endl;
 			return;
 		}
 		current = current->next;
@@ -94,7 +139,7 @@ void ShowInfo(const LecturerList & CurrentList, const string & LecturerID)
 	cout << "Lecturer " << LecturerID << " not found.\n";
 }
 
-void UpdateLecturerFile(const LecturerList & CurrentList)
+void UpdateLecturerFile(const LecturerList & List)
 {
 	ofstream file;
 	file.open(GetPath("Lecturers/Lecturers.txt"));
@@ -102,29 +147,28 @@ void UpdateLecturerFile(const LecturerList & CurrentList)
 		cout << "ERROR: Unable to create file.\n";
 		return;
 	}
-	LecturerList::node * current = CurrentList.head;
+	LecturerList::Lecturer * current = List.head;
 	while (current != nullptr) {
-		file << current->data.ID << ","
-			<< current->data.LastName << ","
-			<< current->data.FirstName << ","
-			<< current->data.Gender << endl;
+		file << current->ID << ","
+			<< current->LastName << ","
+			<< current->FirstName << ","
+			<< current->Gender << endl;
 		current = current->next;
 	}
 	file.close();
 	cout << "Successfully updated Lecturers's data\n";
 }
 
-void LoadLecturer(LecturerList & CurrentList)
+void LoadLecturer(LecturerList & List)
 {
 	ifstream file;
 	file.open(GetPath("Lecturers/Lecturers.txt"));
-
 	if (!file.is_open()) {
 		cout << "ERROR: Unable to load Lecturers. Check if this file exists.\n";
 		return;
 	}
 
-	CurrentList.~LecturerList();
+	List.~LecturerList();
 
 	string ID, LastName, FirstName, Gender;
 	string Check;
@@ -140,31 +184,34 @@ void LoadLecturer(LecturerList & CurrentList)
 		getline(file, LastName, ',');
 		getline(file, FirstName, ',');
 		getline(file, Gender);
-		CurrentList.AddLecturer({ ID, LastName, FirstName, Gender });
+		List.Add(ID, LastName, FirstName, Gender);
 	}
 
-	cout << "Successfully loaded Lecturers's data.\n";
+	cout << "Successfully loaded Lecturers's \n";
 }
 
-void CreateLecturer(LecturerList & CurrentList, const Lecturer & Lecturer_New) {
-	if (CurrentList.head == nullptr) {
+void CreateLecturer(LecturerList & List, const string & LastName, const string & FirstName, const string & Gender)
+{
+	if (List.head == nullptr) {
 		cout << "ERROR: No lecturer loaded.\n";
 		return;
 	}
-	CurrentList.AddLecturer({ Lecturer_New.ID, Lecturer_New.LastName, Lecturer_New.FirstName, Lecturer_New.Gender });
-	CreateLogin(Lecturer_New.ID);
-	UpdateLecturerFile(CurrentList);
-	cout << "Successfully created lecturer " << Lecturer_New.ID << ".\n";
+	string ID = GenerateID(LastName, FirstName);
+	List.Add(ID, LastName, FirstName, Gender);
+	CreateLogin(ID);
+	UpdateLecturerFile(List);
+	cout << "Successfully created lecturer " << ID << ".\n";
 }
 
-void EditLecturer(LecturerList & CurrentList, const string & LecturerID) {
-	if (CurrentList.head == nullptr) {
+void EditLecturer(LecturerList & List, const string & LecturerID)
+{
+	if (List.head == nullptr) {
 		cout << "ERROR: No lecturer loaded.\n";
 		return;
 	}
-	LecturerList::node * current = CurrentList.head;
+	LecturerList::Lecturer * current = List.head;
 	while (current != nullptr) {
-		if (current->data.ID == LecturerID)
+		if (current->ID == LecturerID)
 			break;
 		else
 			current = current->next;
@@ -185,40 +232,41 @@ void EditLecturer(LecturerList & CurrentList, const string & LecturerID) {
 	switch (info) {
 	case 1: {
 		cout << "Enter new Last name: ";
-		getline(cin, current->data.LastName, '\n');
+		getline(cin, current->LastName, '\n');
 		break;
 	}
 	case 2: {
 		cout << "Enter new First name: ";
-		getline(cin, current->data.FirstName, '\n');
+		getline(cin, current->FirstName, '\n');
 		break;
 	}
 	case 3: {
 		cout << "Enter new Gender: ";
-		getline(cin, current->data.Gender);
+		getline(cin, current->Gender);
 		break;
 	}
 	}
-	current->data.ID = GenerateID(current->data.LastName, current->data.FirstName);
-	UpdateLecturerFile(CurrentList);
+	current->ID = GenerateID(current->LastName, current->FirstName);
+	UpdateLecturerFile(List);
 	cout << "Lecturer's info edited.\n";
 }
 
-void DeleteLecturer(LecturerList & CurrentList, const string & LecturerID) {
-	if (CurrentList.head == nullptr) {
+void DeleteLecturer(LecturerList & List, const string & LecturerID)
+{
+	if (List.head == nullptr) {
 		cout << "ERROR: No lecturer loaded.\n";
 		return;
 	}
-	LecturerList::node * current = CurrentList.head;
-	LecturerList::node * previous = nullptr;
+	LecturerList::Lecturer * current = List.head;
+	LecturerList::Lecturer * previous = nullptr;
 
 	while (current != nullptr)
 	{
-		if (current->data.ID == LecturerID)
+		if (current->ID == LecturerID)
 		{
-			if (current == CurrentList.head)
+			if (current == List.head)
 			{
-				CurrentList.head = CurrentList.head->next;
+				List.head = List.head->next;
 				delete current;
 				break;
 			}
@@ -242,18 +290,19 @@ void DeleteLecturer(LecturerList & CurrentList, const string & LecturerID) {
 	}
 
 	DeleteLogin(LecturerID);
-	UpdateLecturerFile(CurrentList);
+	UpdateLecturerFile(List);
 }
 
-void ListLecturers(const LecturerList & CurrentList) {
-	if (CurrentList.head == nullptr) {
+void ListLecturer(const LecturerList & List)
+{
+	if (List.head == nullptr) {
 		cout << "ERROR: No lecturer loaded.\n";
 		return;
 	}
-	LecturerList::node * current = CurrentList.head;
+	LecturerList::Lecturer * current = List.head;
 	while (current != nullptr) {
-		cout << current->data.ID << ", "
-			<< current->data.LastName << " " << current->data.FirstName
+		cout << current->ID << ", "
+			<< current->LastName << " " << current->FirstName
 			<< endl;
 		current = current->next;
 	}

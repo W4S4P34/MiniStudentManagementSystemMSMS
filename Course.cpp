@@ -119,9 +119,9 @@ void ListCourses(const string & Year, const string & Term) {
 
 void CreateCourse(const string & Year, const string & Term, Course & Course_New) {
 	StudentList temp;
-	LoadStudents(temp, Course_New.ClassID);
+	LoadClass(temp, Course_New.ClassID);
 	if (temp.head == nullptr) return;
-	StudentList::node * current;
+	StudentList::Student * current;
 
 	fs::path p;
 
@@ -161,7 +161,7 @@ void CreateCourse(const string & Year, const string & Term, Course & Course_New)
 	time_t End = mktime(&Course_New.End);
 	size_t DC = ceil((End-Start)/(60*60*24*7));
 	while (current != nullptr) {
-		AttendanceFile << current->data.ID << ",";
+		AttendanceFile << current->ID << ",";
 		for (size_t i = 0; i < DC; i++)
 			AttendanceFile << "-";
 		AttendanceFile << endl;
@@ -173,7 +173,7 @@ void CreateCourse(const string & Year, const string & Term, Course & Course_New)
 	ScoreboardFile.open(GetPath("Courses/" + Year + "/" + Term + "/" + Course_New.ID + "_" + Course_New.ClassID + "_Score.txt"));
 	current = temp.head;
 	while (current != nullptr) {
-		ScoreboardFile << current->data.ID << ",0,0,0,0" << endl;
+		ScoreboardFile << current->ID << ",0,0,0,0" << endl;
 		current = current->next;
 	}
 	ScoreboardFile.close();
