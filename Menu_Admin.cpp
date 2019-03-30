@@ -50,16 +50,20 @@ void ShowHelp_Admin()
 }
 
 void Menu_Admin(const string & ID) {
-	StudentList CurrentList;
-	LecturerList CurrentLecturerList;
+	// Session "memory"
 	string CurrentClassID;
+	StudentList CurrentStudentList;
+	string CurrentCoursePath;
+	Course CurrentCourseInfo;
+	AttendanceList CurrentAttendanceList;
+	ScoreList CurrentScoreList;
+	LecturerList CurrentLecturerList;
 
 	// Start-up script
 	LoadLecturer(CurrentLecturerList);
 	cout << "\n";
 	ShowHelp_General();
 	ShowHelp_Admin();
-	// End of start-up script
 
 	// Intepreter
 	do {
@@ -73,7 +77,7 @@ void Menu_Admin(const string & ID) {
 
 		if (c == "logout" || c == "-") { break; }
 		else if (c == "quit" || c == "exit") { exit(EXIT_SUCCESS); }
-		else if (c == "cls") { system("CLS"); }
+		else if (c == "cls") { system("CLS"); cout << "\n"; continue; }
 		else if (c == "help") { ShowHelp_General(); ShowHelp_Admin(); }
 
 		else if (c == "passwd")
@@ -94,31 +98,26 @@ void Menu_Admin(const string & ID) {
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		// STUDENT ////////////////////////////////////////////////////////////////////
 
 		else if (c == "slist")
 		{
-			ListStudents(CurrentList, CurrentClassID);
+			if (CurrentClassID.empty()) { cout << "ERROR: No classes loaded."; cout << "\n\n"; continue; }
+			ListStudents(CurrentStudentList, CurrentClassID);
 		}
 
-		else if (c == "slookup") {
-			cout << "Usage: slookup <Student ID>\n";
-		}
-		else if (c.substr(0, strlen("slookup")) == "slookup") {
-			string StudentID = c.substr(strlen("slookup") + 1);
-			if (StudentID.find_first_not_of(' ') != string::npos) {
-				LookupStudent(CurrentList, CurrentClassID, StudentID);
-			}
-			else {
-				cout << "Usage: slookup <Student ID>\n";
-			}
+		else if (c == "slookup")
+		{
+			if (CurrentClassID.empty()) { cout << "ERROR: No classes loaded."; cout << "\n\n"; continue; }
+			string StudentID;
+			cout << "Enter student ID: "; getline(cin, StudentID);
+			if (StudentID.empty()) { cout << "Invalid student ID."; cout << "\n\n"; continue; }
+			LookupStudent(CurrentStudentList, CurrentClassID, StudentID);
 		}
 
-		else if (c == "sadd") {
-			if (CurrentClassID.empty()) {
-				cout << "ERROR: No class loaded.\n";
-				continue;
-			}
+		else if (c == "sadd")
+		{
+			if (CurrentClassID.empty()) { cout << "ERROR: No classes loaded."; cout << "\n\n"; continue; }
 			StudentList::Student Student_New;
 			cout << "ID: "; getline(cin, Student_New.ID);
 			cout << "Last name: "; getline(cin, Student_New.LastName);
@@ -127,69 +126,38 @@ void Menu_Admin(const string & ID) {
 			cout << "Birth/Year: "; cin >> Student_New.DOB.y;
 			cout << "Birth/Month: "; cin >> Student_New.DOB.m;
 			cout << "Birth/Day: "; cin >> Student_New.DOB.d;
-			while (cin.get() != '\n');
-			CreateStudent(CurrentList, CurrentClassID, Student_New);
+			while(cin.get() != '\n');
+			CreateStudent(CurrentStudentList, CurrentClassID, Student_New);
 		}
 
-		else if (c == "sedit") {
-			cout << "Usage: sedit <Student ID>\n";
-		}
-		else if (c.substr(0, strlen("sedit")) == "sedit") {
-			string StudentID = c.substr(strlen("sedit") + 1);
-			if (StudentID.find_first_not_of(' ') != string::npos) {
-				EditStudent(CurrentList, CurrentClassID, StudentID);
-			}
-			else {
-				cout << "Usage: sedit <Student ID>\n";
-			}
+		else if (c == "sedit")
+		{
+			if (CurrentClassID.empty()) { cout << "ERROR: No classes loaded."; cout << "\n\n"; continue; }
+			string StudentID;
+			cout << "Enter student ID: "; getline(cin, StudentID);
+			EditStudent(CurrentStudentList, CurrentClassID, StudentID);
 		}
 
-		else if (c == "smove") {
-			cout << "Usage: smove <Student ID>\n";
-		}
-		else if (c.substr(0, strlen("smove")) == "smove") {
-			if (CurrentClassID.empty()) {
-				cout << "ERROR: No class loaded.\n";
-				continue;
-			}
-			string StudentID = c.substr(strlen("smove") + 1);
-			if (StudentID.find_first_not_of(' ') != string::npos) {
-
-				string ClassID_New;
-				cout << "Enter target class ID: ";
-				getline(cin, ClassID_New);
-				Capitalize(ClassID_New);
-
-				ifstream temp;
-				temp.open(GetPath("Classes/" + ClassID_New + ".txt"));
-
-				if (ClassID_New.empty() || !temp.is_open()) {
-					cout << "Invalid class ID.\n";
-				}
-				else {
-					MoveStudent(CurrentList, CurrentClassID, ClassID_New, StudentID);
-				}
-
-			}
-			else {
-				cout << "Usage: smove <Student ID>\n";
-			}
+		else if (c == "smove")
+		{
+			if (CurrentClassID.empty()) { cout << "ERROR: No classes loaded."; cout << "\n\n"; continue; }
+			string StudentID;
+			cout << "Enter student ID: "; getline(cin, StudentID);
+			string ClassID_New;
+			cout << "Enter new class ID: "; getline(cin, ClassID_New); Capitalize(ClassID_New);
+			if (CurrentClassID.empty()) { cout << "ERROR: Invalid class ID."; cout << "\n\n"; continue; }
+			MoveStudent(CurrentStudentList, CurrentClassID, ClassID_New, StudentID);
 		}
 
-		else if (c == "sdelete") {
-			cout << "Usage: sdelete <Student ID>\n";
-		}
-		else if (c.substr(0, strlen("sdelete")) == "sdelete") {
-			string StudentID = c.substr(strlen("sdelete") + 1);
-			if (StudentID.find_first_not_of(' ') != string::npos) {
-				DeleteStudent(CurrentList, CurrentClassID, StudentID);
-			}
-			else {
-				cout << "Usage: sdelete <Student ID>\n";
-			}
+		else if (c == "sdelete")
+		{
+			if (CurrentClassID.empty()) { cout << "ERROR: No classes loaded."; cout << "\n\n"; continue; }
+			string StudentID;
+			cout << "Enter student ID: "; getline(cin, StudentID);
+			DeleteStudent(CurrentStudentList, CurrentClassID, StudentID);
 		}
 
-		///////////////////////////////////////////////////////////////////////////////
+		// LECTURER ///////////////////////////////////////////////////////////////////
 		
 		else if (c == "limport") {
 			string FileName;
@@ -289,7 +257,7 @@ void Menu_Admin(const string & ID) {
 			CurrentClassID = c.substr(strlen("cload") + 1);
 			Capitalize(CurrentClassID);
 			if (CurrentClassID.find_first_not_of(' ') != string::npos) {
-				LoadClass(CurrentList, CurrentClassID);
+				LoadClass(CurrentStudentList, CurrentClassID);
 			}
 			else {
 				cout << "Usage: cload <Class ID>\n";
@@ -548,7 +516,7 @@ void Menu_Admin(const string & ID) {
 		//	EditScoreboard(Year + "/" + Term + "/" + CourseID + "_" + ClassID, StudentID, Midterm, Final, Lab, Bonus);
 		//}
 
-		else { cout << "Invalid command.\n"; }
-		cout << "\n";
+		else { cout << "Invalid command."; }
+		cout << "\n\n";
 	} while (1);
 }

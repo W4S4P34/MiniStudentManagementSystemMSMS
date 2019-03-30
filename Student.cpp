@@ -53,7 +53,8 @@ StudentList::~StudentList() {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ImportClass(const string & FilePath, const string & ClassID) {
+void ImportClass(const string & FilePath, const string & ClassID)
+{
 	fstream ExistingClass;
 	ExistingClass.open(GetPath("Classes/" + ClassID + ".txt"), fstream::in);
 	if (ExistingClass.is_open()) {
@@ -102,7 +103,8 @@ void ImportClass(const string & FilePath, const string & ClassID) {
 	// LoadStudents(CurrentList, ClassID);
 }
 
-void LookupStudent(const StudentList & CurrentList, const string & ClassID, const string & StudentID) {
+void LookupStudent(const StudentList & CurrentList, const string & ClassID, const string & StudentID)
+{
 	if (ClassID.empty()) {
 		cout << "ERROR: No class loaded.\n";
 		return;
@@ -121,7 +123,8 @@ void LookupStudent(const StudentList & CurrentList, const string & ClassID, cons
 	cout << "Student " << StudentID << " not found.\n";
 }
 
-void UpdateClass(const StudentList & CurrentList, const string & ClassID) {
+void UpdateClass(const StudentList & CurrentList, const string & ClassID)
+{
 	ofstream file;
 	file.open(GetPath("Classes/" + ClassID + ".txt"));
 	if (!file.is_open()) {
@@ -145,7 +148,8 @@ void UpdateClass(const StudentList & CurrentList, const string & ClassID) {
 	cout << "Successfully updated " << ClassID << ".\n";
 }
 
-void LoadClass(StudentList & CurrentList, const string & ClassID) {
+void LoadClass(StudentList & CurrentList, const string & ClassID)
+{
 	ifstream file;
 	file.open(GetPath("Classes/" + ClassID + ".txt"));
 
@@ -180,18 +184,30 @@ void LoadClass(StudentList & CurrentList, const string & ClassID) {
 	cout << "Successfully loaded " << ClassID << ".\n";
 }
 
-void CreateStudent(StudentList & CurrentList, const string & ClassID, const StudentList::Student & Student_New) {
-	if (ClassID.empty()) {
-		cout << "ERROR: No class loaded.\n";
+void CreateStudent(StudentList & CurrentList, const string & ClassID, const StudentList::Student & Student_New)
+{
+	// rudimentary date checking
+	if (
+		Student_New.ID.empty()
+		|| Student_New.LastName.empty()
+		|| Student_New.FirstName.empty()
+		|| Student_New.Gender.empty()
+		|| Student_New.DOB.y < 0
+		|| (Student_New.DOB.m < 1 || Student_New.DOB.m > 12)
+		|| (Student_New.DOB.d < 1 || Student_New.DOB.d > 31)
+	) {
+		cout << "ERORR: Invalid input found.";
 		return;
 	}
+
 	CurrentList.Add(Student_New.ID, Student_New.LastName, Student_New.FirstName, Student_New.Gender, Student_New.DOB);
 	CreateLogin(Student_New.ID, ClassID);
 	UpdateClass(CurrentList, ClassID);
 	cout << "Successfully created student " << Student_New.ID << " in class " << ClassID << ".\n";
 }
 
-void EditStudent(StudentList & CurrentList, const string & ClassID, const string & StudentID) {
+void EditStudent(StudentList & CurrentList, const string & ClassID, const string & StudentID)
+{
 	if (ClassID.empty()) {
 		cout << "ERROR: No class loaded.\n";
 		return;
@@ -246,7 +262,8 @@ void EditStudent(StudentList & CurrentList, const string & ClassID, const string
 	cout << "Student's info edited.\n";
 }
 
-void DeleteStudent(StudentList & CurrentList, const string & ClassID, const string & StudentID) {
+void DeleteStudent(StudentList & CurrentList, const string & ClassID, const string & StudentID)
+{
 	if (ClassID.empty()) {
 		cout << "ERROR: No class loaded.\n";
 		return;
@@ -257,7 +274,8 @@ void DeleteStudent(StudentList & CurrentList, const string & ClassID, const stri
 	UpdateClass(CurrentList, ClassID);
 }
 
-void ListStudents(const StudentList & CurrentList, const string & ClassID) {
+void ListStudents(const StudentList & CurrentList, const string & ClassID)
+{
 	if (ClassID.empty()) {
 		cout << "ERROR: No class loaded.\n";
 		return;
@@ -271,10 +289,16 @@ void ListStudents(const StudentList & CurrentList, const string & ClassID) {
 	}
 }
 
-void MoveStudent(StudentList & CurrentList, const string & ClassID_Old, const string & ClassID_New, const string & StudentID) {
+void MoveStudent(StudentList & CurrentList, const string & ClassID_Old, const string & ClassID_New, const string & StudentID)
+{
 	StudentList temp;
-	StudentList::Student CurrentStudent;
+	LoadClass(temp, ClassID_New);
+	if (temp.head == nullptr) {
+		cout << "ERROR: Unable to open class " << ClassID_New << ". Check if the class exists.";
+		return;
+	}
 
+	StudentList::Student CurrentStudent;
 	StudentList::Student * current = CurrentList.head;
 	while (current != nullptr) {
 		if (current->ID == StudentID) {
@@ -287,15 +311,15 @@ void MoveStudent(StudentList & CurrentList, const string & ClassID_Old, const st
 		cout << "ERROR: Student " << StudentID << " not found.\n";
 		return;
 	}
-	DeleteStudent(CurrentList, ClassID_Old, CurrentStudent.ID);
 
-	LoadClass(temp, ClassID_New);
+	DeleteStudent(CurrentList, ClassID_Old, CurrentStudent.ID);
 	CreateStudent(temp, ClassID_New, CurrentStudent);
 
 	temp.~StudentList();
 }
 
-void ListClass() {
+void ListClass()
+{
 	fs::path p = GetPath("Classes");
 	if (fs::is_empty(p)) {
 		cout << "No classes available.\n";
