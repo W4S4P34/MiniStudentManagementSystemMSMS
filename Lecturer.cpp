@@ -129,9 +129,9 @@ void LookupLecturer(const LecturerList & List, const string & LecturerID)
 	LecturerList::Lecturer * current = List.head;
 	while (current != nullptr) {
 		if (LecturerID == current->ID) {
-			cout << "ID: " << current->ID << endl;
-			cout << "Full Name: " << current->LastName << " " << current->FirstName << endl;
-			cout << "Gender: " << current->Gender << endl;
+			cout << "ID: " << current->ID << "\n";
+			cout << "Full Name: " << current->LastName << " " << current->FirstName << "\n";
+			cout << "Gender: " << current->Gender << "\n";
 			return;
 		}
 		current = current->next;
@@ -152,7 +152,7 @@ void UpdateLecturerFile(const LecturerList & List)
 		file << current->ID << ","
 			<< current->LastName << ","
 			<< current->FirstName << ","
-			<< current->Gender << endl;
+			<< current->Gender << "\n";
 		current = current->next;
 	}
 	file.close();
@@ -223,9 +223,9 @@ void EditLecturer(LecturerList & List, const string & LecturerID)
 
 	size_t info;
 	cout << "Enter the information you want to change: \n"
-		<< "1. Last name" << endl
-		<< "2. First name" << endl
-		<< "3. Gender" << endl;
+		<< "1. Last name" << "\n"
+		<< "2. First name" << "\n"
+		<< "3. Gender" << "\n";
 	cin >> info;
 
 	while (cin.get() != '\n');
@@ -303,7 +303,7 @@ void ListLecturer(const LecturerList & List)
 	while (current != nullptr) {
 		cout << current->ID << ", "
 			<< current->LastName << " " << current->FirstName
-			<< endl;
+			<< "\n";
 		current = current->next;
 	}
 }

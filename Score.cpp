@@ -119,7 +119,7 @@ void ImportScore(const string & FileName, const string & CoursePath) {
 	getline(file_in, skip);
 	while (!file_in.eof()) {
 		getline(file_in, copy);
-		file_out << copy << endl;
+		file_out << copy << "\n";
 	}
 	file_in.close();
 	file_out.close();
@@ -133,7 +133,7 @@ void ExportScore(const string & FileName, const ScoreList & List, const string &
 		return;
 	}
 
-	file << "ID,Midterm,Final,Lab,Bonus" << endl;
+	file << "ID,Midterm,Final,Lab,Bonus" << "\n";
 
 	ScoreList::Score * current = List.head;
 	while (current != nullptr) {
@@ -142,7 +142,7 @@ void ExportScore(const string & FileName, const ScoreList & List, const string &
 			<< setprecision(3) << current->Final << ","
 			<< setprecision(3) << current->Lab << ","
 			<< setprecision(3) << current->Bonus
-			<< endl;
+			<< "\n";
 		current = current->next;
 	}
 	file.close();

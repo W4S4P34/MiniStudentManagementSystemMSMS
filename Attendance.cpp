@@ -92,7 +92,7 @@ void UpdateAttendance(const AttendanceList & List, const string & CoursePath)
 
 	AttendanceList::Attendance * current = List.head;
 	while (current != nullptr) {
-		file << current->ID << "," << current->CheckIns << endl;
+		file << current->ID << "," << current->CheckIns << "\n";
 		current = current->next;
 	}
 	file.close();
@@ -113,7 +113,7 @@ void ImportAttendance(const string & FileName, const string & CoursePath)
 	getline(file_in, skip);
 	while (!file_in.eof()) {
 		getline(file_in, copy);
-		file_out << copy << endl;
+		file_out << copy << "\n";
 	}
 	file_in.close();
 	file_out.close();
@@ -128,11 +128,11 @@ void ExportAttendance(const string & FileName, const AttendanceList & List, cons
 		return;
 	}
 
-	file << "ID,CheckIns" << endl;
+	file << "ID,CheckIns" << "\n";
 
 	AttendanceList::Attendance * current = List.head;
 	while (current != nullptr) {
-		file << current->ID << "," << current->CheckIns << endl;
+		file << current->ID << "," << current->CheckIns << "\n";
 		current = current->next;
 	}
 	file.close();
@@ -141,7 +141,7 @@ void ExportAttendance(const string & FileName, const AttendanceList & List, cons
 void ViewAttendance(const AttendanceList & List) {
 	AttendanceList::Attendance * current = List.head;
 	while (current != nullptr) {
-		cout << current->ID << "," << current->CheckIns << endl;
+		cout << current->ID << "," << current->CheckIns << "\n";
 		current = current->next;
 	}
 }

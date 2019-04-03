@@ -112,10 +112,10 @@ void LookupStudent(const StudentList & CurrentList, const string & ClassID, cons
 	StudentList::Student * current = CurrentList.head;
 	while (current != nullptr) {
 		if (StudentID == current->ID) {
-			cout << "ID: " << current->ID << endl;
-			cout << "Full Name: " << current->LastName << " " << current->FirstName << endl;
-			cout << "Gender: " << current->Gender << endl;
-			cout << "Date of birth (yyyy/mm/dd): " << current->DOB.y << '/' << current->DOB.m << '/' << current->DOB.d << endl;
+			cout << "ID: " << current->ID << "\n";
+			cout << "Full Name: " << current->LastName << " " << current->FirstName << "\n";
+			cout << "Gender: " << current->Gender << "\n";
+			cout << "Date of birth (yyyy/mm/dd): " << current->DOB.y << '/' << current->DOB.m << '/' << current->DOB.d << "\n";
 			return;
 		}
 		current = current->next;
@@ -134,7 +134,7 @@ void UpdateClass(const StudentList & CurrentList, const string & ClassID)
 	file << ClassID;
 	StudentList::Student * current = CurrentList.head;
 	while (current != nullptr) {
-		file << endl
+		file << "\n"
 			<< current->ID << ","
 			<< current->LastName << ","
 			<< current->FirstName << ","
@@ -226,10 +226,10 @@ void EditStudent(StudentList & CurrentList, const string & ClassID, const string
 
 	size_t info;
 	cout << "Enter the information you want to change: \n"
-		<< "1. Last name" << endl
-		<< "2. First name" << endl
-		<< "3. Gender" << endl
-		<< "4. Day of Birth" << endl;
+		<< "1. Last name" << "\n"
+		<< "2. First name" << "\n"
+		<< "3. Gender" << "\n"
+		<< "4. Day of Birth" << "\n";
 	cin >> info;
 
 	while (cin.get() != '\n');
@@ -284,7 +284,7 @@ void ListStudents(const StudentList & CurrentList, const string & ClassID)
 	while (current != nullptr) {
 		cout << current->ID << ", "
 			<< current->LastName << " " << current->FirstName
-			<< endl;
+			<< "\n";
 		current = current->next;
 	}
 }
@@ -329,6 +329,6 @@ void ListClass()
 		string FileName = p.path().string();
 		FileName = FileName.substr(FileName.find_last_of('\\') + 1);
 		FileName = FileName.substr(0, FileName.find_last_of('.'));
-		cout << FileName << endl;
+		cout << FileName << "\n";
 	}
 }

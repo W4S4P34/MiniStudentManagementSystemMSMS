@@ -166,7 +166,7 @@ void Menu_Admin(const string & ID) {
 				cout << "Invalid filename is invalid.\n";
 				continue;
 			}
-			cout << GetPath("../Import/Lecturers/" + FileName) << endl;
+			cout << GetPath("../Import/Lecturers/" + FileName) << "\n";
 			ImportLecturer(FileName, CurrentLecturerList);
 		}
 
@@ -233,7 +233,7 @@ void Menu_Admin(const string & ID) {
 			cout << "Enter filename: ";
 			string filename;
 			getline(cin, filename);
-			cout << GetPath("../import/student_info/" + filename) << endl;
+			cout << GetPath("../import/student_info/" + filename) << "\n";
 
 			cout << "Enter class ID: ";
 			string ClassID_New;
@@ -381,7 +381,7 @@ void Menu_Admin(const string & ID) {
 				cout << "Empty filename, year and/or term is invalid.\n";
 				continue;
 			}
-			cout << GetPath("../Import/Courses/" + FileName) << endl;
+			cout << GetPath("../Import/Courses/" + FileName) << "\n";
 			ImportCourse(FileName, Year, Term);
 		}
 
@@ -436,7 +436,10 @@ void Menu_Admin(const string & ID) {
 			Course_New.End.tm_min = stoi(EndMM);
 			Course_New.End.tm_wday = Course_New.Start.tm_wday;
 
-			CreateCourse(Year, Term, Course_New);
+			Course_New.Year = Year;
+			Course_New.Term = Term;
+
+			CreateCourse(Course_New);
 		}
 
 		else if (c == "rdelete") {

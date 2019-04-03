@@ -197,14 +197,14 @@ void LoginList::Remove(string ID) {
 void CreateLogin(const string & StudentID, const string & ClassID) {
 	fstream LoginFile;
 	LoginFile.open(GetPath(LOGIN_LIST_STUDENT), fstream::app);
-	LoginFile << StudentID << '@' << ClassID << ",da39a3ee5e6b4b0d3255bfef95601890afd80709" << endl;
+	LoginFile << StudentID << '@' << ClassID << ",da39a3ee5e6b4b0d3255bfef95601890afd80709" << "\n";
 	LoginFile.close();
 }
 
 void CreateLogin(const string & LecturerID) {
 	fstream LoginFile;
 	LoginFile.open(GetPath(LOGIN_LIST_LECTURER), fstream::app);
-	LoginFile << LecturerID << ",da39a3ee5e6b4b0d3255bfef95601890afd80709" << endl;
+	LoginFile << LecturerID << ",da39a3ee5e6b4b0d3255bfef95601890afd80709" << "\n";
 	LoginFile.close();
 }
 
@@ -231,7 +231,7 @@ void DeleteLogin(const string & StudentID, const string & ClassID) {
 	LoginFile.open(GetPath(LOGIN_LIST_STUDENT), fstream::out);
 	LoginList::node * current = LoginList.head;
 	while (current != nullptr) {
-		LoginFile << current->ID << ',' << current->Password << endl;
+		LoginFile << current->ID << ',' << current->Password << "\n";
 		current = current->next;
 	}
 	LoginFile.close();
@@ -259,7 +259,7 @@ void DeleteLogin(const string & LecturerID) {
 	LoginFile.open(GetPath(LOGIN_LIST_LECTURER), fstream::out);
 	LoginList::node * current = LoginList.head;
 	while (current != nullptr) {
-		LoginFile << current->ID << ',' << current->Password << endl;
+		LoginFile << current->ID << ',' << current->Password << "\n";
 		current = current->next;
 	}
 	LoginFile.close();
