@@ -9,7 +9,7 @@ void ListYears() {
 	for (auto& p : fs::directory_iterator(GetPath("Courses"))) {
 		string FileName = p.path().string();
 		FileName = FileName.substr(FileName.find_last_of('\\') + 1);
-		cout << FileName << endl;
+		cout << FileName << "\n";
 	}
 }
 
@@ -57,7 +57,7 @@ void ListTerms(const string & Year) {
 	for (auto& p : fs::directory_iterator(GetPath("Courses/" + Year))) {
 		string FileName = p.path().string();
 		FileName = FileName.substr(FileName.find_last_of('\\') + 1);
-		cout << FileName << endl;
+		cout << FileName << "\n";
 	}
 }
 
@@ -113,73 +113,100 @@ void ListCourses(const string & Year, const string & Term) {
 		FileName = FileName.substr(FileName.find_last_of('\\') + 1);
 		// FileName = FileName.substr(0, FileName.find_last_of('.'));
 		if (FileName.find_last_of('.') == FileName.npos)
-			cout << FileName << endl;
+			cout << FileName << "\n";
 	}
 }
 
-void CreateCourse(const string & Year, const string & Term, Course & Course_New) {
-	StudentList temp;
-	LoadClass(temp, Course_New.ClassID);
-	if (temp.head == nullptr) return;
+void CreateCourse(Course & NewCourse)
+{
+	// VALIDATE INPUT /////////////////////////////////////////////////////////////
+
+	StudentList StudentList;
 	StudentList::Student * current;
+	LoadClass(StudentList, NewCourse.ClassID);
+	if (StudentList.head == nullptr) {
+		cout << "Course not imported: Class " << NewCourse.ClassID << " does not exist.";
+		return;
+	}
 
-	fs::path p;
-
-	p = GetPath("Courses/" + Year + "/" + Term);
-	if (!fs::exists(p)) {
-		cout << "Year " << Year << " and/or term " << Term << " does not exist.\n";
+	fs::path YearTermPath = GetPath("Courses/" + NewCourse.Year + "/" + NewCourse.Term);
+	if (!fs::exists(YearTermPath)) {
+		cout << "Course not imported: Year " << NewCourse.Year << " and/or Term " << NewCourse.Term << " does not exist.";
 		return;
 	}
 
 	const char wday_name[][4] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-	
-	p = GetPath("Courses/" + Year + "/" + Term + "/" + Course_New.ID + "_" + Course_New.ClassID + "_" + wday_name[Course_New.Start.tm_wday]);
-	fs::create_directory(p);
+	fstream InfoFile, AttendanceFile, ScoreFile;
 
-	ofstream InfoFile;
-	InfoFile.open(GetPath("Courses/" + Year + "/" + Term + "/" + Course_New.ID + "_" + Course_New.ClassID + "_" + wday_name[Course_New.Start.tm_wday] + "/Info.txt"));
-	InfoFile << Course_New.Name << endl;
-	InfoFile << Course_New.Room << endl;
-	InfoFile << Course_New.Start.tm_year + 1900
-			<< "-" << Course_New.Start.tm_mon + 1
-			<< "-" << Course_New.Start.tm_mday
-			<< " " << Course_New.Start.tm_hour
-			<< ":" << Course_New.Start.tm_min
-			<< " " << wday_name[Course_New.Start.tm_wday] << endl;
-	InfoFile << Course_New.End.tm_year + 1900
-			<< "-" << Course_New.End.tm_mon + 1
-			<< "-" << Course_New.End.tm_mday
-			<< " " << Course_New.End.tm_hour
-			<< ":" << Course_New.End.tm_min
-			<< " " << wday_name[Course_New.End.tm_wday] << endl;
+	InfoFile.open(GetPath("Courses/" + NewCourse.Year + "/" + NewCourse.Term + "/" + NewCourse.ID + "_" + NewCourse.ClassID + "_" + wday_name[NewCourse.Start.tm_wday] + "_Info.txt"), fstream::in);
+	AttendanceFile.open(GetPath("Courses/" + NewCourse.Year + "/" + NewCourse.Term + "/" + NewCourse.ID + "_" + NewCourse.ClassID + "_" + wday_name[NewCourse.Start.tm_wday] + "_Attendance.txt"), fstream::in);
+	if (InfoFile.is_open() || AttendanceFile.is_open()) {
+		cout << "Course not imported: Course " << (NewCourse.ID + "_" + NewCourse.ClassID + "_" + wday_name[NewCourse.Start.tm_wday]) << " already exists.\n";
+		return;
+	}
+
+	// CREATE INFO FILE ///////////////////////////////////////////////////////////
+
+	InfoFile.close();
+	InfoFile.open(GetPath("Courses/" + NewCourse.Year + "/" + NewCourse.Term + "/" + NewCourse.ID + "_" + NewCourse.ClassID + "_" + wday_name[NewCourse.Start.tm_wday] + "_Info.txt"), fstream::out);
+	InfoFile << NewCourse.Name << "\n";
+	InfoFile << NewCourse.Room << "\n";
+	InfoFile << NewCourse.Start.tm_year + 1900
+		<< "-" << NewCourse.Start.tm_mon + 1
+		<< "-" << NewCourse.Start.tm_mday
+		<< " " << NewCourse.Start.tm_hour
+		<< ":" << NewCourse.Start.tm_min
+		<< " " << wday_name[NewCourse.Start.tm_wday] << "\n";
+	InfoFile << NewCourse.End.tm_year + 1900
+		<< "-" << NewCourse.End.tm_mon + 1
+		<< "-" << NewCourse.End.tm_mday
+		<< " " << NewCourse.End.tm_hour
+		<< ":" << NewCourse.End.tm_min
+		<< " " << wday_name[NewCourse.End.tm_wday] << "\n";
 	InfoFile.close();
 
-	ofstream AttendanceFile;
-	AttendanceFile.open(GetPath("Courses/" + Year + "/" + Term + "/" + Course_New.ID + "_" + Course_New.ClassID + "_" + wday_name[Course_New.Start.tm_wday] + "/Attendance.txt"));
-	current = temp.head;
-	time_t Start = mktime(&Course_New.Start);
-	time_t End = mktime(&Course_New.End);
-	size_t DC = ceil((End-Start)/(60*60*24*7));
+	// CREATE ATTENDANCE FILE /////////////////////////////////////////////////////
+
+	AttendanceFile.close();
+	AttendanceFile.open(GetPath("Courses/" + NewCourse.Year + "/" + NewCourse.Term + "/" + NewCourse.ID + "_" + NewCourse.ClassID + "_" + wday_name[NewCourse.Start.tm_wday] + "_Attendance.txt"), fstream::out);
+	current = StudentList.head;
+	time_t Start = mktime(&NewCourse.Start);
+	time_t End = mktime(&NewCourse.End);
+	size_t DC = ceil((End - Start) / (60 * 60 * 24 * 7));
 	while (current != nullptr) {
 		AttendanceFile << current->ID << ",";
 		for (size_t i = 0; i < DC; i++)
 			AttendanceFile << "-";
-		AttendanceFile << endl;
+		AttendanceFile << "\n";
 		current = current->next;
 	}
 	AttendanceFile.close();
 
-	ofstream ScoreboardFile;
-	ScoreboardFile.open(GetPath("Courses/" + Year + "/" + Term + "/" + Course_New.ID + "_" + Course_New.ClassID + "_Score.txt"));
-	current = temp.head;
+	// CREATE SCOREBOARD FILE /////////////////////////////////////////////////////
+
+	ScoreFile.close();
+	ScoreFile.open(GetPath("Courses/" + NewCourse.Year + "/" + NewCourse.Term + "/" + NewCourse.ID + "_" + NewCourse.ClassID + "_Score.txt"), fstream::out);
+	current = StudentList.head;
 	while (current != nullptr) {
-		ScoreboardFile << current->ID << ",0,0,0,0" << endl;
+		ScoreFile << current->ID << ",0,0,0,0" << "\n";
 		current = current->next;
 	}
-	ScoreboardFile.close();
+	ScoreFile.close();
 
-	temp.~StudentList();
-	cout << "Successfully created course " << Course_New.ID << ".\n";
+	// ADD ENTRY TO TIMETABLE /////////////////////////////////////////////////////
+	
+	fstream SharedTimetable;
+	SharedTimetable.open(GetPath("Courses/Timetable.txt"), fstream::out | fstream::app);
+	current = StudentList.head;
+	while (current != nullptr) {
+		SharedTimetable << current->ID << "," << (NewCourse.Year + "/" + NewCourse.Term + "/" + NewCourse.ID + "_" + NewCourse.ClassID + "_" + wday_name[NewCourse.Start.tm_wday]) << "\n";
+		current = current->next;
+	}
+	SharedTimetable.close();
+
+	// All done
+	StudentList.~StudentList();
+	cout << "Successfully created course " << (NewCourse.ID + "_" + NewCourse.ClassID + "_" + wday_name[NewCourse.Start.tm_wday]) << "\n";
 }
 
 void ImportCourse(const string & FileName, const string & Year, const string & Term) {
@@ -250,7 +277,10 @@ void ImportCourse(const string & FileName, const string & Year, const string & T
 		else if (DoW == "Fri") Course_New.End.tm_wday = 5;
 		else if (DoW == "Sat") Course_New.End.tm_wday = 6;
 
-		CreateCourse(Year, Term, Course_New);
+		Course_New.Year = Year;
+		Course_New.Term = Term;
+
+		CreateCourse(Course_New);
 	}
 
 	file.close();

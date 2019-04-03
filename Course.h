@@ -2,11 +2,14 @@
 #include "_INCLUDES_.h"
 
 struct Course {
+	string Year;
+	string Term;
 	string ID;
+	string ClassID; // Year/Term/CourseID_ClassID
+
 	string Name;
-	string ClassID;
 	string LecturerID;
-	tm Start, End;
+	tm Start, End; // _DoW
 	string Room;
 };
 
@@ -22,7 +25,7 @@ void DeleteTerm(const string & Year, const string & Term);
 
 void ListCourses(const string & Year, const string & Term);
 void ImportCourse(const string & FileName, const string & Year, const string & Term);
-void CreateCourse(const string & Year, const string & Term, Course & Course_New);
+void CreateCourse(Course & NewCourse);
 void DeleteCourse(const string & Year, const string & Term, const string & CourseID, const string & ClassID);
 
 //void EditCourse(CourseList & list);
