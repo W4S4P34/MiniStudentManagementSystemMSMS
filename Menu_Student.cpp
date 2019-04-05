@@ -14,6 +14,8 @@ void Menu_Student(const string & ID) {
 	string StudentID = ID.substr(0, ID.find_first_of('@'));
 	string CurrentClassID = ID.substr(ID.find_first_of('@') + 1);
 	Timetable StudentTimetable;
+	ScoreList StudentScoreboard;
+	int i = 0; // number of courses (THIS SESSION ONLY)
 
 	// potentially dangerous?
 	StudentList CurrentList;
@@ -64,7 +66,6 @@ void Menu_Student(const string & ID) {
 		{
 			cout << "Opted-in courses:" << "\n";
 			Timetable::node * current = StudentTimetable.head;
-			int i = 0;
 			string CourseName, skip;
 			time_t CourseStartTime; tm CourseStartTime_tm = { 0 };
 			const char wday_name[][4] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
@@ -81,7 +82,6 @@ void Menu_Student(const string & ID) {
 				cout << i << ". " << CourseName << " (" << wday_name[CourseStartTime_tm.tm_wday] << ")" << "\n";
 				current = current->next;
 			}
-
 		}
 
 		else if (c == "checkin")
@@ -89,8 +89,27 @@ void Menu_Student(const string & ID) {
 			CheckIn_Menu(StudentID);
 		}
 
+		else if (c == "score")
+		{
+			int selection;
+			do {
+				cout << "Choose course (Enter a number): "; cin >> selection;
+				if (selection < 1 || selection > i) {
+					cout << "Invalid choice." << "\n" << "\n";
+				}
+			} while (selection < 1 || selection > i);
+
+			Timetable::node * current = StudentTimetable.head;
+			for (int j = 1; j < selection; j++)
+				current = current->next;
+
+			CheckIn(current->CoursePath, StudentID);
+
+			LoadScore(StudentScoreboard, current->CoursePath);
+			ViewScore(StudentScoreboard, StudentID);
+		}
+
 		//else if (c == "listck") { }
-		//else if (c == "score") { }
 
 		else { cout << "Invalid command.\n"; }
 		cout << "\n";

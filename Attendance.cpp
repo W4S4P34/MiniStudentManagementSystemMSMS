@@ -57,7 +57,7 @@ AttendanceList::~AttendanceList()
 void LoadAttendance(AttendanceList & List, const string & CoursePath)
 {
 	ifstream file;
-	file.open(GetPath(CoursePath + "/Attendance.txt"));
+	file.open(GetPath("Courses/" + CoursePath + "_Attendance.txt"));
 	if (!file.is_open()) {
 		cout << "ERROR: Unable to open attendance list.";
 		return;
@@ -84,7 +84,7 @@ void LoadAttendance(AttendanceList & List, const string & CoursePath)
 void UpdateAttendance(const AttendanceList & List, const string & CoursePath)
 {
 	ofstream file;
-	file.open(GetPath(CoursePath + "/Attendance.txt"));
+	file.open(GetPath("Courses/" + CoursePath + "_Attendance.txt"));
 	if (!file.is_open()) {
 		cout << "ERROR: Unable to open attendance list.";
 		return;
@@ -185,28 +185,6 @@ void EditAttendance(AttendanceList & List, const string & CoursePath, const stri
 void CheckIn_Menu(const string & StudentID) {
 	Timetable StudentTimetable;
 	StudentTimetable.Load(StudentID);
-	
-	//cout << "Opted-in courses:" << "\n";
-	//Timetable::node * current = StudentTimetable.head;
-	//int i = 0;
-	//string CoursePath, CourseName, skip;
-	//time_t CourseStartTime; tm * CourseStartTime_tm = {0};
-	//const char wday_name[][4] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-
-	//ifstream CourseInfoFile;
-	//while (current != nullptr) {
-	//	// CoursePath = current->CoursePath;
-	//	CourseInfoFile.open(GetPath("Courses/" + CoursePath + "_Info.txt"));
-	//	getline(CourseInfoFile, CourseName);
-	//	getline(CourseInfoFile, skip);
-	//	CourseInfoFile >> CourseStartTime;
-	//	CourseInfoFile.close();
-	//	localtime_s(CourseStartTime_tm, &CourseStartTime);
-	//	i++;
-	//	cout << i << ". " << CourseName << " (" << wday_name[CourseStartTime_tm->tm_wday] << ")" << "\n";
-	//	current = current->next;
-	//}
-	//cout << "\n";
 
 	cout << "Opted-in courses:" << "\n";
 	Timetable::node * current = StudentTimetable.head;
@@ -260,7 +238,7 @@ void CheckIn(const string & CoursePath, const string & StudentID) {
 	size_t DC = ceil((CourseEndTime - CourseStartTime) / (60 * 60 * 24 * 7));
 	size_t CW = ceil((CurrentTime - CourseStartTime) / (60 * 60 * 24 * 7));
 
-	if (CW < 1 || CW > DC) {
+	if (CW < 0 || CW > DC) {
 		cout << "System hasn't opened yet. Please come back later.";
 		return;
 	}
@@ -285,7 +263,8 @@ void CheckIn(const string & CoursePath, const string & StudentID) {
 	AttendanceList::Attendance * current = List.head;
 	while (current != nullptr) {
 		if (current->ID == StudentID) {
-			current->CheckIns[CW - 1] = 'x';
+			current->CheckIns[CW] = 'x';
+			break;
 		}
 		current = current->next;
 	}
