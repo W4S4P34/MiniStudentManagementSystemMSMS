@@ -25,3 +25,6 @@ namespace fs = std::experimental::filesystem;
 #include "Course.h"
 #include "Attendance.h"
 #include "Score.h"
+
+// _mktime32, not 64
+#define _USE_32BIT_TIME_T

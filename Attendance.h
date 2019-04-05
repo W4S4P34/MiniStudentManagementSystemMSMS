@@ -17,8 +17,6 @@ struct AttendanceList
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void CheckIn(AttendanceList & List, const string & StudentID);
-
 void LoadAttendance(AttendanceList & List, const string & CoursePath);
 void UpdateAttendance(const AttendanceList & List, const string & CoursePath);
 
@@ -27,3 +25,8 @@ void ExportAttendance(const string & FileName, const AttendanceList & List, cons
 void ViewAttendance(const AttendanceList & List);
 void ViewAttendance(const AttendanceList & List, const string & StudentID);
 void EditAttendance(AttendanceList & List, const string & CoursePath, const string & StudentID, const size_t & Week, const bool & State);
+
+///////////////////////////////////////////////////////////////////////////////
+
+void CheckIn_Menu(const string & StudentID);
+void CheckIn(const string & CoursePath, const string & StudentID);

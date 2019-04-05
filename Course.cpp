@@ -1,5 +1,112 @@
 #include "Course.h"
 
+void Timetable::Add(const string & StudentID, const string & CoursePath) {
+	Timetable::node * newnode = new node{ StudentID, CoursePath, nullptr };
+	if (head == nullptr) {
+		head = newnode;
+	}
+	else {
+		Timetable::node * append = head;
+		while (append->next != nullptr) append = append->next;
+		append->next = newnode;
+	}
+}
+
+void Timetable::Remove(const string & CourseID, const string & ClassID)
+{
+	node * previous = nullptr;
+	node * current = head;
+	while (current != nullptr) {
+		if (current->CoursePath.find(CourseID + "_" + ClassID) != current->CoursePath.npos) break;
+		previous = current;
+		current = current->next;
+	}
+
+	if (current == head) {
+		head = head->next;
+	}
+	else {
+		previous->next = current->next;
+	}
+	delete current;
+}
+
+void Timetable::Load(const string & StudentID)
+{
+	fstream TimetableFile;
+	TimetableFile.open(GetPath("Courses/Timetable.txt"), fstream::in);
+	if (!TimetableFile.is_open()) {
+		cout << "ERROR: Unable to open shared timetable file.";
+		return;
+	}
+
+	string check, StudentID_Compare, CoursePath;
+	streamoff BeginOfLine;
+	while (!TimetableFile.eof()) {	
+		BeginOfLine = TimetableFile.tellg();
+		getline(TimetableFile, check);
+		if (check.empty() || check == "\n") break;
+		TimetableFile.seekg(BeginOfLine);
+
+		getline(TimetableFile, StudentID_Compare, ',');
+		getline(TimetableFile, CoursePath);
+		if (StudentID_Compare == StudentID)
+			Add(StudentID, CoursePath);
+	}
+
+	TimetableFile.close();
+}
+
+void Timetable::LoadAll()
+{
+	fstream TimetableFile;
+	TimetableFile.open(GetPath("Courses/Timetable.txt"), fstream::in);
+	if (!TimetableFile.is_open()) {
+		cout << "ERROR: Unable to open shared timetable file.";
+		return;
+	}
+
+	string check, StudentID, CoursePath;
+	streamoff BeginOfLine;
+	while (!TimetableFile.eof()) {
+		BeginOfLine = TimetableFile.tellg();
+		getline(TimetableFile, check);
+		if (check.empty() || check == "\n") break;
+		TimetableFile.seekg(BeginOfLine);
+
+		getline(TimetableFile, StudentID, ',');
+		getline(TimetableFile, CoursePath);
+		Add(StudentID, CoursePath);
+	}
+
+	TimetableFile.close();
+}
+
+void Timetable::Update()
+{
+	fstream TimetableFile;
+	TimetableFile.open(GetPath("Courses/Timetable.txt"), fstream::out | fstream::trunc);
+	
+	node * current = head;
+	while (current != nullptr) {
+		TimetableFile << current->StudentID << "," << current->CoursePath << "\n";
+		current = current->next;
+	}
+
+	TimetableFile.close();
+}
+
+Timetable::~Timetable() {
+	while (head != nullptr) {
+		Timetable::node * current = head;
+		head = current->next;
+		delete current;
+	}
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+
 void ListYears() {
 	fs::path p = GetPath("Courses");
 	if (fs::is_empty(p)) {
@@ -8,6 +115,7 @@ void ListYears() {
 	}
 	for (auto& p : fs::directory_iterator(GetPath("Courses"))) {
 		string FileName = p.path().string();
+		if (FileName == "Timetable.txt") continue;
 		FileName = FileName.substr(FileName.find_last_of('\\') + 1);
 		cout << FileName << "\n";
 	}
@@ -16,11 +124,11 @@ void ListYears() {
 void CreateYear(const string & Year) {
 	fs::path p = GetPath("Courses/" + Year);
 	if (fs::exists(p)) {
-		cout << "Year " << Year << " already exists.\n";
+		cout << "Year " << Year << " already exists.";
 		return;
 	}
 	fs::create_directory(p);
-	cout << "Successfully created year " << Year << ".\n";
+	cout << "Created " << Year << ".";
 }
 
 void EditYear(const string & Year_Old, const string & Year_New) {
@@ -31,7 +139,7 @@ void EditYear(const string & Year_Old, const string & Year_New) {
 		return;
 	}
 	fs::rename(p_old, p_new);
-	cout << "Successfully changed year " << Year_Old << " into year " << Year_New << ".\n";
+	cout << "Renamed year " << Year_Old << " into year " << Year_New << ".\n";
 }
 
 void DeleteYear(const string & Year) {
@@ -41,7 +149,7 @@ void DeleteYear(const string & Year) {
 		return;
 	}
 	fs::remove_all(p);
-	cout << "Successfully deleted year " << Year << ".\n";
+	cout << "Deleted year " << Year << ".\n";
 }
 
 void ListTerms(const string & Year) {
@@ -74,7 +182,7 @@ void CreateTerm(const string & Year, const string & Term) {
 		return;
 	}
 	fs::create_directory(p);
-	cout << "Successfully created term " << Term << ".\n";
+	cout << "Created term " << Term << ".\n";
 }
 
 void EditTerm(const string & Year, const string & Term_Old, const string & Term_New) {
@@ -85,7 +193,7 @@ void EditTerm(const string & Year, const string & Term_Old, const string & Term_
 		return;
 	}
 	fs::rename(p_old, p_new);
-	cout << "Succesfully renamed " << Term_Old << " into " << Term_New << ".\n";
+	cout << "Renamed " << Term_Old << " into " << Term_New << ".\n";
 }
 
 void DeleteTerm(const string & Year, const string & Term) {
@@ -95,25 +203,27 @@ void DeleteTerm(const string & Year, const string & Term) {
 		return;
 	}
 	fs::remove_all(p);
-	cout << "Successfully deleted year " << Term << ".\n";
+	cout << "Deleted term " << Term << ".\n";
 }
 
 void ListCourses(const string & Year, const string & Term) {
 	fs::path p = GetPath("Courses/" + Year + "/" + Term);
 	if (!fs::exists(p)) {
-		cout << "Either year " << Year << " or term " << Term << " does not exist.\n";
+		cout << "Either year " << Year << " or term " << Term << " does not exist.";
 		return;
 	}
 	if (fs::is_empty(p)) {
-		cout << "No courses available.\n";
+		cout << "No courses available.";
 		return;
 	}
+
 	for (auto& p : fs::directory_iterator(GetPath("Courses/" + Year + "/" + Term))) {
 		string FileName = p.path().string();
 		FileName = FileName.substr(FileName.find_last_of('\\') + 1);
-		// FileName = FileName.substr(0, FileName.find_last_of('.'));
-		if (FileName.find_last_of('.') == FileName.npos)
+		if (FileName.find("_Attendance.txt") == FileName.npos && FileName.find("_Score.txt") == FileName.npos) {
+			FileName = FileName.substr(0, FileName.find_last_of('_'));
 			cout << FileName << "\n";
+		}
 	}
 }
 
@@ -145,13 +255,20 @@ void CreateCourse(Course & NewCourse)
 		return;
 	}
 
+	// apparently mktime() destroys tm after conversion
+	tm CourseStartTime_tm, CourseEndTime_tm;
+
 	// CREATE INFO FILE ///////////////////////////////////////////////////////////
 
+	CourseStartTime_tm = NewCourse.Start;
+	CourseEndTime_tm = NewCourse.End;
 	InfoFile.close();
 	InfoFile.open(GetPath("Courses/" + NewCourse.Year + "/" + NewCourse.Term + "/" + NewCourse.ID + "_" + NewCourse.ClassID + "_" + wday_name[NewCourse.Start.tm_wday] + "_Info.txt"), fstream::out);
 	InfoFile << NewCourse.Name << "\n";
 	InfoFile << NewCourse.Room << "\n";
-	InfoFile << NewCourse.Start.tm_year + 1900
+	InfoFile << mktime(&CourseStartTime_tm) << "\n";
+	InfoFile << mktime(&CourseEndTime_tm) << "\n";
+	/*InfoFile << NewCourse.Start.tm_year + 1900
 		<< "-" << NewCourse.Start.tm_mon + 1
 		<< "-" << NewCourse.Start.tm_mday
 		<< " " << NewCourse.Start.tm_hour
@@ -162,16 +279,18 @@ void CreateCourse(Course & NewCourse)
 		<< "-" << NewCourse.End.tm_mday
 		<< " " << NewCourse.End.tm_hour
 		<< ":" << NewCourse.End.tm_min
-		<< " " << wday_name[NewCourse.End.tm_wday] << "\n";
+		<< " " << wday_name[NewCourse.End.tm_wday] << "\n";*/
 	InfoFile.close();
 
 	// CREATE ATTENDANCE FILE /////////////////////////////////////////////////////
 
+	CourseStartTime_tm = NewCourse.Start;
+	CourseEndTime_tm = NewCourse.End;
 	AttendanceFile.close();
 	AttendanceFile.open(GetPath("Courses/" + NewCourse.Year + "/" + NewCourse.Term + "/" + NewCourse.ID + "_" + NewCourse.ClassID + "_" + wday_name[NewCourse.Start.tm_wday] + "_Attendance.txt"), fstream::out);
 	current = StudentList.head;
-	time_t Start = mktime(&NewCourse.Start);
-	time_t End = mktime(&NewCourse.End);
+	time_t Start = mktime(&CourseStartTime_tm);
+	time_t End = mktime(&CourseEndTime_tm);
 	size_t DC = ceil((End - Start) / (60 * 60 * 24 * 7));
 	while (current != nullptr) {
 		AttendanceFile << current->ID << ",";
@@ -194,7 +313,7 @@ void CreateCourse(Course & NewCourse)
 	ScoreFile.close();
 
 	// ADD ENTRY TO TIMETABLE /////////////////////////////////////////////////////
-	
+
 	fstream SharedTimetable;
 	SharedTimetable.open(GetPath("Courses/Timetable.txt"), fstream::out | fstream::app);
 	current = StudentList.head;
@@ -209,47 +328,49 @@ void CreateCourse(Course & NewCourse)
 	cout << "Successfully created course " << (NewCourse.ID + "_" + NewCourse.ClassID + "_" + wday_name[NewCourse.Start.tm_wday]) << "\n";
 }
 
-void ImportCourse(const string & FileName, const string & Year, const string & Term) {
-	fs::path p;
-	p = GetPath("../Import/Courses/" + FileName);
-	if (!fs::exists(p)) {
+void ImportCourse(const string & FileName, const string & Year, const string & Term)
+{
+	// VALIDATE INPUT /////////////////////////////////////////////////////////////
+
+	fstream CourseFile;
+	CourseFile.open(GetPath("../Import/Courses/" + FileName), fstream::in);
+	if (!CourseFile.is_open()) {
 		cout << "File does not exist.";
 		return;
 	}
 
-	p = GetPath("Courses/" + Year + "/" + Term);
-	if (!fs::exists(p)) {
-		cout << "Year " << Year << " and/or term " << Term << " does not exist.\n";
+	fs::path YearTermPath = GetPath("Courses/" + Year + "/" + Term);
+	if (!fs::exists(YearTermPath)) {
+		cout << "Course not imported: Year " << Year << " and/or Term " << Term << " does not exist.";
 		return;
 	}
 
-	ifstream file;
-	file.open(GetPath("../Import/Courses/" + FileName));
+	// CREATE COURSES FROM FILE ///////////////////////////////////////////////////
 
 	string skip;
-	getline(file, skip);
-	while (!file.eof()) {
+	getline(CourseFile, skip);
+	while (!CourseFile.eof()) {
 		Course Course_New;
 		string StartY, StartM, StartD, StartHH, StartMM;
 		string EndY, EndM, EndD, EndHH, EndMM;
 		string DoW;
-		getline(file, skip, ',');
-		getline(file, Course_New.ID, ',');
-		getline(file, Course_New.Name, ',');
-		getline(file, Course_New.ClassID, ',');
-		getline(file, skip, ','); // LecturerID
-		getline(file, StartY, '-');
-		getline(file, StartM, '-');
-		getline(file, StartD, ',');
-		getline(file, EndY, '-');
-		getline(file, EndM, '-');
-		getline(file, EndD, ',');
-		getline(file, DoW, ',');
-		getline(file, StartHH, ':');
-		getline(file, StartMM, ',');
-		getline(file, EndHH, ':');
-		getline(file, EndMM, ',');
-		getline(file, Course_New.Room);
+		getline(CourseFile, skip, ',');
+		getline(CourseFile, Course_New.ID, ',');
+		getline(CourseFile, Course_New.Name, ',');
+		getline(CourseFile, Course_New.ClassID, ',');
+		getline(CourseFile, Course_New.LecturerID, ',');
+		getline(CourseFile, StartY, '-');
+		getline(CourseFile, StartM, '-');
+		getline(CourseFile, StartD, ',');
+		getline(CourseFile, EndY, '-');
+		getline(CourseFile, EndM, '-');
+		getline(CourseFile, EndD, ',');
+		getline(CourseFile, DoW, ',');
+		getline(CourseFile, StartHH, ':');
+		getline(CourseFile, StartMM, ',');
+		getline(CourseFile, EndHH, ':');
+		getline(CourseFile, EndMM, ',');
+		getline(CourseFile, Course_New.Room);
 
 		Course_New.Start.tm_year = stoi(StartY); Course_New.Start.tm_year -= 1900;
 		Course_New.Start.tm_mon = stoi(StartM); Course_New.Start.tm_mon -= 1;
@@ -283,10 +404,12 @@ void ImportCourse(const string & FileName, const string & Year, const string & T
 		CreateCourse(Course_New);
 	}
 
-	file.close();
+	CourseFile.close();
 }
 
-void DeleteCourse(const string & Year, const string & Term, const string & CourseID, const string & ClassID) {
+void DeleteCourse(const string & Year, const string & Term, const string & CourseID, const string & ClassID)
+{	
+	// DELETE COURSE FILES ////////////////////////////////////////////////////////
 	bool found = false;
 	for (auto& p : fs::directory_iterator(GetPath("Courses/" + Year + "/" + Term))) {
 		string FileName = p.path().string();
@@ -304,4 +427,20 @@ void DeleteCourse(const string & Year, const string & Term, const string & Cours
 	else {
 		cout << "Course not found.\n";
 	}
+
+	// DELETE ENTRIES FROM TIMETABLE //////////////////////////////////////////////
+	Timetable SharedTimetable;
+	SharedTimetable.LoadAll();
+	
+	Timetable::node * current = SharedTimetable.head;
+	while (current != nullptr) {
+		if (current->CoursePath.find(CourseID + "_" + ClassID) != current->CoursePath.npos) {
+			SharedTimetable.Remove(CourseID, ClassID);
+			current = SharedTimetable.head;
+		}
+		else {
+			current = current->next;
+		}
+	}
+	SharedTimetable.Update();
 }
