@@ -191,7 +191,7 @@ void CheckIn_Menu(const string & StudentID) {
 	int i = 0;
 	string CourseName, skip;
 	time_t CourseStartTime; tm CourseStartTime_tm = { 0 };
-	const char wday_name[][4] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+	const char wday_name[][4] = {  "Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"};
 
 	fstream CourseInfoFile;
 	while (current != nullptr) {
