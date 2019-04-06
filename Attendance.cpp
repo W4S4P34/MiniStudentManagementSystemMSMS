@@ -186,9 +186,9 @@ void CheckIn_Menu(const string & StudentID) {
 	Timetable StudentTimetable;
 	StudentTimetable.Load(StudentID);
 
+	int i = 0;
 	cout << "Opted-in courses:" << "\n";
 	Timetable::node * current = StudentTimetable.head;
-	int i = 0;
 	string CourseName, skip;
 	time_t CourseStartTime; tm CourseStartTime_tm = { 0 };
 	const char wday_name[][4] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
@@ -210,7 +210,7 @@ void CheckIn_Menu(const string & StudentID) {
 	do {
 		cout << "Choose course (Enter a number): "; cin >> selection;
 		if (selection < 1 || selection > i) {
-			cout << "Invalid choice." << "\n" << "\n";
+			cout << "Invalid choice.\n";
 		}
 	} while (selection < 1 || selection > i);
 
@@ -239,7 +239,8 @@ void CheckIn(const string & CoursePath, const string & StudentID) {
 	size_t CW = ceil((CurrentTime - CourseStartTime) / (60 * 60 * 24 * 7));
 
 	if (CW < 0 || CW > DC) {
-		cout << "System hasn't opened yet. Please come back later.";
+		cout << "System hasn't opened yet. Please come back later.\n";
+		while (cin.get() != '\n');
 		return;
 	}
 
@@ -248,13 +249,15 @@ void CheckIn(const string & CoursePath, const string & StudentID) {
 	localtime_s(&CourseEndTime_tm, &CourseEndTime);
 
 	if (CurrentTime_tm.tm_wday != CourseStartTime_tm.tm_wday) {
-		cout << "System hasn't opened yet. Please come back later.";
+		cout << "System hasn't opened yet. Please come back later.\n";
+		while (cin.get() != '\n');
 		return;
 	}
 
 	if ((CurrentTime_tm.tm_hour < CourseStartTime_tm.tm_hour) || (CurrentTime_tm.tm_hour == CourseStartTime_tm.tm_hour && CurrentTime_tm.tm_min < CourseStartTime_tm.tm_min) ||
 		(CurrentTime_tm.tm_hour > CourseEndTime_tm.tm_hour) || (CurrentTime_tm.tm_hour == CourseEndTime_tm.tm_hour && CurrentTime_tm.tm_min > CourseEndTime_tm.tm_min)) {
-		cout << "System hasn't opened yet. Please come back later.";
+		cout << "System hasn't opened yet. Please come back later.\n";
+		while (cin.get() != '\n');
 		return;
 	}
 

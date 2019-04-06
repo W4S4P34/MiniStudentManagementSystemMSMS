@@ -64,6 +64,43 @@ void Menu_Student(const string & ID) {
 
 		else if (c == "sched")
 		{
+			i = 0;
+			cout << "Opted-in courses:" << "\n";
+			Timetable::node * current = StudentTimetable.head;
+			string CourseName, Room;
+			time_t CourseStartTime; tm CourseStartTime_tm = { 0 };
+			time_t CourseEndTime; tm CourseEndTime_tm = { 0 };
+			const char wday_name[][4] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+
+			fstream CourseInfoFile;
+			while (current != nullptr) {
+				CourseInfoFile.open(GetPath("Courses/" + current->CoursePath + "_Info.txt"), fstream::in);
+				getline(CourseInfoFile, CourseName);
+				getline(CourseInfoFile, Room);
+				CourseInfoFile >> CourseStartTime;
+				CourseInfoFile >> CourseEndTime;
+				CourseInfoFile.close();
+				localtime_s(&CourseStartTime_tm, &CourseStartTime);
+				localtime_s(&CourseEndTime_tm, &CourseEndTime);
+				i++;
+				cout << i << ". "
+					<< left << setw(30) << (CourseName + " (" + wday_name[CourseStartTime_tm.tm_wday] + ")")
+					<< left << setw(10) << Room
+					<< setw(2) << right << CourseStartTime_tm.tm_hour << ":" << setw(2) << CourseStartTime_tm.tm_min
+					<< " - "
+					<< setw(2) << right << CourseEndTime_tm.tm_hour << ":" << setw(2) << CourseEndTime_tm.tm_min << '\n';
+				current = current->next;
+			}
+		}
+
+		else if (c == "checkin")
+		{
+			CheckIn_Menu(StudentID);
+		}
+
+		else if (c == "score")
+		{
+			int i = 0;
 			cout << "Opted-in courses:" << "\n";
 			Timetable::node * current = StudentTimetable.head;
 			string CourseName, skip;
@@ -82,15 +119,7 @@ void Menu_Student(const string & ID) {
 				cout << i << ". " << CourseName << " (" << wday_name[CourseStartTime_tm.tm_wday] << ")" << "\n";
 				current = current->next;
 			}
-		}
 
-		else if (c == "checkin")
-		{
-			CheckIn_Menu(StudentID);
-		}
-
-		else if (c == "score")
-		{
 			int selection;
 			do {
 				cout << "Choose course (Enter a number): "; cin >> selection;
@@ -99,11 +128,8 @@ void Menu_Student(const string & ID) {
 				}
 			} while (selection < 1 || selection > i);
 
-			Timetable::node * current = StudentTimetable.head;
 			for (int j = 1; j < selection; j++)
 				current = current->next;
-
-			CheckIn(current->CoursePath, StudentID);
 
 			LoadScore(StudentScoreboard, current->CoursePath);
 			ViewScore(StudentScoreboard, StudentID);

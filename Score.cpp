@@ -56,8 +56,8 @@ ScoreList::~ScoreList()
 
 void LoadScore(ScoreList & List, const string & CoursePath) {
 	ifstream file;
-	// string CoursePath_1 = CoursePath.substr(0, CoursePath.find_last_of('_'));
-	file.open(GetPath("Courses/" + CoursePath + "_Score.txt"));
+	string CoursePath_1 = CoursePath.substr(0, CoursePath.find_last_of('_'));
+	file.open(GetPath("Courses/" + CoursePath_1 + "_Score.txt"));
 	if (!file.is_open()) {
 		cout << "ERROR: Unable to open scoreboard.";
 		return;
