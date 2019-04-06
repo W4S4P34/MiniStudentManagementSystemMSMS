@@ -119,6 +119,8 @@ void Menu_Student(const string & ID) {
 				cout << i << ". " << CourseName << " (" << wday_name[CourseStartTime_tm.tm_wday] << ")" << "\n";
 				current = current->next;
 			}
+			
+			current = StudentTimetable.head;
 
 			int selection;
 			do {
@@ -133,6 +135,7 @@ void Menu_Student(const string & ID) {
 
 			LoadScore(StudentScoreboard, current->CoursePath);
 			ViewScore(StudentScoreboard, StudentID);
+			while (cin.get() != '\n');
 		}
 
 		//else if (c == "listck") { }
