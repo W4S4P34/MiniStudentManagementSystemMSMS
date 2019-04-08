@@ -198,6 +198,7 @@ void CheckIn_Menu(const string & StudentID) {
 		CourseInfoFile.open(GetPath("Courses/" + current->CoursePath + "_Info.txt"), fstream::in);
 		getline(CourseInfoFile, CourseName);
 		getline(CourseInfoFile, skip);
+		getline(CourseInfoFile, skip);
 		CourseInfoFile >> CourseStartTime;
 		CourseInfoFile.close();
 		localtime_s(&CourseStartTime_tm, &CourseStartTime);

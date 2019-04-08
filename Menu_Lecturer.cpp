@@ -87,7 +87,16 @@ void Menu_Lecturer(const string & ID) {
 			ListCourses(Year, Term);
 		}
 
-		// else if (c == "rslist")
+		else if (c == "rslist")
+		{
+			string Year, Term, CourseID, ClassID, DayOfWeek;
+			cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
+			cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
+			cout << "Enter course ID: "; getline(cin, CourseID); Capitalize(CourseID);
+			cout << "Enter class ID: "; getline(cin, ClassID); Capitalize(ClassID);
+			cout << "Enter day of week: "; getline(cin, DayOfWeek); LowerString(DayOfWeek);
+			ListStudent_Course(Year + "/" + Term + "/" + CourseID + "_" + ClassID + "_" + DayOfWeek);
+		}
 		
 		else if (c == "alist")
 		{
@@ -103,13 +112,13 @@ void Menu_Lecturer(const string & ID) {
 				|| Term.empty() || Term == "\n"
 				|| CourseID.empty() || CourseID == "\n"
 				|| ClassID.empty() || ClassID == "\n"
-				|| DayOfWeek != "mon"
-				|| DayOfWeek != "tue"
-				|| DayOfWeek != "wed"
-				|| DayOfWeek != "thu"
-				|| DayOfWeek != "fri"
-				|| DayOfWeek != "sat"
-				|| DayOfWeek != "sun"
+				|| (DayOfWeek != "mon"
+				&& DayOfWeek != "tue"
+				&& DayOfWeek != "wed"
+				&& DayOfWeek != "thu"
+				&& DayOfWeek != "fri"
+				&& DayOfWeek != "sat"
+				&& DayOfWeek != "sun")
 			) {
 				cout << "Empty values and/or invalid day-of-week found.";
 				continue;
@@ -135,13 +144,13 @@ void Menu_Lecturer(const string & ID) {
 				|| Term.empty() || Term == "\n"
 				|| CourseID.empty() || CourseID == "\n"
 				|| ClassID.empty() || ClassID == "\n"
-				|| DayOfWeek != "mon"
-				|| DayOfWeek != "tue"
-				|| DayOfWeek != "wed"
-				|| DayOfWeek != "thu"
-				|| DayOfWeek != "fri"
-				|| DayOfWeek != "sat"
-				|| DayOfWeek != "sun"
+				|| (DayOfWeek != "mon"
+				&& DayOfWeek != "tue"
+				&& DayOfWeek != "wed"
+				&& DayOfWeek != "thu"
+				&& DayOfWeek != "fri"
+				&& DayOfWeek != "sat"
+				&& DayOfWeek != "sun")
 				) {
 				cout << "Empty values and/or invalid day-of-week found.";
 				continue;
@@ -186,13 +195,13 @@ void Menu_Lecturer(const string & ID) {
 				|| Term.empty() || Term == "\n"
 				|| CourseID.empty() || CourseID == "\n"
 				|| ClassID.empty() || ClassID == "\n"
-				|| DayOfWeek != "mon"
-				|| DayOfWeek != "tue"
-				|| DayOfWeek != "wed"
-				|| DayOfWeek != "thu"
-				|| DayOfWeek != "fri"
-				|| DayOfWeek != "sat"
-				|| DayOfWeek != "sun"
+				|| (DayOfWeek != "mon"
+				&& DayOfWeek != "tue"
+				&& DayOfWeek != "wed"
+				&& DayOfWeek != "thu"
+				&& DayOfWeek != "fri"
+				&& DayOfWeek != "sat"
+				&& DayOfWeek != "sun")
 			) {
 				cout << "Empty values and/or invalid day-of-week found.";
 				continue;
@@ -222,15 +231,15 @@ void Menu_Lecturer(const string & ID) {
 				|| Term.empty() || Term == "\n"
 				|| CourseID.empty() || CourseID == "\n"
 				|| ClassID.empty() || ClassID == "\n"
-				|| DayOfWeek != "mon"
-				|| DayOfWeek != "tue"
-				|| DayOfWeek != "wed"
-				|| DayOfWeek != "thu"
-				|| DayOfWeek != "fri"
-				|| DayOfWeek != "sat"
-				|| DayOfWeek != "sun"
+				|| (DayOfWeek != "mon"
+				&& DayOfWeek != "tue"
+				&& DayOfWeek != "wed"
+				&& DayOfWeek != "thu"
+				&& DayOfWeek != "fri"
+				&& DayOfWeek != "sat"
+				&& DayOfWeek != "sun")
 			) {
-				cout << "Empty values and/or invalid day-of-week found.";
+				cout << "Empty values and/or invalid day-of-week found.\n";
 				continue;
 			}
 
@@ -253,13 +262,13 @@ void Menu_Lecturer(const string & ID) {
 				|| Term.empty() || Term == "\n"
 				|| CourseID.empty() || CourseID == "\n"
 				|| ClassID.empty() || ClassID == "\n"
-				|| DayOfWeek != "mon"
-				|| DayOfWeek != "tue"
-				|| DayOfWeek != "wed"
-				|| DayOfWeek != "thu"
-				|| DayOfWeek != "fri"
-				|| DayOfWeek != "sat"
-				|| DayOfWeek != "sun"
+				|| (DayOfWeek != "mon"
+				&& DayOfWeek != "tue"
+				&& DayOfWeek != "wed"
+				&& DayOfWeek != "thu"
+				&& DayOfWeek != "fri"
+				&& DayOfWeek != "sat"
+				&& DayOfWeek != "sun")
 				) {
 				cout << "Empty values and/or invalid day-of-week found.";
 				continue;

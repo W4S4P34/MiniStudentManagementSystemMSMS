@@ -443,7 +443,7 @@ void Menu_Admin(const string & ID) {
 		}
 
 		else if (c == "rdelete") {
-			string Year, Term, CourseID, ClassID, DayOfWeek;
+			string Year, Term, CourseID, ClassID;
 			cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
 			cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
 			cout << "Enter course ID: "; getline(cin, CourseID); Capitalize(CourseID);
@@ -455,69 +455,104 @@ void Menu_Admin(const string & ID) {
 			DeleteCourse(Year, Term, CourseID, ClassID);
 		}
 
-		//else if (c == "scview") {
-		//	string Year, Term, CourseID, ClassID;
-		//	cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
-		//	cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
-		//	cout << "Enter course ID: "; getline(cin, CourseID); Capitalize(CourseID);
-		//	cout << "Enter class ID: "; getline(cin, ClassID); Capitalize(ClassID);
-		//	ViewScoreboard(Year + "/" + Term + "/" + CourseID + "_" + ClassID);
-		//}
+		else if (c == "redit")
+		{
+			string Year, Term, CourseID, ClassID, DayOfWeek;
+			cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
+			cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
+			cout << "Enter course ID: "; getline(cin, CourseID); Capitalize(CourseID);
+			cout << "Enter class ID: "; getline(cin, ClassID); Capitalize(ClassID);
+			cout << "Enter day of week: "; getline(cin, DayOfWeek); LowerString(DayOfWeek);
+			if (Year.empty() || Term.empty() || CourseID.empty() || ClassID.empty() || DayOfWeek.empty()) {
+				cout << "Empty year, term and/or course information is invalid.\n";
+				continue;
+			}
+			EditCourse(Year + "/" + Term + "/" + CourseID + "_" + ClassID + "_" + DayOfWeek);
+		}
 
-		//else if (c == "sclookup") {
-		//	string Year, Term, CourseID, ClassID, StudentID;
-		//	cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
-		//	cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
-		//	cout << "Enter course ID: "; getline(cin, CourseID); Capitalize(CourseID);
-		//	cout << "Enter class ID: "; getline(cin, ClassID); Capitalize(ClassID);
-		//	cout << "Enter student ID: "; getline(cin, StudentID); Capitalize(StudentID);
-		//	ViewScoreboard(Year + "/" + Term + "/" + CourseID + "_" + ClassID, StudentID);
-		//}
+		else if (c == "rslist")
+		{
+			string Year, Term, CourseID, ClassID, DayOfWeek;
+			cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
+			cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
+			cout << "Enter course ID: "; getline(cin, CourseID); Capitalize(CourseID);
+			cout << "Enter class ID: "; getline(cin, ClassID); Capitalize(ClassID);
+			cout << "Enter day of week: "; getline(cin, DayOfWeek); LowerString(DayOfWeek);
+			ListStudent_Course(Year + "/" + Term + "/" + CourseID + "_" + ClassID + "_" + DayOfWeek);
+		}
 
-		//else if (c == "scedit") {
-		//	string Year, Term, CourseID, ClassID;
-		//	cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
-		//	cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
-		//	cout << "Enter course ID: "; getline(cin, CourseID); Capitalize(CourseID);
-		//	cout << "Enter class ID: "; getline(cin, ClassID); Capitalize(ClassID);
+		else if (c == "scview")
+		{
+			string Year, Term, CourseID, ClassID;
+			cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
+			cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
+			cout << "Enter course ID: "; getline(cin, CourseID); Capitalize(CourseID);
+			cout << "Enter class ID: "; getline(cin, ClassID); Capitalize(ClassID);
+			LoadScore(CurrentScoreList, Year + "/" + Term + "/" + CourseID + "_" + ClassID);
+			ViewScore(CurrentScoreList);
+		}
 
-		//	Scoreboard temp; // only for testing if y/t/r/c exists
-		//	LoadScoreboard(temp, Year + "/" + Term + "/" + CourseID + "_" + ClassID);
-		//	if (temp.head == nullptr) continue;
+		else if (c == "sclookup")
+		{
+			string Year, Term, CourseID, ClassID, StudentID;
+			cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
+			cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
+			cout << "Enter course ID: "; getline(cin, CourseID); Capitalize(CourseID);
+			cout << "Enter class ID: "; getline(cin, ClassID); Capitalize(ClassID);
+			cout << "Enter student ID: "; getline(cin, StudentID); Capitalize(StudentID);
+			LoadScore(CurrentScoreList, Year + "/" + Term + "/" + CourseID + "_" + ClassID);
+			ViewScore(CurrentScoreList, StudentID);
+		}
 
-		//	string StudentID;
-		//	cout << "Enter student ID: "; getline(cin, StudentID); Capitalize(StudentID);
+		else if (c == "scexport")
+		{
+			string Year, Term, CourseID, ClassID, FileName;
+			cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
+			cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
+			cout << "Enter course ID: "; getline(cin, CourseID); Capitalize(CourseID);
+			cout << "Enter class ID: "; getline(cin, ClassID); Capitalize(ClassID);
+			cout << "Enter new filename: "; getline(cin, FileName);
+			LoadScore(CurrentScoreList, Year + "/" + Term + "/" + CourseID + "_" + ClassID);
+			ExportScore(FileName, CurrentScoreList, Year + "/" + Term + "/" + CourseID + "_" + ClassID);
+		}
 
-		//	Scoreboard::node * target = temp.head;
-		//	bool found = false;
-		//	while (target != nullptr) {
-		//		if (target->ID == StudentID) {
-		//			found = true;
-		//			break;
-		//		}
-		//		target = target->next;
-		//	}
-		//	if (!found) {
-		//		cout << "Student " << StudentID << " not found.\n";
-		//		continue;
-		//	}
+		else if (c == "aview")
+		{
+			string Year, Term, CourseID, ClassID, DayOfWeek;
+			cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
+			cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
+			cout << "Enter course ID: "; getline(cin, CourseID); Capitalize(CourseID);
+			cout << "Enter class ID: "; getline(cin, ClassID); Capitalize(ClassID);
+			cout << "Enter day of week: "; getline(cin, DayOfWeek); LowerString(DayOfWeek);
+			LoadAttendance(CurrentAttendanceList, Year + "/" + Term + "/" + CourseID + "_" + ClassID + "_" + DayOfWeek);
+			ViewAttendance(CurrentAttendanceList);
+		}
 
-		//	cout << "Current scores:\n"
-		//		<< "Midterm = " << setprecision(3) << target->Midterm << "\n"
-		//		<< "Final = " << setprecision(3) << target->Final << "\n"
-		//		<< "Lab = " << setprecision(3) << target->Lab << "\n"
-		//		<< "Bonus = " << setprecision(3) << target->Bonus << "\n";
+		else if (c == "alookup")
+		{
+			string Year, Term, CourseID, ClassID, StudentID, DayOfWeek;
+			cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
+			cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
+			cout << "Enter course ID: "; getline(cin, CourseID); Capitalize(CourseID);
+			cout << "Enter class ID: "; getline(cin, ClassID); Capitalize(ClassID);
+			cout << "Enter day of week: "; getline(cin, DayOfWeek); LowerString(DayOfWeek);
+			cout << "Enter student ID: "; getline(cin, StudentID); Capitalize(StudentID);
+			LoadAttendance(CurrentAttendanceList, Year + "/" + Term + "/" + CourseID + "_" + ClassID + "_" + DayOfWeek);
+			ViewAttendance(CurrentAttendanceList, StudentID);
+		}
 
-		//	cout << "New scores:\n";
-		//	float Midterm, Final, Lab, Bonus;
-		//	cout << "Midterm = "; cin >> Midterm;
-		//	cout << "Final = "; cin >> Final;
-		//	cout << "Lab = "; cin >> Lab;
-		//	cout << "Bonus = "; cin >> Bonus;
-		//	while (cin.get() != '\n');
-
-		//	EditScoreboard(Year + "/" + Term + "/" + CourseID + "_" + ClassID, StudentID, Midterm, Final, Lab, Bonus);
-		//}
+		else if (c == "aexport")
+		{
+			string Year, Term, CourseID, ClassID, DayOfWeek, FileName;
+			cout << "Enter year: "; getline(cin, Year); Capitalize(Year);
+			cout << "Enter term: "; getline(cin, Term); Capitalize(Term);
+			cout << "Enter course ID: "; getline(cin, CourseID); Capitalize(CourseID);
+			cout << "Enter class ID: "; getline(cin, ClassID); Capitalize(ClassID);
+			cout << "Enter day of week: "; getline(cin, DayOfWeek); LowerString(DayOfWeek);
+			cout << "Enter new filename: "; getline(cin, FileName);
+			LoadAttendance(CurrentAttendanceList, Year + "/" + Term + "/" + CourseID + "_" + ClassID + "_" + DayOfWeek);
+			ExportAttendance(FileName, CurrentAttendanceList, Year + "/" + Term + "/" + CourseID + "_" + ClassID + "_" + DayOfWeek);
+		}
 
 		else { cout << "Invalid command."; }
 		cout << "\n\n";

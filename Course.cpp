@@ -241,7 +241,7 @@ void CreateCourse(Course & NewCourse)
 
 	fs::path YearTermPath = GetPath("Courses/" + NewCourse.Year + "/" + NewCourse.Term);
 	if (!fs::exists(YearTermPath)) {
-		cout << "Course not imported: Year " << NewCourse.Year << " and/or Term " << NewCourse.Term << " does not exist.";
+		cout << "Course not created: Year " << NewCourse.Year << " and/or Term " << NewCourse.Term << " does not exist.";
 		return;
 	}
 
@@ -266,6 +266,7 @@ void CreateCourse(Course & NewCourse)
 	InfoFile.close();
 	InfoFile.open(GetPath("Courses/" + NewCourse.Year + "/" + NewCourse.Term + "/" + NewCourse.ID + "_" + NewCourse.ClassID + "_" + wday_name[NewCourse.Start.tm_wday] + "_Info.txt"), fstream::out);
 	InfoFile << NewCourse.Name << "\n";
+	InfoFile << NewCourse.LecturerID << "\n";
 	InfoFile << NewCourse.Room << "\n";
 	InfoFile << mktime(&CourseStartTime_tm) << "\n";
 
@@ -453,4 +454,99 @@ void DeleteCourse(const string & Year, const string & Term, const string & Cours
 		}
 	}
 	SharedTimetable.Update();
+}
+
+void EditCourse(const string & CoursePath)
+{
+	fstream CourseInfoFile;
+	CourseInfoFile.open(GetPath("Courses/" + CoursePath + "_Info.txt"), fstream::in);
+	if (!CourseInfoFile.is_open()) {
+		cout << "Unable to open info file; check if the course exists.";
+		return;
+	}
+
+	string CourseName, LecturerID, Room;
+	time_t StartTime, EndTime;
+	getline(CourseInfoFile, CourseName);
+	getline(CourseInfoFile, LecturerID);
+	getline(CourseInfoFile, Room);
+	CourseInfoFile >> StartTime;
+	CourseInfoFile >> EndTime;
+
+	cout << "Current course info:\n"
+		<< "Course full name = " << CourseName << "\n"
+		<< "Lecturer ID = " << LecturerID << "\n"
+		<< "Room = " << Room << "\n";
+	cout << "\n";
+	size_t choice;
+	cout << "Select one to modify:\n"
+		<< "1. Course full name\n"
+		<< "2. Lecturer ID\n"
+		<< "3. Room\n";
+
+	do {
+		cin >> choice;
+	} while (
+		choice != 1 && choice != 2 && choice != 3
+		&& (cout << "Invalid choice; try again.\n")
+	);
+
+	switch (choice) {
+		case 1: {
+			do {
+				cout << "Enter new name: ";
+				getline(cin, CourseName);
+			} while (
+				(CourseName.empty() || CourseName == "\n")
+				&& (cout << "Empty course name is invalid; try again.\n")
+			);
+			break;
+		}
+
+		case 2: {
+			do {
+				cout << "Enter new lecturer ID: ";
+				getline(cin, LecturerID);
+			} while (
+				(LecturerID.empty() || LecturerID == "\n")
+				&& (cout << "Empty lecturer ID is invalid; try again.\n")
+			);
+			break;
+		}
+
+		case 3: {
+			do {
+				cout << "Enter new room: ";
+				getline(cin, Room);
+			} while (
+				(Room.empty() || Room == "\n")
+				&& (cout << "Empty room is invaid; try again.\n")
+			);
+		}
+	}
+
+	CourseInfoFile.close();
+	CourseInfoFile.open(GetPath(CoursePath), fstream::out | fstream::trunc);
+	CourseInfoFile << CourseName << "\n"
+				<< LecturerID << "\n"
+				<< Room << "\n"
+				<< StartTime << "\n"
+				<< EndTime << "\n";
+	CourseInfoFile.close();
+
+	cout << "Course modified.";
+}
+
+void ListStudent_Course(const string & CoursePath)
+{
+	Timetable SharedTimetable;
+	SharedTimetable.LoadAll();
+
+	Timetable::node * current = SharedTimetable.head;
+	while (current != nullptr) {
+		if (current->CoursePath == CoursePath) {
+			cout << current->StudentID << "\n";
+		}
+		current = current->next;
+	}
 }

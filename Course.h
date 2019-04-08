@@ -46,8 +46,9 @@ void ImportCourse(const string & FileName, const string & Year, const string & T
 void CreateCourse(Course & NewCourse);
 void DeleteCourse(const string & Year, const string & Term, const string & CourseID, const string & ClassID);
 
-//void EditCourse(CourseList & list);
+void EditCourse(const string & CoursePath);
+// course fullname, lecturer ID, room #
 
-//void ListStudents_Course(CourseList & list, string CourseID);
+void ListStudent_Course(const string & CoursePath);
 //void AddStudent_Course(CourseList & list, string StudentID);
 //void RemoveStudent_Course(CourseList & list, string StudentID); // Unenroll();
