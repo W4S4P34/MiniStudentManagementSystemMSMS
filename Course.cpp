@@ -115,8 +115,8 @@ void ListYears() {
 	}
 	for (auto& p : fs::directory_iterator(GetPath("Courses"))) {
 		string FileName = p.path().string();
-		if (FileName == "Timetable.txt") continue;
 		FileName = FileName.substr(FileName.find_last_of('\\') + 1);
+		if (FileName == "Timetable.txt") continue;
 		cout << FileName << "\n";
 	}
 }

@@ -179,7 +179,7 @@ void ViewScore(const ScoreList & List, const string & StudentID) {
 		<< setprecision(3) << "Bonus = " << current->Bonus << "\n";
 }
 
-void EditScore(const ScoreList & List, const string & CoursePath, const string & StudentID, const float & Midterm, const float & Final, const float & Lab, const float & Bonus) {
+void EditScore(ScoreList & List, const string & CoursePath, const string & StudentID, const float & Midterm, const float & Final, const float & Lab, const float & Bonus) {
 	bool found = false;
 	ScoreList::Score * current = List.head;
 	while (current != nullptr) {

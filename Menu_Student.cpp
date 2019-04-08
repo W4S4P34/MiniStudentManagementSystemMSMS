@@ -42,7 +42,7 @@ void Menu_Student(const string & ID) {
 		else if (c == "quit" || c == "exit") { exit(EXIT_SUCCESS); }
 		else if (c == "cls") { system("CLS"); cout << "\n"; continue; }
 		else if (c == "info") { LookupStudent(CurrentList, CurrentClassID, StudentID); }
-		else if (c == "help") { ShowHelp_General(); ShowHelp_Admin(); }
+		else if (c == "help") { ShowHelp_General(); ShowHelp_Student(); }
 
 		else if (c == "passwd")
 		{
@@ -58,7 +58,7 @@ void Menu_Student(const string & ID) {
 				cout << "Passwords do not match. Operation aborted.\n";
 			}
 			else {
-				ChangePassword(ID, AC_ADMIN, Password_New);
+				ChangePassword(ID, AC_STUDENT, Password_New);
 			}
 		}
 
