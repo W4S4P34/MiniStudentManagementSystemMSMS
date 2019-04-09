@@ -125,7 +125,7 @@ void Menu_Lecturer(const string & ID) {
 			}
 
 			AttendanceList CurrentAttendanceList;
-			LoadAttendance(CurrentAttendanceList, GetPath(Year + "/" + Term + "/" + CourseID + "_" + ClassID + "_" + DayOfWeek));
+			LoadAttendance(CurrentAttendanceList, Year + "/" + Term + "/" + CourseID + "_" + ClassID + "_" + DayOfWeek);
 
 			ViewAttendance(CurrentAttendanceList);
 		}

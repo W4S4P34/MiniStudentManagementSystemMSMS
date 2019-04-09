@@ -269,7 +269,8 @@ void DeleteStudent(StudentList & CurrentList, const string & ClassID, const stri
 		return;
 	}
 	
-
+	CurrentList.Delete(StudentID);
+	
 	DeleteLogin(StudentID, ClassID);
 	UpdateClass(CurrentList, ClassID);
 }

@@ -267,7 +267,7 @@ void CheckIn(const string & CoursePath, const string & StudentID) {
 	AttendanceList::Attendance * current = List.head;
 	while (current != nullptr) {
 		if (current->ID == StudentID) {
-			current->CheckIns[CW] = 'x';
+			current->CheckIns[CW] = '+';
 			break;
 		}
 		current = current->next;

@@ -108,7 +108,7 @@ void UpdateScore(const ScoreList & List, const string & CoursePath) {
 
 void ImportScore(const string & FileName, const string & CoursePath) {
 	ifstream file_in;
-	file_in.open(GetPath("../Import/Scores/" + FileName + ".csv"));
+	file_in.open(GetPath("../Import/Scoreboards/" + FileName + ".csv"));
 	ofstream file_out;
 	file_out.open(GetPath("Courses/" + CoursePath + "_" + "Score.txt"));
 	if (!file_in.is_open() || !file_out.is_open()) {
