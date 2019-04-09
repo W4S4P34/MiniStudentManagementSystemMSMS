@@ -172,7 +172,7 @@ void Menu_Lecturer(const string & ID) {
 			cout << "Enter week number: "; cin >> Week;
 			cout << "Type + for present; - for absent: "; cin >> State_String;
 
-			if (Week < 0 || Week > 9 || StudentID.empty() || StudentID == "\n" || (State_String != "+" && State_String != "-")) {
+			if (Week < 1 || Week > 10 || StudentID.empty() || StudentID == "\n" || (State_String != "+" && State_String != "-")) {
 				cout << "Invalid student ID, week number and/or presence state.";
 				continue;
 			}
